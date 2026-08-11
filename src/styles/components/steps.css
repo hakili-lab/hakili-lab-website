@@ -1,0 +1,9 @@
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:26px;margin-top:48px}
+.step{position:relative}
+.step::before{content:"";position:absolute;top:25px;left:60px;right:-26px;height:2px;background:var(--line);z-index:1}
+.step:last-child::before{display:none}
+.step-num{position:relative;z-index:2;width:52px;height:52px;border-radius:50%;background:#fff;border:2px solid var(--blue);color:var(--blue);font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center}
+.step h3{font-size:19px;font-weight:600;color:var(--ink);margin:20px 0 10px}
+.step p{color:var(--slate);font-size:15.5px}
+.steps-note{margin-top:38px;background:#fff;border:1px solid var(--line);border-left:4px solid var(--lime);border-radius:12px;padding:22px 24px;color:var(--slate);font-size:15.5px}
+.steps-note strong{color:var(--ink)}

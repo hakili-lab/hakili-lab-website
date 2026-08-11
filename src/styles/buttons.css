@@ -1,0 +1,10 @@
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;padding:13px 24px;border-radius:999px;border:2px solid transparent;transition:transform .16s,background .18s,color .18s,border-color .18s;cursor:pointer}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{background:var(--blue-deep);transform:translateY(-1px)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:#3d8a3a;transform:translateY(-1px)}
+.btn-ghost{border-color:rgba(255,255,255,.55);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.12)}
+.btn-outline{border-color:var(--blue);color:var(--blue)}
+.btn-outline:hover{background:var(--blue);color:#fff}
+.btn-sm{padding:10px 20px;font-size:14px}

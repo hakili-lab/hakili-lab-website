@@ -1,0 +1,32 @@
+/* bloc partagé : hero + header + footer */
+.brand-line{
+  border-left:1px solid var(--line);padding-left:14px;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:10.5px;
+  letter-spacing:.15em;line-height:1.5;color:var(--blue);white-space:nowrap;
+}
+.brand-line em{display:block;font-style:normal;color:var(--green)}
+
+.claim{
+  display:inline-flex;align-items:center;gap:16px;margin-bottom:26px;
+  font-family:'Poppins',sans-serif;font-weight:600;
+  font-size:clamp(13px,1.5vw,17px);letter-spacing:.2em;color:#fff;
+}
+.claim::before{content:"";width:44px;height:4px;background:var(--lime);flex:none}
+.hero-meta{margin-top:26px;font-size:14.5px;color:rgba(255,255,255,.7);letter-spacing:.05em}
+
+.footer-claim{
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:11.5px;
+  letter-spacing:.18em;color:var(--lime);margin-bottom:14px;
+}
+
+.hero{position:relative;color:#fff;overflow:hidden;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-deep) 100%);padding:88px 0 148px}
+.hero::before{content:"";position:absolute;inset:0;opacity:.14;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.6) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.6) 1px,transparent 1px);
+  background-size:38px 38px;
+  -webkit-mask-image:radial-gradient(ellipse 90% 70% at 74% 18%,#000 0%,transparent 72%);
+  mask-image:radial-gradient(ellipse 90% 70% at 74% 18%,#000 0%,transparent 72%)}
+.hero .wrap{position:relative;z-index:2}
+.hero h1{font-size:clamp(36px,5vw,58px);font-weight:700;max-width:17ch}
+.hero h1 em{font-style:normal;color:var(--lime)}
+.hero-lead{margin-top:22px;max-width:56ch;font-size:19px;color:rgba(255,255,255,.86)}
+.hero-actions{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap}

@@ -1,0 +1,5 @@
+.recruit{margin-top:44px;background:var(--cloud);border-radius:var(--r);padding:32px 34px;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.recruit-big{font-family:'Poppins',sans-serif;font-weight:700;font-size:42px;color:var(--blue);line-height:1}
+.recruit-text{flex:1;min-width:260px}
+.recruit-text b{display:block;font-family:'Poppins',sans-serif;font-weight:600;font-size:18px}
+.recruit-text span{color:var(--slate);font-size:15.5px}

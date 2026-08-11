@@ -1,0 +1,2 @@
+.partners{display:flex;flex-wrap:wrap;gap:14px;margin-top:34px}
+.partner{border:1px solid var(--line);background:#fff;border-radius:12px;padding:16px 24px;font-size:14.5px;font-weight:500;color:var(--slate)}

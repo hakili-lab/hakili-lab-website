@@ -1,0 +1,4 @@
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
+.stat{padding:26px 22px;background:var(--cloud);border-radius:var(--r)}
+.stat b{display:block;font-family:'Poppins',sans-serif;font-size:38px;font-weight:700;color:var(--blue);line-height:1}
+.stat span{display:block;margin-top:8px;font-size:14.5px;color:var(--slate)}

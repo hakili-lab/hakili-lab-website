@@ -1,0 +1,5 @@
+.gallery{display:grid;grid-template-columns:2fr 1fr 1fr;grid-template-rows:180px 180px;gap:16px;margin-top:44px}
+.gallery figure{margin:0;border-radius:var(--r);overflow:hidden;background:#dbe6f2}
+.gallery figure:first-child{grid-row:span 2}
+.gallery img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.gallery figure:hover img{transform:scale(1.05)}

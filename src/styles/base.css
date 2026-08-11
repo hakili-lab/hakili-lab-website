@@ -1,0 +1,8 @@
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:'Inter',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;color:var(--ink);background:#fff;font-size:16.5px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Poppins',Montserrat,system-ui,Arial,sans-serif;line-height:1.18;letter-spacing:-.015em;margin:0}
+p{margin:0}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+:focus-visible{outline:3px solid var(--lime);outline-offset:3px;border-radius:4px}

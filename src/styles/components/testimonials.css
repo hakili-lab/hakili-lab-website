@@ -1,0 +1,8 @@
+.quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px}
+.quote{background:#fff;border-radius:var(--r);padding:30px 28px;border:1px solid var(--line)}
+.quote-mark{font-family:'Poppins',sans-serif;font-size:52px;line-height:1;color:var(--lime);font-weight:700;margin-bottom:6px}
+.quote p{font-size:16.5px;line-height:1.65}
+.quote footer{margin-top:20px;display:flex;align-items:center;gap:12px}
+.avatar{width:44px;height:44px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Poppins',sans-serif;font-weight:600;font-size:15px;flex:none}
+.quote b{display:block;font-size:15px}
+.quote small{color:var(--slate);font-size:13.5px}

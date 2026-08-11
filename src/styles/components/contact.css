@@ -1,0 +1,16 @@
+.contact{background:var(--blue);color:#fff}
+.contact .h2{color:#fff}
+.contact-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:60px;align-items:start}
+.contact-lead{color:rgba(255,255,255,.84);margin-top:16px;max-width:44ch}
+.contact-items{list-style:none;padding:0;margin:34px 0 0;display:grid;gap:18px}
+.contact-items li{display:flex;gap:14px;align-items:flex-start}
+.contact-items .icon{background:rgba(255,255,255,.14);color:#fff;flex:none}
+.contact-items b{display:block;font-family:'Poppins',sans-serif;font-weight:600;font-size:15.5px}
+.contact-items span{color:rgba(255,255,255,.78);font-size:15px}
+.form{background:#fff;border-radius:var(--r);padding:32px;color:var(--ink)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:block;margin-bottom:16px}
+.field span{display:block;font-size:13.5px;font-weight:600;margin-bottom:7px;color:var(--slate)}
+.field input,.field select,.field textarea{width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:10px;font-family:inherit;font-size:15.5px;color:var(--ink);background:#fff}
+.field textarea{min-height:104px;resize:vertical}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,92,185,.14)}
