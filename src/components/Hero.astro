@@ -1,4 +1,44 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import heroImg1 from '../assets/photos/846A26820.jpg';
+import heroImg2 from '../assets/photos/846A2755.jpg';
+import heroImg3 from '../assets/photos/banner1.jpg';
+
+const heroImages: { src: ImageMetadata; focus?: string }[] = [
+  { src: heroImg1 },
+  { src: heroImg2 },
+  { src: heroImg3 }, // ex: { src: heroImg3, focus: 'center 20%' } pour recadrer une image
+];
+const DEFAULT_FOCUS = 'center 35%';
+---
 <section class="hero" id="accueil">
+  <div class="hero-media" aria-hidden="true">
+    <Picture
+      src={heroImages[0].src}
+      formats={['avif', 'webp']}
+      widths={[800, 1400, 2000, 2600]}
+      sizes="100vw"
+      alt=""
+      loading="eager"
+      fetchpriority="high"
+      class="is-active"
+      style={`object-position:${heroImages[0].focus || DEFAULT_FOCUS}`}
+    />
+    {heroImages.slice(1).map((img) => (
+      <template data-hero-slide>
+        <Picture
+          src={img.src}
+          formats={['avif', 'webp']}
+          widths={[800, 1400, 2000, 2600]}
+          sizes="100vw"
+          alt=""
+          loading="lazy"
+          style={`object-position:${img.focus || DEFAULT_FOCUS}`}
+        />
+      </template>
+    ))}
+  </div>
   <div class="wrap">
     <span class="claim">CENTRE D'EXCELLENCE EN MATHEMATIQUES</span>
     <h1>Votre enfant peut <em>vraiment</em> comprendre les maths.</h1>
