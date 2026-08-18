@@ -1,3 +1,6 @@
+---
+const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
+---
 <section class="section section-cloud">
   <div class="wrap">
     <div class="brochure">
@@ -6,10 +9,15 @@
         <p>Classes ouvertes par centre, horaires, tarifs et calendrier du Camp Vacances : tout est réuni dans un document de quatre pages.</p>
       </div>
       <div>
-        <div class="brochure-form">
-          <input type="email" placeholder="Votre adresse électronique" aria-label="Votre adresse électronique">
-          <button class="btn" type="button">Télécharger</button>
-        </div>
+        <form class="brochure-form" id="brochureForm" novalidate>
+          <input type="email" name="email" placeholder="Votre adresse électronique" aria-label="Votre adresse électronique">
+          <button class="btn" type="submit">Télécharger</button>
+          <label class="form-honeypot" aria-hidden="true">Ne pas remplir<input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label>
+          <input type="hidden" name="access_key" value={web3formsKey}>
+          <input type="hidden" name="subject" value="Demande de plaquette">
+          <input type="hidden" name="from_name" value="Formulaire du site Hakili Lab">
+        </form>
+        <p class="form-status" id="brochureFormStatus" role="status" aria-live="polite" hidden></p>
         <span class="brochure-note">Nous n'utilisons votre adresse que pour vous envoyer la plaquette et les dates d'inscription.</span>
       </div>
     </div>

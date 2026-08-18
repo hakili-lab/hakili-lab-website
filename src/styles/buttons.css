@@ -8,3 +8,4 @@
 .btn-outline{border-color:var(--blue);color:var(--blue)}
 .btn-outline:hover{background:var(--blue);color:#fff}
 .btn-sm{padding:10px 20px;font-size:14px}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}

@@ -6,3 +6,8 @@
 .brochure-form .btn{background:#fff;color:var(--green)}
 .brochure-form .btn:hover{background:var(--ink);color:#fff}
 .brochure-note{display:block;margin-top:12px;font-size:13px;color:rgba(255,255,255,.75)}
+.brochure .form-honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.brochure .form-status{margin-top:12px;font-size:14px;font-weight:600}
+.brochure .form-status.is-sending{color:rgba(255,255,255,.86);font-weight:500}
+.brochure .form-status.is-success{color:#fff}
+.brochure .form-status.is-error{color:#fff;text-decoration:underline}
