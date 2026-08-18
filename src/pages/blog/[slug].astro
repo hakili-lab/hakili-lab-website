@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TopBar from '../../components/TopBar.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.brouillon);
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<BaseLayout title={`${post.data.titre} — Hakili Lab`}>
+<TopBar />
+
+<Header />
+
+<article class="section">
+  <div class="wrap article">
+    <a class="post-link" href="/blog">&larr; Tous les articles</a>
+    <span class="eyebrow">{post.data.categorie}</span>
+    <h1 class="h2">{post.data.titre}</h1>
+    <p class="lead">{dateFormatter.format(post.data.date)}</p>
+    {post.data.image && (
+      <Picture
+        src={post.data.image}
+        formats={['avif', 'webp']}
+        widths={[500, 900, 1200]}
+        sizes="(min-width: 780px) 780px, 100vw"
+        alt=""
+        class="article-image"
+      />
+    )}
+    <div class="article-body">
+      <Content />
+    </div>
+  </div>
+</article>
+
+<Footer />
+
+<script>
+  import '../../scripts/nav.js';
+</script>
+</BaseLayout>

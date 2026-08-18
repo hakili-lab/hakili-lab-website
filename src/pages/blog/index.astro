@@ -1,15 +1,24 @@
 ---
 import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TopBar from '../../components/TopBar.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.brouillon);
-const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
+const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
-<section class="section section-cloud" id="blog">
+<BaseLayout title="Nos articles — Hakili Lab">
+<TopBar />
+
+<Header />
+
+<section class="section" id="blog-index">
   <div class="wrap">
     <span class="eyebrow">Actualités et conseils</span>
-    <h2 class="h2">Nos articles</h2>
+    <h1 class="h2">Nos articles</h1>
     <p class="lead">Deux familles d'articles : les actualités de Hakili Lab, qui montrent que l'école est vivante, et les conseils aux parents, qui amènent du trafic depuis les moteurs de recherche.</p>
     <div class="posts">
       {posts.map((post) => (
@@ -29,8 +38,12 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 
         </a>
       ))}
     </div>
-    <div style="margin-top:36px">
-      <a class="btn btn-outline" href="/blog">Voir tous les articles</a>
-    </div>
   </div>
 </section>
+
+<Footer />
+
+<script>
+  import '../../scripts/nav.js';
+</script>
+</BaseLayout>
