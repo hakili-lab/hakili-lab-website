@@ -10,4 +10,4 @@
 .brochure .form-status{margin-top:12px;font-size:14px;font-weight:600}
 .brochure .form-status.is-sending{color:rgba(255,255,255,.86);font-weight:500}
 .brochure .form-status.is-success{color:#fff}
-.brochure .form-status.is-error{color:#fff;text-decoration:underline}
+.brochure .form-status.is-error{display:inline-block;color:var(--danger);background:#fff;padding:4px 12px;border-radius:999px}

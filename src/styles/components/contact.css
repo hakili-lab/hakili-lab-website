@@ -21,4 +21,4 @@
 .form-status{margin-top:2px;font-size:14.5px;font-weight:600}
 .form-status.is-sending{color:var(--slate)}
 .form-status.is-success{color:var(--green)}
-.form-status.is-error{color:var(--ink)}
+.form-status.is-error{color:var(--danger)}
