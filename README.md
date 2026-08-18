@@ -10,7 +10,7 @@ l'état.
 
 ```sh
 npm install
-npm run dev       # http://localhost:4321
+npm run dev       # http://localhost:3000
 ```
 
 ```sh
