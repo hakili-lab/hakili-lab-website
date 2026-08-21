@@ -1,4 +1,7 @@
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:44px}
-.stat{padding:26px 22px;background:var(--cloud);border-radius:var(--r)}
-.stat b{display:block;font-family:'Poppins',sans-serif;font-size:38px;font-weight:700;color:var(--blue);line-height:1}
-.stat span{display:block;margin-top:8px;font-size:14.5px;color:var(--slate)}
+/* Respiration visuelle : contrairement aux grilles de cartes sur fond nuage
+   repetees ailleurs sur la page, ce bloc chiffres-cles est un panneau plein
+   bleu profond, sans bordures ni ombres. */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:44px;background:rgba(255,255,255,.16);border-radius:var(--r);overflow:hidden;background-color:var(--blue-deep)}
+.stat{padding:34px 22px;background:linear-gradient(160deg,var(--blue) 0%,var(--blue-deep) 100%)}
+.stat b{display:block;font-family:'Poppins',sans-serif;font-size:44px;font-weight:700;color:#fff;line-height:1}
+.stat span{display:block;margin-top:10px;font-size:14.5px;color:rgba(255,255,255,.82)}

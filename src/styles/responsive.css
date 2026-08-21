@@ -1,5 +1,4 @@
 @media (max-width:1080px){
-  .centres{grid-template-columns:1fr 1fr}
   .level-panel{grid-template-columns:1fr 1fr;gap:20px}
 }
 @media (max-width:980px){

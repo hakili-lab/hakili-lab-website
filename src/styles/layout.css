@@ -5,4 +5,5 @@
 .eyebrow::before{content:"";width:9px;height:9px;background:var(--lime);flex:none}
 .eyebrow-light{color:rgba(255,255,255,.85)}
 .h2{font-size:clamp(29px,3.4vw,42px);font-weight:700;color:var(--blue)}
+.h2.is-minor{font-size:clamp(23px,2.4vw,30px);font-weight:600}
 .lead{color:var(--slate);max-width:62ch;margin-top:16px;font-size:17.5px}

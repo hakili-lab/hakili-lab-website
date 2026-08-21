@@ -94,6 +94,9 @@ const cases = [
   ['Couverture manuel 5e (vert, corrigé) : "small" blanc 80%', T.white, T.green, 11.5, false, 'text'],
   ['Couverture manuel 4e (bleu profond) : "small" blanc 80%', blend(T.white, 0.8, T.blueDeep), T.blueDeep, 11.5, false, 'text'],
   ['Couverture manuel 3e (sarcelle) : "small" blanc 80%', T.white, T.bookTeal, 11.5, false, 'text'],
+  ['Bloc "chiffres cles" (.stats) : nombre blanc / degrade bleu->bleu profond', T.white, T.blueDeep, 44, true, 'text'],
+  ['Bloc "chiffres cles" (.stats) : libelle blanc 82% / degrade bleu->bleu profond', blend(T.white, 0.82, T.blueDeep), T.blueDeep, 14.5, false, 'text'],
+  ['Lien "Nous rendre visite" unifie en bleu / fond blanc', T.blue, T.white, 14.5, false, 'text'],
 ];
 
 const rows = cases.map(([label, fg, bg, size, bold, kind]) => {
