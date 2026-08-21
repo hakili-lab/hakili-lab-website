@@ -1,18 +1,21 @@
 ---
+import { Picture } from 'astro:assets';
 import photoA from '../assets/photos/846A26820.jpg';
 import photoB from '../assets/photos/846A2755.jpg';
 import photoC from '../assets/photos/banner1.jpg';
+
+const gallerySizes = '(max-width: 680px) 50vw, (max-width: 1080px) 33vw, 400px';
 ---
 <section class="section" id="galerie">
   <div class="wrap">
     <span class="eyebrow">Galerie</span>
     <h2 class="h2">La vie dans nos centres</h2>
     <div class="gallery">
-      <figure><img src={photoA.src} alt="Elèves en séance de travail"></figure>
-      <figure><img src={photoB.src} alt="Enseignant au tableau"></figure>
-      <figure><img src={photoC.src} alt="Vue d'un centre Hakili Lab"></figure>
-      <figure><img src={photoB.src} alt="Travail en petit groupe"></figure>
-      <figure><img src={photoA.src} alt="Remise des prix du concours de mathématiques"></figure>
+      <figure><Picture src={photoA} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Elèves en séance de travail" loading="lazy" /></figure>
+      <figure><Picture src={photoB} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Enseignant au tableau" loading="lazy" /></figure>
+      <figure><Picture src={photoC} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Vue d'un centre Hakili Lab" loading="lazy" /></figure>
+      <figure><Picture src={photoB} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Travail en petit groupe" loading="lazy" /></figure>
+      <figure><Picture src={photoA} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Remise des prix du concours de mathématiques" loading="lazy" /></figure>
     </div>
   </div>
 </section>

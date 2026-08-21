@@ -1,4 +1,5 @@
 ---
+import { Picture } from 'astro:assets';
 import photo from '../assets/photos/846A2755.jpg';
 ---
 <section class="section" id="apropos">
@@ -15,7 +16,7 @@ import photo from '../assets/photos/846A2755.jpg';
       </ul>
     </div>
     <a class="video-wrap" href="https://youtu.be/wUX2iMeWs_4" target="_blank" rel="noopener" aria-label="Voir la vidéo de présentation">
-      <img src={photo.src} alt="Une séance de cours dans un centre Hakili Lab">
+      <Picture src={photo} formats={['avif', 'webp']} widths={[500, 900]} sizes="(max-width: 980px) 100vw, 560px" alt="Une séance de cours dans un centre Hakili Lab" loading="lazy" />
       <span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
       <span class="video-cap">Une journée dans un centre Hakili Lab &nbsp;•&nbsp; 2 min</span>
     </a>
