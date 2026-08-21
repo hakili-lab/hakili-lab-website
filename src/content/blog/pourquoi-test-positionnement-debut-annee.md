@@ -4,7 +4,7 @@ description: "Ce que nous observons après avoir fait passer des tests diagnosti
 date: 2026-09-15
 categorie: "Pédagogie"
 image: "../../assets/photos/846A26820.jpg"
-brouillon: false
+brouillon: true
 ---
 
 Ce que nous observons après avoir fait passer des tests diagnostiques à nos élèves de 6<sup>e</sup>.

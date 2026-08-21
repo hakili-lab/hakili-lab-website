@@ -4,7 +4,7 @@ description: "Trois semaines, plusieurs centres, et une finale qui a réuni les 
 date: 2026-08-28
 categorie: "Actualité"
 image: "../../assets/photos/846A2755.jpg"
-brouillon: false
+brouillon: true
 ---
 
 Trois semaines, plusieurs centres, et une finale qui a réuni les meilleurs élèves de chaque niveau.

@@ -3,8 +3,28 @@ import { Picture } from 'astro:assets';
 import photoA from '../assets/photos/846A26820.jpg';
 import photoB from '../assets/photos/846A2755.jpg';
 import photoC from '../assets/photos/banner1.jpg';
+import { SITE_URL } from '../data/site.js';
 
 const centrePhotoSizes = '(max-width: 680px) 100vw, (max-width: 1080px) 50vw, 380px';
+
+const centres = ['Pissy', 'Tampouy', 'Saaba', 'SIAO', 'Nagrin'];
+const centresJsonLd = centres.map((nom) => ({
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: `Hakili Lab — ${nom}`,
+  parentOrganization: 'Hakili Lab',
+  email: 'info@hakililab.com',
+  telephone: ['+22657919191', '+22658795050'],
+  openingHours: 'Mo-Sa 08:00-18:00',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Ouagadougou',
+    addressCountry: 'BF',
+    // TODO(url): streetAddress et postalCode du centre de ${nom}
+  },
+  // TODO(url): coordonnees GPS (geo.latitude / geo.longitude) du centre de ${nom}
+  ...(SITE_URL ? { url: SITE_URL + '#centres' } : {}),
+}));
 ---
 <section class="section" id="centres">
   <div class="wrap">
@@ -38,3 +58,7 @@ const centrePhotoSizes = '(max-width: 680px) 100vw, (max-width: 1080px) 50vw, 38
     </div>
   </div>
 </section>
+<!-- TODO(url): adresse postale et coordonnees GPS de chaque centre, a completer ci-dessous une fois connues -->
+{centresJsonLd.map((json) => (
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(json)} />
+))}

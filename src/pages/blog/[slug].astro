@@ -17,8 +17,9 @@ export async function getStaticPaths() {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+const plainDescription = post.data.description.replace(/<[^>]+>/g, '');
 ---
-<BaseLayout title={`${post.data.titre} — Hakili Lab`}>
+<BaseLayout title={`${post.data.titre} — Hakili Lab`} description={plainDescription}>
 <TopBar />
 
 <Header />

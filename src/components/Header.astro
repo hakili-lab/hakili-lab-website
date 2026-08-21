@@ -1,6 +1,9 @@
 ---
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import logo from '../assets/logo-hakili-lab.png';
+
+const hasBlogPosts = (await getCollection('blog', ({ data }) => !data.brouillon)).length > 0;
 ---
 <header class="site-header">
   <div class="wrap header-inner">
@@ -44,7 +47,7 @@ import logo from '../assets/logo-hakili-lab.png';
         </div>
       </div>
       <div class="navitem"><a href="#galerie">Galerie</a></div>
-      <div class="navitem"><a href="#blog">Blog</a></div>
+      {hasBlogPosts && <div class="navitem"><a href="#blog">Blog</a></div>}
       <div class="navitem"><a href="#contact">Contact</a></div>
       <a class="btn btn-green btn-sm nav-cta" href="#contact">Inscrire mon enfant</a>
     </nav>

@@ -4,7 +4,7 @@ description: "Cinq habitudes simples à installer à la maison, même sans avoir
 date: 2026-09-02
 categorie: "Conseils"
 image: "../../assets/photos/banner1.jpg"
-brouillon: false
+brouillon: true
 ---
 
 Cinq habitudes simples à installer à la maison, même sans avoir fait d'études scientifiques.

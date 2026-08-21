@@ -1,11 +1,15 @@
 ---
 import '../styles/main.css';
+import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from '../data/site.js';
 
 interface Props {
   title?: string;
+  description?: string;
 }
 
-const { title = 'Hakili Lab' } = Astro.props;
+const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
+const canonicalPath = Astro.url.pathname;
+const canonicalUrl = SITE_URL ? SITE_URL + canonicalPath : canonicalPath;
 ---
 <!DOCTYPE html>
 <html lang="fr">
@@ -13,9 +17,44 @@ const { title = 'Hakili Lab' } = Astro.props;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
+<meta name="description" content={description}>
+<!-- TODO(url): domaine de production a renseigner dans src/data/site.js (SITE_URL) ; canonical/OG/JSON-LD se completent automatiquement une fois cette valeur remplie -->
+<link rel="canonical" href={canonicalUrl}>
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Hakili Lab">
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonicalUrl}>
+<meta property="og:locale" content="fr_FR">
+<!-- TODO(url): image de partage Open Graph (1200x630) - a ajouter une fois une vraie photo disponible, puis <meta property="og:image" content="..."> -->
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={title}>
+<meta name="twitter:description" content={description}>
+<!-- TODO(url): meme image que og:image pour <meta name="twitter:image" content="..."> -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  name: 'Hakili Lab',
+  description: SITE_DESCRIPTION,
+  ...(SITE_URL ? { url: SITE_URL } : {}),
+  email: 'info@hakililab.com',
+  telephone: ['+22657919191', '+22658795050'],
+  areaServed: {
+    '@type': 'City',
+    name: 'Ouagadougou',
+  },
+  sameAs: [
+    'https://web.facebook.com/hakililab',
+    'https://www.tiktok.com/@hakililab',
+  ],
+})} />
 </head>
 <body>
 <a class="skip-link" href="#accueil">Aller au contenu</a>

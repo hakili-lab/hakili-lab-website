@@ -6,31 +6,33 @@ const allPosts = await getCollection('blog', ({ data }) => !data.brouillon);
 const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 3);
 const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
-<section class="section section-cloud" id="blog">
-  <div class="wrap">
-    <span class="eyebrow">Actualités et conseils</span>
-    <h2 class="h2">Nos articles</h2>
-    <p class="lead">Les actualités de Hakili Lab et des conseils pratiques pour accompagner votre enfant.</p>
-    <div class="posts">
-      {posts.map((post) => (
-        <a class="post" href={`/blog/${post.id}`}>
-          <div class="post-thumb">
-            {post.data.image && (
-              <Picture src={post.data.image} formats={['avif', 'webp']} widths={[400, 800]} sizes="400px" alt="" />
-            )}
-            <span class="post-tag">{post.data.categorie}</span>
-          </div>
-          <div class="post-body">
-            <span class="post-date">{dateFormatter.format(post.data.date)}</span>
-            <h3>{post.data.titre}</h3>
-            <p set:html={post.data.description} />
-            <span class="post-link">Lire l'article</span>
-          </div>
-        </a>
-      ))}
+{posts.length > 0 && (
+  <section class="section section-cloud" id="blog">
+    <div class="wrap">
+      <span class="eyebrow">Actualités et conseils</span>
+      <h2 class="h2">Nos articles</h2>
+      <p class="lead">Les actualités de Hakili Lab et des conseils pratiques pour accompagner votre enfant.</p>
+      <div class="posts">
+        {posts.map((post) => (
+          <a class="post" href={`/blog/${post.id}`}>
+            <div class="post-thumb">
+              {post.data.image && (
+                <Picture src={post.data.image} formats={['avif', 'webp']} widths={[400, 800]} sizes="400px" alt="" />
+              )}
+              <span class="post-tag">{post.data.categorie}</span>
+            </div>
+            <div class="post-body">
+              <span class="post-date">{dateFormatter.format(post.data.date)}</span>
+              <h3>{post.data.titre}</h3>
+              <p set:html={post.data.description} />
+              <span class="post-link">Lire l'article</span>
+            </div>
+          </a>
+        ))}
+      </div>
+      <div style="margin-top:36px">
+        <a class="btn btn-outline" href="/blog">Voir tous les articles</a>
+      </div>
     </div>
-    <div style="margin-top:36px">
-      <a class="btn btn-outline" href="/blog">Voir tous les articles</a>
-    </div>
-  </div>
-</section>
+  </section>
+)}
