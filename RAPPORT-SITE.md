@@ -349,7 +349,73 @@ Contrairement à ce que suggérait l'audit ("extraire chaque section en composan
 ## 9. Ce que je n'ai pas corrigé
 
 - **Le découpage multipage lui-même** : hors périmètre demandé, voir section 8.
-- **Les valeurs "À définir" / "À préciser"** affichées dans les fiches détail (effectif, tarif, horaires par service/manuel) : ce sont des informations réelles non encore décidées, pas du contenu inventé faisant semblant d'être fini (contrairement aux témoignages ou aux partenaires) — je les ai corrigées typographiquement (bloc 9) mais pas masquées, une décision produit qui vous revient : soit vous les complétez, soit vous décidez qu'elles doivent rester visibles en l'état.
+- ~~Les valeurs "À définir" / "À préciser" affichées dans les fiches détail~~ — **mis à jour pendant le découpage multipage (section 10)** : ce point n'est plus d'actualité. En listant les emplacements de contenu d'attente pour les nouvelles collections, vous m'avez fait remarquer à juste titre qu'un champ rempli d'un texte d'attente n'est pas un champ vide, et que "Tarif : À définir" affiché à un visiteur est la même famille de problème que les témoignages fictifs du bloc 4. Les fiches détail (`detail-modal.js`, déjà en ligne sur l'accueil) masquent désormais chaque ligne de fait dont la valeur est une formule d'attente reconnue, au lieu de l'afficher.
 - **Les liens Facebook, TikTok, WhatsApp et le numéro de téléphone déjà présents** dans le code avant cette session : non modifiés, non vérifiés (je n'ai pas de moyen de confirmer qu'ils sont exacts depuis cet environnement).
 - **Message de commit avec un caractère mal encodé** : le commit `b0332c3` contient un caractère accentué corrompu dans son message ("gérait" → affiché avec un caractère de remplacement) à cause d'un problème d'encodage lors du passage du message par le terminal. Cela ne touche aucun fichier du projet, uniquement le texte du message de commit ; je ne l'ai pas corrigé pour ne pas réécrire l'historique Git sans que vous me le demandiez explicitement.
 - **La photo d'accompagnement du lien "Qui sommes-nous" vers YouTube** : je n'ai pas vérifié que `https://youtu.be/wUX2iMeWs_4` est bien une vidéo existante et pertinente — ce lien était déjà présent avant cette session.
+
+---
+
+## 10. Découpage multipage
+
+**En cours.** Cette section est mise à jour au fur et à mesure des étapes ; elle sera complétée (arborescence livrée, résultats de vérification par page, ce qui n'a pas été fait) une fois le découpage terminé.
+
+### Ce qui a été fait
+
+**Étape 1 — Layout partagé, SEO par page, sitemap, page 404** (commit `233afd5`)
+
+- `SITE_URL` passe de vide/relatif à `https://example.com` (domaine réservé à la documentation par la norme RFC 2606, non confondable avec un vrai domaine), marqué `TODO(url)` dans `src/data/site.js` : canonical et `og:url` sont désormais des URL absolues valides.
+- `astro.config.mjs` : `site` dérivé de `SITE_URL`, intégration `@astrojs/sitemap` (seule dépendance de production ajoutée). Le `sitemap.xml` écrit à la main à la session précédente est supprimé : l'intégration officielle énumère les vraies routes du build.
+- `BaseLayout` accepte un prop `jsonLd` (objet ou tableau) que chaque page complète sans dupliquer le bloc `EducationalOrganization`.
+- Nouveau `SiteLayout.astro` : assemble TopBar/Header/`<main id="contenu">` (nouvelle cible du lien d'évitement, qui pointait avant vers `#accueil`, une ancre qui n'existe que sur l'accueil)/fil d'Ariane optionnel/Footer/DetailModal + les scripts communs. Les pages blog existantes sont migrées dessus pour vérifier le layout avant de bâtir les nouvelles pages par-dessus.
+- Page `/404` avec liens vers les pages principales.
+- Playwright + `@axe-core/playwright` + `axe-core` installés en **vraies devDependencies** (pas seulement le temps d'une vérification), navigateur Chromium testé et fonctionnel.
+
+**Étape 2 — Collections de contenu** (inclus dans les commits d'étape 3, ci-dessous)
+
+`src/content.config.ts` définit quatre collections : `blog` (existante, complétée d'un champ `slug` explicite), `centres`, `services`, `manuels`. Chaque nouvelle collection porte un champ `slug` déclaré et un booléen `pretPourPublication` (par défaut `false`). Le contenu a été **extrait programmatiquement** des composants existants (`Centres.astro`, `Services.astro`, `Productions.astro`, `details.js`) avec un petit script Node, plutôt que retapé à la main, pour ne perdre aucune apostrophe typographique ni aucune espace fine déjà corrigées (bloc 9).
+
+Deux décisions de contenu prises pendant l'extraction, validées avec vous :
+- La carte "Diagnostic et remédiation", classée à tort sous "Productions" alors que c'est un service, est fusionnée dans `/services/remediation` avec "Cours de remédiation en mathématiques" (les deux décrivent la même offre de remédiation, sous deux angles).
+- La collection `blog` garde son champ `brouillon` existant plutôt que de porter un second booléen `pretPourPublication` qui aurait pu le contredire.
+
+**Garde-fou contre les pages à moitié remplies, renforcé en cours de route.** Une première version rejetait seulement les champs *vides*. Vous avez signalé, à raison, qu'un champ rempli d'un texte d'attente ("À définir", "À confirmer"...) n'est pas un champ vide : il passe la validation et la page part en ligne avec un contenu qui fait semblant d'être fini — exactement le problème du bloc 4, sous une autre forme. Corrigé :
+
+- `src/lib/placeholders.js` (nouveau) : détecte une valeur vide **ou** une formule d'attente connue ("à définir", "à préciser", "à confirmer", "à compléter", "todo", "tbd", "n/a", "nous consulter", "à venir"), insensible à la casse et aux accents. Utilisée à la fois dans le schéma de contenu et dans les gabarits de page.
+- `content.config.ts` : la validation "requis si prêt" utilise désormais cette détection plutôt qu'un simple test de vide. Vérifié empiriquement (avant d'écrire le vrai contenu) qu'une entrée `pretPourPublication:true` avec un champ vide fait échouer `astro build` avec un message précis pointant le fichier et le champ — pas seulement un avertissement.
+- Pour la collection `centres` spécifiquement : `adresse` est désormais un champ **requis** dès que `pretPourPublication` vaut `true` (voir tableau ci-dessous). Une fiche de centre sans adresse n'a plus de raison d'être en ligne : c'est l'information qui donne sa valeur à la page.
+- Aucun gabarit n'affiche plus un libellé à côté d'une valeur vide : les blocs "Classes ouvertes" / "Adresse" de la fiche de centre ne s'affichent pas du tout si le champ est vide, au lieu d'un texte de repli ("Nous consulter", "À confirmer..." — que j'avais moi-même introduit par erreur, en réintroduisant exactement le problème qu'on venait de corriger).
+- Le JSON-LD `LocalBusiness` n'est émis que si l'adresse **et** les coordonnées GPS sont toutes les deux réelles — jamais un balisage structuré qui ne correspond pas au contenu visible.
+- Étendu au contenu déjà en ligne sur l'accueil : `detail-modal.js` (fiche détail ouverte depuis les cartes de services/manuels/applications) filtre désormais les mêmes formules d'attente avant d'afficher les "faits" (effectif, tarif...) — vérifié avec Playwright : la fiche "Cours d'appui", dont les 3 faits étaient tous "À définir", n'affiche plus aucun bloc de faits ; la fiche "Cours de remédiation", qui mélange faits réels et "À définir", n'affiche plus que les 2 faits réels.
+
+**Étape 3 — `/centres` et les cinq pages de centre** (commits `233afd5`…, dont le correctif ci-dessus)
+
+- `/centres` : grille des 5 centres. Chaque carte affiche photo, nom, description réelle. Un centre `pretPourPublication:true` a un lien "Voir le centre de {nom}" ; un centre `false` **n'a pas de lien du tout** (pas de texte de remplacement type "bientôt disponible" — ç'aurait été, encore, du contenu d'attente).
+- `/centres/<slug>` : générée uniquement pour les centres `pretPourPublication:true`. Aujourd'hui, **aucun des cinq centres n'a d'adresse réelle : aucune des cinq pages individuelles n'est donc générée.** `/centres` reste en ligne et montre les 5 cartes sans lien.
+- Bug ARIA réel trouvé par Playwright (pas par l'analyse statique de la session précédente, qui ne pouvait pas l'attraper) : les cartes "Amira"/"Diagnostic et remédiation" avaient `role="button"` sur toute la carte alors qu'elles contiennent un vrai `<a class="btn">` à l'intérieur — contrôles imbriqués, invalide en ARIA. Corrigé : "En savoir plus" est désormais un vrai `<button>` focusable, indépendant du lien interne.
+
+### Vérification (étapes 1 à 3)
+
+- `scripts/verifier-pages.mjs` (nouveau, rejouable, utilise Playwright + axe-core installés en devDependencies) : lance axe-core sur chaque route réellement construite par le build, capture chaque route en 1280px et 390px, détecte les liens internes morts.
+- **4 routes construites, 0 violation axe-core** (`/`, `/404`, `/blog`, `/centres`). Contrairement à la session précédente, ceci utilise un vrai navigateur Chromium, pas une analyse statique du HTML.
+- `scripts/verifier-contrastes.mjs` : toujours 33/33.
+- Liens internes morts détectés : uniquement vers `/inscription` et `/contact`, deux pages prévues à l'étape 7 — attendu à ce stade, pas une anomalie.
+- Captures d'écran disponibles dans `captures/` (non versionnées).
+
+### Ce dont j'ai besoin de vous — centres
+
+Aucun des cinq centres n'a de page individuelle publiée pour l'instant. Voici, centre par centre, exactement ce qui bloque :
+
+| Centre | Champ bloquant (obligatoire) | Champs optionnels manquants (n'empêchent pas la publication, mais utiles) |
+|---|---|---|
+| Pissy | `adresse` | classes ouvertes, coordonnées GPS, lien Google Maps |
+| Tampouy | `adresse` | classes ouvertes, coordonnées GPS, lien Google Maps |
+| Saaba | `adresse` | classes ouvertes, coordonnées GPS, lien Google Maps |
+| SIAO | `adresse` | classes ouvertes, coordonnées GPS, lien Google Maps |
+| Nagrin | `adresse` | classes ouvertes, coordonnées GPS, lien Google Maps |
+
+Pour publier la page d'un centre : ouvrez `src/content/centres/<slug>.md`, remplissez `adresse` (ligne commentée `# adresse: ""`, à décommenter et compléter), puis passez `pretPourPublication: true`. Si vous fournissez aussi `latitude`/`longitude`, le balisage `LocalBusiness` (utile pour le référencement local) s'active automatiquement — sans coordonnées GPS, la page existe mais reste sans ce balisage plutôt que d'en publier un incomplet.
+
+Le nom du fichier associe déjà le slug à chaque centre : `pissy.md`, `tampouy.md`, `saaba.md`, `siao.md`, `nagrin.md`.
+
+*(Suite au prochain commit : étape 4, `/services` et les quatre formules.)*

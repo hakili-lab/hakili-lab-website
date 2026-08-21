@@ -1,4 +1,5 @@
 import { detail } from '../data/details.js';
+import { isPlaceholder } from '../lib/placeholders.js';
 
 function norm(s){
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
@@ -15,9 +16,14 @@ function openDetail(key,title){
   d.who.forEach(function(x){html+='<li>'+x+'</li>'});
   html+='</ul></div><div><h3>Comment cela se passe</h3><ul>';
   d.how.forEach(function(x){html+='<li>'+x+'</li>'});
-  html+='</ul></div></div><div class="modal-facts">';
-  d.f.forEach(function(x){html+='<div class="fact"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'});
-  html+='</div><div class="modal-actions"><a class="btn btn-green" href="#contact" data-close="1">'+d.cta+'</a>'
+  html+='</ul></div></div>';
+  var realFacts=d.f.filter(function(x){return !isPlaceholder(x[1])});
+  if(realFacts.length){
+    html+='<div class="modal-facts">';
+    realFacts.forEach(function(x){html+='<div class="fact"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'});
+    html+='</div>';
+  }
+  html+='<div class="modal-actions"><a class="btn btn-green" href="#contact" data-close="1">'+d.cta+'</a>'
     +'<a class="btn btn-outline" href="#contact" data-close="1">Poser une question</a></div>';
   modalBody.innerHTML=html;
   lastFocus=document.activeElement;
@@ -58,17 +64,20 @@ document.addEventListener('keydown',function(e){
     var key=norm(h.textContent);
     if(!detail[key]) return;
     el.setAttribute('data-detail',key);
-    el.setAttribute('tabindex','0');
-    el.setAttribute('role','button');
-    var more=document.createElement('span');
+    // Le bouton "En savoir plus" est le seul declencheur focusable : certaines
+    // cartes (les applications) contiennent deja un vrai <a class="btn">
+    // (ex. "Essayer Amira"). Rendre toute la carte role="button" empecherait
+    // ce lien d'etre correctement focusable (controles imbriques, invalide en
+    // ARIA) - verifie avec axe-core (regle nested-interactive).
+    var more=document.createElement('button');
+    more.type='button';
     more.className='card-more';
     more.innerHTML='En savoir plus &rarr;';
+    more.addEventListener('click',function(e){ e.stopPropagation(); openDetail(key,h.innerHTML); });
     el.appendChild(more);
-    function fire(e){
-      if(e.target.closest('.btn')) return;
+    el.addEventListener('click',function(e){
+      if(e.target.closest('.btn')||e.target.closest('.card-more')) return;
       openDetail(key,h.innerHTML);
-    }
-    el.addEventListener('click',fire);
-    el.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();fire(e)}});
+    });
   });
 })();

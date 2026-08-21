@@ -1,0 +1,72 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { SITE_URL } from '../../data/site.js';
+
+const allCentres = await getCollection('centres');
+const centres = allCentres.sort((a, b) => a.data.nom.localeCompare(b.data.nom, 'fr'));
+const centresPrets = centres.filter((c) => c.data.pretPourPublication);
+
+// Seuls les centres publies ont une page a referencer : un centre sans
+// adresse n'a pas de page (voir content.config.ts), donc pas d'entree ici.
+const itemListJsonLd =
+  centresPrets.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        itemListElement: centresPrets.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: `Hakili Lab — ${c.data.nom}`,
+          url: `${SITE_URL}/centres/${c.data.slug}`,
+        })),
+      }
+    : undefined;
+---
+<SiteLayout
+  title="Nos centres à Ouagadougou — Hakili Lab"
+  description="Les cinq centres Hakili Lab à Ouagadougou : Pissy, Tampouy, Saaba, SIAO et Nagrin. Horaires, classes ouvertes et itinéraire pour chaque centre."
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos centres' }]}
+  jsonLd={itemListJsonLd}
+>
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Nos centres</span>
+    <h1 class="h2">Cinq centres à Ouagadougou</h1>
+    <p class="lead">Chaque centre accueille les élèves après les cours en semaine et le week-end.</p>
+    <div class="centres">
+      {centres.map((centre) => {
+        const photo = centre.data.image && (
+          <Picture
+            src={centre.data.image}
+            formats={['avif', 'webp']}
+            widths={[400, 760]}
+            sizes="(max-width: 680px) 100vw, (max-width: 1080px) 50vw, 380px"
+            alt={`Centre de ${centre.data.nom}`}
+            loading="lazy"
+          />
+        );
+        return (
+          <article class="centre">
+            <div class="centre-photo">
+              {photo}
+              <b>{centre.data.nom}</b>
+            </div>
+            <div class="centre-body">
+              <h2>{centre.data.nom}</h2>
+              <p>{centre.data.resume}</p>
+              {centre.data.pretPourPublication && (
+                <a class="centre-link" href={`/centres/${centre.data.slug}`}>Voir le centre de {centre.data.nom}</a>
+              )}
+            </div>
+          </article>
+        );
+      })}
+    </div>
+    <div class="centres-cta">
+      <a class="btn btn-primary" href="/inscription">Prendre rendez-vous dans un centre</a>
+    </div>
+  </div>
+</section>
+</SiteLayout>

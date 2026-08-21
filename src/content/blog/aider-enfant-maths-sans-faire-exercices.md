@@ -1,4 +1,5 @@
 ---
+slug: "aider-enfant-maths-sans-faire-exercices"
 titre: "Aider son enfant en maths sans faire les exercices à sa place"
 description: "Cinq habitudes simples à installer à la maison, même sans avoir fait d’études scientifiques."
 date: 2026-09-02

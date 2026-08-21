@@ -6,7 +6,7 @@
 .centre:hover .centre-photo img{transform:scale(1.05)}
 .centre-photo b{position:absolute;left:16px;top:16px;background:#fff;color:var(--blue);font-family:'Poppins',sans-serif;font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;padding:6px 12px;border-radius:999px}
 .centre-body{padding:24px 24px 26px;display:flex;flex-direction:column;flex:1}
-.centre-body h3{font-size:21px;font-weight:600;color:var(--blue)}
+.centre-body h2,.centre-body h3{font-size:21px;font-weight:600;color:var(--blue)}
 .centre-body p{color:var(--slate);font-size:15px;margin-top:10px}
 .centre-link{margin-top:18px;font-weight:600;font-size:14.5px;color:var(--blue)}
 .centres-cta{margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}

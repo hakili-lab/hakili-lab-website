@@ -5,5 +5,5 @@
 .card p{color:var(--slate);font-size:15.5px}
 .icon{width:46px;height:46px;border-radius:12px;background:var(--cloud);display:flex;align-items:center;justify-content:center;color:var(--green-light)}
 .icon svg{width:23px;height:23px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
-.card-more{display:block;margin-top:auto;padding-top:14px;font-weight:600;font-size:14.5px;color:var(--blue)}
+.card-more{display:block;width:100%;margin-top:auto;padding:14px 0 0;font:inherit;font-weight:600;font-size:14.5px;color:var(--blue);background:none;border:none;text-align:left;cursor:pointer}
 .cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;margin-top:32px}

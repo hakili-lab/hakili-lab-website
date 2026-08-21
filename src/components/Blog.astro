@@ -14,7 +14,7 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 
       <p class="lead">Les actualités de Hakili Lab et des conseils pratiques pour accompagner votre enfant.</p>
       <div class="posts">
         {posts.map((post) => (
-          <a class="post" href={`/blog/${post.id}`}>
+          <a class="post" href={`/blog/${post.data.slug}`}>
             <div class="post-thumb">
               {post.data.image && (
                 <Picture src={post.data.image} formats={['avif', 'webp']} widths={[400, 800]} sizes="400px" alt="" />

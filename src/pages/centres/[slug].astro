@@ -1,0 +1,104 @@
+---
+import { getCollection } from 'astro:content';
+import { Picture } from 'astro:assets';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { SITE_URL } from '../../data/site.js';
+import { isPlaceholder } from '../../lib/placeholders.js';
+
+export async function getStaticPaths() {
+  // Une fiche de centre sans adresse n'est pas pretPourPublication (voir
+  // content.config.ts) : elle n'a donc pas de page ici, pas d'entree dans le
+  // sitemap, et /centres l'affiche comme une carte sans lien plutot que de
+  // generer une page a moitie remplie.
+  const centres = await getCollection('centres', ({ data }) => data.pretPourPublication);
+  return centres.map((centre) => ({
+    params: { slug: centre.data.slug },
+    props: { centre },
+  }));
+}
+
+const { centre } = Astro.props;
+const d = centre.data;
+
+const hasClassesOuvertes = !isPlaceholder(d.classesOuvertes);
+const hasAdresse = !isPlaceholder(d.adresse);
+const hasGeo = typeof d.latitude === 'number' && typeof d.longitude === 'number';
+
+// Aucun balisage structure plutot qu'un balisage creux : LocalBusiness n'est
+// emis que si l'adresse ET les coordonnees GPS sont reelles toutes les deux.
+const localBusinessJsonLd =
+  hasAdresse && hasGeo
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: `Hakili Lab — ${d.nom}`,
+        parentOrganization: 'Hakili Lab',
+        description: d.resume,
+        url: `${SITE_URL}/centres/${d.slug}`,
+        email: 'info@hakililab.com',
+        telephone: ['+22657919191', '+22658795050'],
+        openingHours: 'Mo-Sa 08:00-18:00',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: d.adresse,
+          addressLocality: 'Ouagadougou',
+          addressCountry: 'BF',
+        },
+        geo: { '@type': 'GeoCoordinates', latitude: d.latitude, longitude: d.longitude },
+      }
+    : undefined;
+---
+<SiteLayout
+  title={`Centre Hakili Lab de ${d.nom} — horaires et itinéraire`}
+  description={d.resume}
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos centres', href: '/centres' }, { label: d.nom }]}
+  jsonLd={localBusinessJsonLd}
+>
+<section class="section">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Nos centres</span>
+      <h1 class="since">{d.nom}</h1>
+      <p class="lead">{d.resume}</p>
+
+      <div class="modal-facts" style="margin-top:28px">
+        <div class="fact">
+          <span>Horaires</span>
+          <b>{d.horaires}</b>
+        </div>
+        {hasClassesOuvertes && (
+          <div class="fact">
+            <span>Classes ouvertes</span>
+            <b>{d.classesOuvertes}</b>
+          </div>
+        )}
+        {hasAdresse && (
+          <div class="fact">
+            <span>Adresse</span>
+            <b>{d.adresse}</b>
+          </div>
+        )}
+      </div>
+
+      <div class="hero-actions" style="margin-top:30px">
+        <a class="btn btn-primary" href="/inscription">Prendre rendez-vous dans ce centre</a>
+        {d.googleMapsUrl && (
+          <a class="btn btn-outline" href={d.googleMapsUrl} target="_blank" rel="noopener">Voir sur Google Maps</a>
+        )}
+        <a class="btn btn-outline" href="/contact">Nous contacter</a>
+      </div>
+    </div>
+    {d.image && (
+      <Picture
+        src={d.image}
+        formats={['avif', 'webp']}
+        widths={[500, 900]}
+        sizes="(max-width: 980px) 100vw, 560px"
+        alt={`Centre de ${d.nom}`}
+        loading="lazy"
+        style="border-radius:var(--r);width:100%;height:auto;aspect-ratio:4/3;object-fit:cover"
+      />
+    )}
+  </div>
+</section>
+</SiteLayout>
