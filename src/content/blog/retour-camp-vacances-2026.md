@@ -9,4 +9,4 @@ brouillon: true
 
 Trois semaines, plusieurs centres, et une finale qui a réuni les meilleurs élèves de chaque niveau.
 
-*Contenu d'exemple. Cet article préfigure la page dédiée du site définitif : le texte complet reste à rédiger avant mise en ligne.*
+*Contenu d’exemple. Cet article préfigure la page dédiée du site définitif : le texte complet reste à rédiger avant mise en ligne.*

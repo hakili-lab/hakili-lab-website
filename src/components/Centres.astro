@@ -23,7 +23,7 @@ const centresJsonLd = centres.map((nom) => ({
     // TODO(url): streetAddress et postalCode du centre de ${nom}
   },
   // TODO(url): coordonnees GPS (geo.latitude / geo.longitude) du centre de ${nom}
-  ...(SITE_URL ? { url: SITE_URL + '#centres' } : {}),
+  ...(SITE_URL ? { url: SITE_URL + '#centres' } : {}),
 }));
 ---
 <section class="section" id="centres">
@@ -34,15 +34,15 @@ const centresJsonLd = centres.map((nom) => ({
     <div class="centres">
       <article class="centre">
         <div class="centre-photo"><Picture src={photoA} formats={['avif', 'webp']} widths={[400, 760]} sizes={centrePhotoSizes} alt="Centre de Pissy" loading="lazy" /><b>Pissy</b></div>
-        <div class="centre-body"><h3>Pissy</h3><p>Notre centre historique, au coeur d'un quartier dense, avec l'offre la plus complète : primaire et secondaire, du CP1 à la Terminale.</p><!-- TODO(url): lien Google Maps du centre de Pissy --><a class="centre-link" href="#contact">Nous rendre visite</a></div>
+        <div class="centre-body"><h3>Pissy</h3><p>Notre centre historique, au coeur d’un quartier dense, avec l’offre la plus complète : primaire et secondaire, du CP1 à la Terminale.</p><!-- TODO(url): lien Google Maps du centre de Pissy --><a class="centre-link" href="#contact">Nous rendre visite</a></div>
       </article>
       <article class="centre">
         <div class="centre-photo"><Picture src={photoB} formats={['avif', 'webp']} widths={[400, 760]} sizes={centrePhotoSizes} alt="Centre de Tampouy" loading="lazy" /><b>Tampouy</b></div>
-        <div class="centre-body"><h3>Tampouy</h3><p>Un centre facilement accessible depuis le nord de la ville, avec des séances en fin d'après-midi et le samedi.</p><!-- TODO(url): lien Google Maps du centre de Tampouy --><a class="centre-link" href="#contact">Nous rendre visite</a></div>
+        <div class="centre-body"><h3>Tampouy</h3><p>Un centre facilement accessible depuis le nord de la ville, avec des séances en fin d’après-midi et le samedi.</p><!-- TODO(url): lien Google Maps du centre de Tampouy --><a class="centre-link" href="#contact">Nous rendre visite</a></div>
       </article>
       <article class="centre">
         <div class="centre-photo"><Picture src={photoC} formats={['avif', 'webp']} widths={[400, 760]} sizes={centrePhotoSizes} alt="Centre de Saaba" loading="lazy" /><b>Saaba</b></div>
-        <div class="centre-body"><h3>Saaba</h3><p>À l'est de Ouagadougou, un cadre calme qui accueille surtout les élèves du primaire et du premier cycle du secondaire.</p><!-- TODO(url): lien Google Maps du centre de Saaba --><a class="centre-link" href="#contact">Nous rendre visite</a></div>
+        <div class="centre-body"><h3>Saaba</h3><p>À l’est de Ouagadougou, un cadre calme qui accueille surtout les élèves du primaire et du premier cycle du secondaire.</p><!-- TODO(url): lien Google Maps du centre de Saaba --><a class="centre-link" href="#contact">Nous rendre visite</a></div>
       </article>
       <article class="centre">
         <div class="centre-photo"><Picture src={photoB} formats={['avif', 'webp']} widths={[400, 760]} sizes={centrePhotoSizes} alt="Centre du SIAO" loading="lazy" /><b>SIAO</b></div>

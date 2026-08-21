@@ -20,7 +20,7 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 
     <span class="eyebrow">Actualités et conseils</span>
     <h1 class="h2">Nos articles</h1>
     <p class="lead">Les actualités de Hakili Lab et des conseils pratiques pour accompagner votre enfant.</p>
-    {posts.length > 0 ? (
+    {posts.length > 0 ? (
       <div class="posts">
         {posts.map((post) => (
           <a class="post" href={`/blog/${post.id}`}>
@@ -34,7 +34,7 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 
               <span class="post-date">{dateFormatter.format(post.data.date)}</span>
               <h3>{post.data.titre}</h3>
               <p set:html={post.data.description} />
-              <span class="post-link">Lire l'article</span>
+              <span class="post-link">Lire l’article</span>
             </div>
           </a>
         ))}

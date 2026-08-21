@@ -19,7 +19,7 @@ const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
         <label class="field"><span>Téléphone</span><input type="tel" name="telephone" placeholder="70 00 00 00"></label>
       </div>
       <div class="form-row">
-        <label class="field"><span>Classe de l'enfant</span>
+        <label class="field"><span>Classe de l’enfant</span>
           <select name="classe">
             <optgroup label="Primaire"><option>CP1</option><option>CP2</option><option>CE1</option><option>CE2</option><option>CM1</option><option>CM2</option></optgroup>
             <optgroup label="Secondaire"><option>6e</option><option>5e</option><option>4e</option><option>3e</option><option>2nde</option><option>1re</option><option>Terminale</option></optgroup>
@@ -30,16 +30,16 @@ const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
       <label class="field"><span>Votre demande concerne</span>
         <select name="objet">
           <optgroup label="Cours">
-            <option>Des cours d'appui</option>
+            <option>Des cours d’appui</option>
             <option>Des cours de remédiation en mathématiques</option>
-            <option>Des cours d'anglais (6e et 5e)</option>
+            <option>Des cours d’anglais (6e et 5e)</option>
             <option>Le Camp Vacances</option>
-            <option>La préparation d'un examen</option>
+            <option>La préparation d’un examen</option>
           </optgroup>
           <optgroup label="Nos productions">
             <option>Les manuels de la Collection Hakili Lab</option>
-            <option>L'application Amira</option>
-            <option>L'application de diagnostic et de remédiation</option>
+            <option>L’application Amira</option>
+            <option>L’application de diagnostic et de remédiation</option>
           </optgroup>
           <option>Autre</option>
         </select>
@@ -48,7 +48,7 @@ const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
       <label class="form-honeypot" aria-hidden="true">Ne pas remplir<input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off"></label>
       <input type="hidden" name="access_key" value={web3formsKey}>
-      <input type="hidden" name="subject" value="Nouvelle demande d'inscription - Hakili Lab">
+      <input type="hidden" name="subject" value="Nouvelle demande d’inscription - Hakili Lab">
       <input type="hidden" name="from_name" value="Formulaire du site Hakili Lab">
 
       <div class="form-actions">

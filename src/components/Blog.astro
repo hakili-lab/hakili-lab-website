@@ -25,7 +25,7 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 
               <span class="post-date">{dateFormatter.format(post.data.date)}</span>
               <h3>{post.data.titre}</h3>
               <p set:html={post.data.description} />
-              <span class="post-link">Lire l'article</span>
+              <span class="post-link">Lire l’article</span>
             </div>
           </a>
         ))}
