@@ -1,11 +1,11 @@
-.brochure{background:linear-gradient(135deg,var(--green) 0%,#2F7A2C 100%);color:#fff;border-radius:var(--r);padding:44px;display:grid;grid-template-columns:1.15fr 1fr;gap:44px;align-items:center}
+.brochure{background:linear-gradient(135deg,var(--green) 0%,#1E5A1B 100%);color:#fff;border-radius:var(--r);padding:44px;display:grid;grid-template-columns:1.15fr 1fr;gap:44px;align-items:center}
 .brochure h2{font-size:clamp(25px,2.8vw,33px);font-weight:700}
-.brochure p{color:rgba(255,255,255,.86);margin-top:12px;max-width:46ch}
+.brochure p{color:#fff;margin-top:12px;max-width:46ch}
 .brochure-form{display:flex;gap:10px;flex-wrap:wrap}
 .brochure-form input{flex:1;min-width:210px;padding:14px 16px;border:none;border-radius:999px;font-family:inherit;font-size:15.5px}
 .brochure-form .btn{background:#fff;color:var(--green)}
 .brochure-form .btn:hover{background:var(--ink);color:#fff}
-.brochure-note{display:block;margin-top:12px;font-size:13px;color:rgba(255,255,255,.75)}
+.brochure-note{display:block;margin-top:12px;font-size:13px;color:#fff}
 .brochure .form-honeypot{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 .brochure .form-status{margin-top:12px;font-size:14px;font-weight:600}
 .brochure .form-status.is-sending{color:rgba(255,255,255,.86);font-weight:500}
