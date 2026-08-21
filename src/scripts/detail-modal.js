@@ -36,7 +36,16 @@ document.getElementById('modalClose').addEventListener('click',closeDetail);
 modal.addEventListener('click',function(e){
   if(e.target===modal||e.target.getAttribute('data-close')) closeDetail();
 });
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('is-open')) closeDetail()});
+document.addEventListener('keydown',function(e){
+  if(!modal.classList.contains('is-open')) return;
+  if(e.key==='Escape'){ closeDetail(); return; }
+  if(e.key!=='Tab') return;
+  var focusables=[].filter.call(modal.querySelectorAll('a,button'),function(el){return el.offsetParent!==null});
+  if(!focusables.length) return;
+  var first=focusables[0], last=focusables[focusables.length-1];
+  if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+});
 
 (function(){
   var items=[];

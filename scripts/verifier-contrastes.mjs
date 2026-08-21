@@ -97,6 +97,7 @@ const cases = [
   ['Bloc "chiffres cles" (.stats) : nombre blanc / degrade bleu->bleu profond', T.white, T.blueDeep, 44, true, 'text'],
   ['Bloc "chiffres cles" (.stats) : libelle blanc 82% / degrade bleu->bleu profond', blend(T.white, 0.82, T.blueDeep), T.blueDeep, 14.5, false, 'text'],
   ['Lien "Nous rendre visite" unifie en bleu / fond blanc', T.blue, T.white, 14.5, false, 'text'],
+  ['Lien d\'evitement ".skip-link" (visible au focus) blanc / fond bleu', T.white, T.blue, 15, true, 'text'],
 ];
 
 const rows = cases.map(([label, fg, bg, size, bold, kind]) => {
