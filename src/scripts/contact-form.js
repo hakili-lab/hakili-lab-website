@@ -39,7 +39,7 @@ if (form) {
     if (objet) lines.push('Demande : ' + objet);
     if (message) { lines.push(''); lines.push(message); }
 
-    var url = 'https://wa.me/22658795050?text=' + encodeURIComponent(lines.join('\n'));
+    var url = 'https://wa.me/22652932598?text=' + encodeURIComponent(lines.join('\n'));
     window.open(url, '_blank', 'noopener');
   });
 
