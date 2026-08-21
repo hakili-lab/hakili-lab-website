@@ -1,5 +1,8 @@
 # build output
 dist/
+
+# captures d'ecran de verification (scripts/verifier-pages.mjs --shots=)
+captures/
 # generated types
 .astro/
 

@@ -418,4 +418,21 @@ Pour publier la page d'un centre : ouvrez `src/content/centres/<slug>.md`, rempl
 
 Le nom du fichier associe déjà le slug à chaque centre : `pissy.md`, `tampouy.md`, `saaba.md`, `siao.md`, `nagrin.md`.
 
-*(Suite au prochain commit : étape 4, `/services` et les quatre formules.)*
+**Étape 4 — `/services` et les quatre formules**
+
+- `/services` : reprend "Nos matières" (4 cartes, contenu inchangé) et "Nos formules d'accompagnement" (6 cartes). Les 4 formules promues (Cours d'appui, Remédiation, Camp Vacances, Préparation aux examens) sont désormais de vrais liens `<a class="card">` vers leur page dédiée — un lien natif, pas un `role="button"` JavaScript : plus simple et nativement accessible au clavier, sans script. "Test de positionnement" renvoie vers `/methode` (où elle emménagera à l'étape 6). "Suivi des parents" n'a pas de page dédiée et garde son comportement actuel (fiche détail en fenêtre modale).
+- `/services/<slug>` (4 pages) : texte complet (le corps Markdown, qui inclut désormais la description de l'outil "Diagnostic et remédiation" fusionnée dans la page remediation), "Pour qui" / "Comment cela se passe", les faits réels uniquement (filtrés avec `isPlaceholder`), JSON-LD `Course`.
+- Réutilisation étendue de `detail-modal.js` plutôt que duplication : les 4 cartes "matières" et "Suivi des parents" sur `/services` déclenchent la même fiche détail que sur l'accueil (même contenu réel, `details.js`, pas de code dupliqué). Deux ajustements pour que ça fonctionne sans régression :
+  - le script acceptait uniquement des titres `<h3>` (convention de l'accueil) ; il accepte maintenant `<h2>` aussi, nécessaire ici puisque chaque carte est un sous-titre direct du H1 de la page (hiérarchie correcte, pas de saut de niveau) ;
+  - le script exclut désormais les cartes déjà transformées en vrai lien (`<a>`) ou déjà pourvues de leur propre `.card-more` (le cas de "Test de positionnement") : sans cette exclusion, un `<button>` se serait injecté à l'intérieur d'un `<a>` déjà existant — le même bug de contrôles imbriqués corrigé à l'étape 3, réapparu sous une autre forme.
+- Petite correction de présentation, repérée en relisant la page rendue : le résumé court (utilisé comme accroche sur `/services` et comme méta-description) et le début du texte long partagent presque la même phrase d'origine (l'un vient de la carte courte du composant `Services.astro`, l'autre de la fiche détail `details.js` — les deux existaient déjà séparément sur le site, jamais affichés ensemble). Sur la page dédiée, les deux se retrouvaient empilés et se répétaient. Retiré le résumé court de la page individuelle (il reste utilisé pour la carte de liste et la méta-description) plutôt que de réécrire l'un des deux textes.
+
+### Vérification (étape 4)
+
+- **9 routes construites, 0 violation axe-core** (les 4 précédentes + `/services` et ses 4 pages).
+- `scripts/verifier-contrastes.mjs` : 33/33.
+- Testé avec Playwright (pas seulement lu dans le code) : la carte "Physique-chimie" ouvre bien la fiche détail sur `/services` ; la carte-lien "Cours d'appui" ne contient aucun bouton injecté (0, vérifié).
+- Liens morts restants : uniquement vers `/methode`, `/inscription`, `/contact` — les trois pages suivantes du plan, attendu à ce stade.
+- Captures dans `captures/` (non versionnées).
+
+*(Pause ici pour la vérification visuelle des services, comme convenu. Suite : étape 5, `/manuels` et `/amira`.)*

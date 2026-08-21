@@ -1,0 +1,79 @@
+---
+import { getCollection, render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { isPlaceholder } from '../../lib/placeholders.js';
+import { SITE_URL } from '../../data/site.js';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services', ({ data }) => data.pretPourPublication);
+  return services.map((service) => ({
+    params: { slug: service.data.slug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const d = service.data;
+const { Content } = await render(service);
+const realFacts = d.facts.filter((f) => !isPlaceholder(f.valeur));
+
+const courseJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Course',
+  name: d.nom,
+  description: d.resumeCourt,
+  url: `${SITE_URL}/services/${d.slug}`,
+  provider: {
+    '@type': 'EducationalOrganization',
+    name: 'Hakili Lab',
+    sameAs: SITE_URL,
+  },
+};
+---
+<SiteLayout
+  title={`${d.nom} — Hakili Lab`}
+  description={d.resumeCourt}
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Services', href: '/services' }, { label: d.nom }]}
+  jsonLd={courseJsonLd}
+>
+<article class="section">
+  <div class="wrap article">
+    <a class="post-link" href="/services">&larr; Tous les services</a>
+    <span class="eyebrow">Services</span>
+    <h1 class="h2">{d.nom}</h1>
+
+    <div class="article-body"><Content /></div>
+
+    <div class="modal-cols">
+      <div>
+        <h2>Pour qui</h2>
+        <ul>
+          {d.publicVise.map((x) => <li>{x}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Comment cela se passe</h2>
+        <ul>
+          {d.deroule.map((x) => <li>{x}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    {realFacts.length > 0 && (
+      <div class="modal-facts" style="margin-top:30px">
+        {realFacts.map((f) => (
+          <div class="fact">
+            <span>{f.label}</span>
+            <b>{f.valeur}</b>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <div class="hero-actions" style="margin-top:30px">
+      <a class="btn btn-green" href="/inscription">{d.cta}</a>
+      <a class="btn btn-outline" href="/contact">Poser une question</a>
+    </div>
+  </div>
+</article>
+</SiteLayout>

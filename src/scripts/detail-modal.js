@@ -55,9 +55,20 @@ document.addEventListener('keydown',function(e){
 
 (function(){
   var items=[];
-  [].forEach.call(document.querySelectorAll('#services .card'),function(el){items.push([el,el.querySelector('h3')])});
-  [].forEach.call(document.querySelectorAll('#productions .book'),function(el){items.push([el,el.querySelector('h3')])});
-  [].forEach.call(document.querySelectorAll('#productions .app'),function(el){items.push([el,el.querySelector('h3')])});
+  // Les cartes deja transformees en vrai lien vers une page dediee
+  // (ex. les 4 formules promues sur /services) sont exclues : y ajouter un
+  // <button> imbriquerait un second controle interactif dans le <a>.
+  // h2 (pages dediees) et h3 (accueil) sont acceptes, seule la hierarchie
+  // de titres correcte differe d'une page a l'autre.
+  function collect(selector){
+    [].forEach.call(document.querySelectorAll(selector),function(el){
+      if(el.tagName==='A'||el.querySelector('.card-more')) return;
+      items.push([el,el.querySelector('h2, h3')]);
+    });
+  }
+  collect('#services .card');
+  collect('#productions .book');
+  collect('#productions .app');
 
   items.forEach(function(pair){
     var el=pair[0],h=pair[1]; if(!h) return;
