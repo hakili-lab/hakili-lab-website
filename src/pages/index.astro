@@ -1,4 +1,5 @@
 ---
+import { SECTIONS_PRETES } from '../data/sections.js';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TopBar from '../components/TopBar.astro';
 import Header from '../components/Header.astro';
@@ -41,7 +42,7 @@ import DetailModal from '../components/DetailModal.astro';
 
 <Productions />
 
-<Testimonials />
+{SECTIONS_PRETES.temoignages && <Testimonials />}
 
 <Brochure />
 
@@ -51,7 +52,7 @@ import DetailModal from '../components/DetailModal.astro';
 
 <Faq />
 
-<Partners />
+{SECTIONS_PRETES.partenaires && <Partners />}
 
 <Contact />
 

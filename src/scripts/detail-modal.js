@@ -18,8 +18,7 @@ function openDetail(key,title){
   html+='</ul></div></div><div class="modal-facts">';
   d.f.forEach(function(x){html+='<div class="fact"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'});
   html+='</div><div class="modal-actions"><a class="btn btn-green" href="#contact" data-close="1">'+d.cta+'</a>'
-    +'<a class="btn btn-outline" href="#contact" data-close="1">Poser une question</a></div>'
-    +'<p class="modal-note">Contenu d\'exemple. Cette fiche préfigure la page dédiée du site définitif : texte de présentation, public visé, déroulement, informations pratiques et bouton d\'action.</p>';
+    +'<a class="btn btn-outline" href="#contact" data-close="1">Poser une question</a></div>';
   modalBody.innerHTML=html;
   lastFocus=document.activeElement;
   modal.classList.add('is-open');
