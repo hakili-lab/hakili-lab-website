@@ -1,33 +1,37 @@
 <div class="finder">
   <div class="wrap">
     <div class="finder-card">
-      <div class="finder-title">Où en est votre enfant ?</div>
+      <h2 class="finder-title">Où en est votre enfant ?</h2>
       <p class="finder-sub">Choisissez son cycle, puis sa classe.</p>
 
-      <div class="cycles" id="cycles">
-        <button class="cycle is-active" data-c="prim">Primaire</button>
-        <button class="cycle" data-c="sec">Secondaire</button>
+      <div class="cycles" id="cycles" role="tablist" aria-label="Cycle scolaire">
+        <button class="cycle is-active" data-c="prim" role="tab" id="tab-cycle-prim" aria-selected="true" aria-controls="panel-prim" tabindex="0">Primaire</button>
+        <button class="cycle" data-c="sec" role="tab" id="tab-cycle-sec" aria-selected="false" aria-controls="panel-sec" tabindex="-1">Secondaire</button>
       </div>
 
-      <div class="classes is-shown" data-c="prim">
-        <button class="klass is-active" data-k="cp1">CP1</button>
-        <button class="klass" data-k="cp2">CP2</button>
-        <button class="klass" data-k="ce1">CE1</button>
-        <button class="klass" data-k="ce2">CE2</button>
-        <button class="klass" data-k="cm1">CM1</button>
-        <button class="klass" data-k="cm2">CM2</button>
+      <div class="classes-panel" id="panel-prim" role="tabpanel" aria-labelledby="tab-cycle-prim">
+        <div class="classes" data-c="prim" role="tablist" aria-label="Classe du primaire">
+          <button class="klass is-active" data-k="cp1" role="tab" id="tab-klass-cp1" aria-selected="true" aria-controls="level-panel" tabindex="0">CP1</button>
+          <button class="klass" data-k="cp2" role="tab" id="tab-klass-cp2" aria-selected="false" aria-controls="level-panel" tabindex="-1">CP2</button>
+          <button class="klass" data-k="ce1" role="tab" id="tab-klass-ce1" aria-selected="false" aria-controls="level-panel" tabindex="-1">CE1</button>
+          <button class="klass" data-k="ce2" role="tab" id="tab-klass-ce2" aria-selected="false" aria-controls="level-panel" tabindex="-1">CE2</button>
+          <button class="klass" data-k="cm1" role="tab" id="tab-klass-cm1" aria-selected="false" aria-controls="level-panel" tabindex="-1">CM1</button>
+          <button class="klass" data-k="cm2" role="tab" id="tab-klass-cm2" aria-selected="false" aria-controls="level-panel" tabindex="-1">CM2</button>
+        </div>
       </div>
-      <div class="classes" data-c="sec">
-        <button class="klass is-active" data-k="s6">6<sup>e</sup></button>
-        <button class="klass" data-k="s5">5<sup>e</sup></button>
-        <button class="klass" data-k="s4">4<sup>e</sup></button>
-        <button class="klass" data-k="s3">3<sup>e</sup></button>
-        <button class="klass" data-k="s2">2<sup>nde</sup></button>
-        <button class="klass" data-k="s1">1<sup>re</sup></button>
-        <button class="klass" data-k="st">Terminale</button>
+      <div class="classes-panel" id="panel-sec" role="tabpanel" aria-labelledby="tab-cycle-sec" hidden>
+        <div class="classes" data-c="sec" role="tablist" aria-label="Classe du secondaire">
+          <button class="klass is-active" data-k="s6" role="tab" id="tab-klass-s6" aria-selected="true" aria-controls="level-panel" tabindex="0">6<sup>e</sup></button>
+          <button class="klass" data-k="s5" role="tab" id="tab-klass-s5" aria-selected="false" aria-controls="level-panel" tabindex="-1">5<sup>e</sup></button>
+          <button class="klass" data-k="s4" role="tab" id="tab-klass-s4" aria-selected="false" aria-controls="level-panel" tabindex="-1">4<sup>e</sup></button>
+          <button class="klass" data-k="s3" role="tab" id="tab-klass-s3" aria-selected="false" aria-controls="level-panel" tabindex="-1">3<sup>e</sup></button>
+          <button class="klass" data-k="s2" role="tab" id="tab-klass-s2" aria-selected="false" aria-controls="level-panel" tabindex="-1">2<sup>nde</sup></button>
+          <button class="klass" data-k="s1" role="tab" id="tab-klass-s1" aria-selected="false" aria-controls="level-panel" tabindex="-1">1<sup>re</sup></button>
+          <button class="klass" data-k="st" role="tab" id="tab-klass-st" aria-selected="false" aria-controls="level-panel" tabindex="-1">Terminale</button>
+        </div>
       </div>
 
-      <div class="level-panel">
+      <div class="level-panel" id="level-panel" role="tabpanel" aria-labelledby="tab-klass-cp1">
         <div>
           <h3 id="lvTitle">CP1</h3>
           <p id="lvDesc">Premiers apprentissages du nombre et du calcul, dans un cadre rassurant et très progressif.</p>

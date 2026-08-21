@@ -11,9 +11,9 @@ var modal=document.getElementById('modal'),
 function openDetail(key,title){
   var d=detail[key]; if(!d) return;
   var html='<span class="modal-kicker">'+d.k+'</span><h2 id="modalTitle">'+title+'</h2>'
-    +'<p class="modal-intro">'+d.p+'</p><div class="modal-cols"><div><h4>Pour qui</h4><ul>';
+    +'<p class="modal-intro">'+d.p+'</p><div class="modal-cols"><div><h3>Pour qui</h3><ul>';
   d.who.forEach(function(x){html+='<li>'+x+'</li>'});
-  html+='</ul></div><div><h4>Comment cela se passe</h4><ul>';
+  html+='</ul></div><div><h3>Comment cela se passe</h3><ul>';
   d.how.forEach(function(x){html+='<li>'+x+'</li>'});
   html+='</ul></div></div><div class="modal-facts">';
   d.f.forEach(function(x){html+='<div class="fact"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'});
@@ -42,7 +42,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.class
 (function(){
   var items=[];
   [].forEach.call(document.querySelectorAll('#services .card'),function(el){items.push([el,el.querySelector('h3')])});
-  [].forEach.call(document.querySelectorAll('#productions .book'),function(el){items.push([el,el.querySelector('h4')])});
+  [].forEach.call(document.querySelectorAll('#productions .book'),function(el){items.push([el,el.querySelector('h3')])});
   [].forEach.call(document.querySelectorAll('#productions .app'),function(el){items.push([el,el.querySelector('h3')])});
 
   items.forEach(function(pair){

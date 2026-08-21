@@ -10,7 +10,7 @@
 .modal-panel h2{font-size:clamp(26px,3vw,34px);font-weight:700;color:var(--blue);margin:10px 0 14px}
 .modal-intro{color:var(--slate);font-size:17px}
 .modal-cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:30px}
-.modal-cols h4{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);margin-bottom:14px}
+.modal-cols h3{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--slate);margin-bottom:14px}
 .modal-cols ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
 .modal-cols li{position:relative;padding-left:22px;font-size:15.5px}
 .modal-cols li::before{content:"";position:absolute;left:0;top:9px;width:8px;height:8px;background:var(--lime)}

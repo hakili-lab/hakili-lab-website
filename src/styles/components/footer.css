@@ -1,6 +1,6 @@
 .footer{background:#0B1B2E;color:rgba(255,255,255,.72);padding:64px 0 30px;font-size:15px}
 .footer-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr 1fr;gap:36px}
-.footer h4{font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;color:#fff;margin-bottom:18px}
+.footer h3{font-size:13.5px;letter-spacing:.12em;text-transform:uppercase;color:#fff;margin-bottom:18px}
 .footer ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
 .footer a:hover{color:var(--lime)}
 .footer-logo{background:#fff;border-radius:10px;padding:10px 14px;display:inline-block;margin-bottom:18px}
