@@ -1,0 +1,42 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TopBar from '../components/TopBar.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import DetailModal from '../components/DetailModal.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { breadcrumbJsonLd } from '../lib/breadcrumbs.js';
+
+interface Props {
+  title?: string;
+  description?: string;
+  breadcrumbs?: { label: string; href?: string }[];
+  jsonLd?: object | object[];
+}
+
+const { title, description, breadcrumbs, jsonLd } = Astro.props;
+
+const extraJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const allJsonLd = breadcrumbs && breadcrumbs.length > 1
+  ? [...extraJsonLd, breadcrumbJsonLd(breadcrumbs)]
+  : extraJsonLd;
+---
+<BaseLayout title={title} description={description} jsonLd={allJsonLd}>
+<TopBar />
+
+<Header />
+
+<main id="contenu">
+  {breadcrumbs && breadcrumbs.length > 1 && <Breadcrumbs items={breadcrumbs} />}
+  <slot />
+</main>
+
+<Footer />
+
+<DetailModal />
+
+<script>
+  import '../scripts/nav.js';
+  import '../scripts/detail-modal.js';
+</script>
+</BaseLayout>

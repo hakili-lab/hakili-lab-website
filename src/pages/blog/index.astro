@@ -1,26 +1,23 @@
 ---
 import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import TopBar from '../../components/TopBar.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
 
 const allPosts = await getCollection('blog', ({ data }) => !data.brouillon);
 const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
-<BaseLayout title="Nos articles — Hakili Lab">
-<TopBar />
-
-<Header />
-
+<SiteLayout
+  title="Nos articles — Hakili Lab"
+  description="Les actualités de Hakili Lab et des conseils pratiques pour accompagner votre enfant en mathématiques et physique-chimie."
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Blog' }]}
+>
 <section class="section" id="blog-index">
   <div class="wrap">
     <span class="eyebrow">Actualités et conseils</span>
     <h1 class="h2">Nos articles</h1>
     <p class="lead">Les actualités de Hakili Lab et des conseils pratiques pour accompagner votre enfant.</p>
-    {posts.length > 0 ? (
+    {posts.length > 0 ? (
       <div class="posts">
         {posts.map((post) => (
           <a class="post" href={`/blog/${post.id}`}>
@@ -34,7 +31,7 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 
               <span class="post-date">{dateFormatter.format(post.data.date)}</span>
               <h3>{post.data.titre}</h3>
               <p set:html={post.data.description} />
-              <span class="post-link">Lire l’article</span>
+              <span class="post-link">Lire l'article</span>
             </div>
           </a>
         ))}
@@ -44,10 +41,4 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 
     )}
   </div>
 </section>
-
-<Footer />
-
-<script>
-  import '../../scripts/nav.js';
-</script>
-</BaseLayout>
+</SiteLayout>

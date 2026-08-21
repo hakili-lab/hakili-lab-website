@@ -5,11 +5,32 @@ import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from '../data/site.js';
 interface Props {
   title?: string;
   description?: string;
+  jsonLd?: object | object[];
 }
 
-const { title = SITE_TITLE, description = SITE_DESCRIPTION } = Astro.props;
-const canonicalPath = Astro.url.pathname;
-const canonicalUrl = SITE_URL ? SITE_URL + canonicalPath : canonicalPath;
+const { title = SITE_TITLE, description = SITE_DESCRIPTION, jsonLd } = Astro.props;
+const canonicalUrl = SITE_URL + Astro.url.pathname;
+
+const organizationJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'EducationalOrganization',
+  name: 'Hakili Lab',
+  description: SITE_DESCRIPTION,
+  url: SITE_URL,
+  email: 'info@hakililab.com',
+  telephone: ['+22657919191', '+22658795050'],
+  areaServed: {
+    '@type': 'City',
+    name: 'Ouagadougou',
+  },
+  sameAs: [
+    'https://web.facebook.com/hakililab',
+    'https://www.tiktok.com/@hakililab',
+  ],
+};
+
+const extraJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const jsonLdBlocks = [organizationJsonLd, ...extraJsonLd];
 ---
 <!DOCTYPE html>
 <html lang="fr">
@@ -18,7 +39,7 @@ const canonicalUrl = SITE_URL ? SITE_URL + canonicalPath : canonicalPath;
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{title}</title>
 <meta name="description" content={description}>
-<!-- TODO(url): domaine de production a renseigner dans src/data/site.js (SITE_URL) ; canonical/OG/JSON-LD se completent automatiquement une fois cette valeur remplie -->
+<!-- TODO(url): domaine de production a renseigner dans src/data/site.js (SITE_URL) ET dans astro.config.mjs (site) ; canonical/OG/JSON-LD/sitemap se completent automatiquement une fois cette valeur remplacee -->
 <link rel="canonical" href={canonicalUrl}>
 
 <meta property="og:type" content="website">
@@ -38,26 +59,12 @@ const canonicalUrl = SITE_URL ? SITE_URL + canonicalPath : canonicalPath;
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
-<script type="application/ld+json" is:inline set:html={JSON.stringify({
-  '@context': 'https://schema.org',
-  '@type': 'EducationalOrganization',
-  name: 'Hakili Lab',
-  description: SITE_DESCRIPTION,
-  ...(SITE_URL ? { url: SITE_URL } : {}),
-  email: 'info@hakililab.com',
-  telephone: ['+22657919191', '+22658795050'],
-  areaServed: {
-    '@type': 'City',
-    name: 'Ouagadougou',
-  },
-  sameAs: [
-    'https://web.facebook.com/hakililab',
-    'https://www.tiktok.com/@hakililab',
-  ],
-})} />
+{jsonLdBlocks.map((block) => (
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(block)} />
+))}
 </head>
 <body>
-<a class="skip-link" href="#accueil">Aller au contenu</a>
+<a class="skip-link" href="#contenu">Aller au contenu</a>
 <slot />
 </body>
 </html>

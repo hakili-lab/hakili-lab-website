@@ -4,6 +4,7 @@
 @import "./buttons.css";
 @import "./components/topbar.css";
 @import "./components/header.css";
+@import "./components/breadcrumbs.css";
 @import "./components/hero.css";
 @import "./components/finder.css";
 @import "./components/stats.css";

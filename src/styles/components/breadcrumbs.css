@@ -1,0 +1,7 @@
+.breadcrumbs{padding:18px 0 0}
+.breadcrumbs ol{list-style:none;display:flex;flex-wrap:wrap;gap:8px;padding:0;margin:0;max-width:var(--maxw);margin:0 auto;padding-left:28px;padding-right:28px;font-size:13.5px;color:var(--slate)}
+.breadcrumbs li{display:flex;align-items:center;gap:8px}
+.breadcrumbs li:not(:last-child)::after{content:"/";color:var(--line)}
+.breadcrumbs a{color:var(--slate);text-decoration:underline;text-underline-offset:2px}
+.breadcrumbs a:hover{color:var(--blue)}
+.breadcrumbs span[aria-current="page"]{color:var(--ink);font-weight:600}

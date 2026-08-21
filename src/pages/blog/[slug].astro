@@ -1,10 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import { Picture } from 'astro:assets';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import TopBar from '../../components/TopBar.astro';
-import Header from '../../components/Header.astro';
-import Footer from '../../components/Footer.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog', ({ data }) => !data.brouillon);
@@ -19,11 +16,11 @@ const { Content } = await render(post);
 const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 const plainDescription = post.data.description.replace(/<[^>]+>/g, '');
 ---
-<BaseLayout title={`${post.data.titre} — Hakili Lab`} description={plainDescription}>
-<TopBar />
-
-<Header />
-
+<SiteLayout
+  title={`${post.data.titre} — Hakili Lab`}
+  description={plainDescription}
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Blog', href: '/blog' }, { label: post.data.titre }]}
+>
 <article class="section">
   <div class="wrap article">
     <a class="post-link" href="/blog">&larr; Tous les articles</a>
@@ -45,10 +42,4 @@ const plainDescription = post.data.description.replace(/<[^>]+>/g, '');
     </div>
   </div>
 </article>
-
-<Footer />
-
-<script>
-  import '../../scripts/nav.js';
-</script>
-</BaseLayout>
+</SiteLayout>
