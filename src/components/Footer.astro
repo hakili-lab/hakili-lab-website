@@ -1,11 +1,12 @@
 ---
+import { Image } from 'astro:assets';
 import logo from '../assets/logo-hakili-lab.png';
 ---
 <footer class="footer">
   <div class="wrap">
     <div class="footer-grid">
       <div>
-        <span class="footer-logo"><img src={logo.src} alt="Hakili Lab" width="45" height="42" loading="lazy"></span>
+        <span class="footer-logo"><Image src={logo} alt="Hakili Lab" width={90} height={84} format="webp" loading="lazy" /></span>
         <div class="footer-claim">CENTRE D'EXCELLENCE EN MATHEMATIQUES</div>
         <p>Tutorat en mathématiques et en physique-chimie, du primaire au secondaire. Ouagadougou, Burkina Faso.</p>
       </div>
