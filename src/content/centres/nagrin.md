@@ -13,5 +13,5 @@ horaires: "Du lundi au samedi, 8h à 18h"
 # TODO(url): lien Google Maps de ce centre
 # googleMapsUrl: ""
 image: "../../assets/photos/846A26820.jpg"
-pretPourPublication: false
+pretPourPublication: true
 ---

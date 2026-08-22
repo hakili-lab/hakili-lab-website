@@ -6,10 +6,6 @@ import { SITE_URL } from '../../data/site.js';
 import { isPlaceholder } from '../../lib/placeholders.js';
 
 export async function getStaticPaths() {
-  // Une fiche de centre sans adresse n'est pas pretPourPublication (voir
-  // content.config.ts) : elle n'a donc pas de page ici, pas d'entree dans le
-  // sitemap, et /centres l'affiche comme une carte sans lien plutot que de
-  // generer une page a moitie remplie.
   const centres = await getCollection('centres', ({ data }) => data.pretPourPublication);
   return centres.map((centre) => ({
     params: { slug: centre.data.slug },
@@ -79,6 +75,12 @@ const localBusinessJsonLd =
           </div>
         )}
       </div>
+
+      {!hasAdresse && (
+        <p class="steps-note" style="margin-top:20px">
+          Pour l’adresse exacte et l’itinéraire, appelez-nous : <a href="tel:+22657919191" style="text-decoration:underline">57 91 91 91</a> / <a href="tel:+22658795050" style="text-decoration:underline">58 79 50 50</a>, ou <a href="/contact" style="text-decoration:underline">contactez-nous</a>.
+        </p>
+      )}
 
       <div class="hero-actions" style="margin-top:30px">
         <a class="btn btn-primary" href="/inscription">Prendre rendez-vous dans ce centre</a>

@@ -61,12 +61,14 @@ const centres = defineCollection({
         nom: z.string().default(''),
         resume: z.string().default(''),
         horaires: z.string().default('Du lundi au samedi, 8h à 18h'),
-        // classesOuvertes/GPS/lien Maps restent optionnels et exemptes de la
-        // validation "requis si pret" : utiles s'ils existent, mais leur
-        // absence n'empeche pas la page d'etre utile (le gabarit masque
-        // simplement le bloc correspondant, jamais un libelle vide).
-        // adresse, elle, EST requise des que pretPourPublication est true :
-        // une fiche de centre sans adresse n'a pas de raison d'etre en ligne.
+        // classesOuvertes/adresse/GPS/lien Maps restent optionnels et
+        // exemptes de la validation "requis si pret" : la regle n'est pas
+        // "jamais de contenu manquant" mais "jamais de contenu d'attente".
+        // Une fiche qui dit ce qui est vrai et propose un moyen d'agir pour
+        // le reste (appeler pour l'adresse exacte) est legitime sans ces
+        // champs. Le gabarit masque simplement le bloc concerne (jamais un
+        // libelle a cote d'une valeur vide) et n'emet le JSON-LD
+        // LocalBusiness que si adresse ET GPS sont tous les deux reels.
         classesOuvertes: z.string().optional(),
         adresse: z.string().optional(),
         latitude: z.number().optional(),
@@ -75,7 +77,7 @@ const centres = defineCollection({
         image: image().optional(),
         pretPourPublication: z.boolean().default(false),
       })
-      .superRefine((data, ctx) => requireWhenReady(['slug', 'nom', 'resume', 'horaires', 'adresse'])(data, ctx)),
+      .superRefine((data, ctx) => requireWhenReady(['slug', 'nom', 'resume', 'horaires'])(data, ctx)),
 });
 
 const services = defineCollection({
