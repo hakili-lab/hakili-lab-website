@@ -584,3 +584,67 @@ Chaque page a sa propre méta-description rédigée à partir de son contenu ré
 - N'ouvrez pas `/blog` : la page existe mais est vide (aucun article publié) — pas d'entrée de menu y renvoie, donc un public ne la trouvera pas tout seul, inutile de la montrer.
 - Évitez de zoomer sur les photos : ce sont des photos de banque d'images (décor nord-américain), à remplacer — voir section 14.
 - Si quelqu'un clique sur les icônes « matières » de `/services` (Mathématiques, Physique-chimie…), une fenêtre s'ouvre : c'est volontaire et fonctionnel, mais n'a pas d'URL propre — ne le présentez pas comme une "page".
+
+---
+
+## 17. Logo du pied de page — corrigé
+
+**Le bug** : le logo fait 90×84 px à la source, mais `.footer-logo img{height:42px}` ne fixait que la hauteur, sans `width:auto` explicite ni `object-fit`. Résultat mesuré : 90×42 px affichés — la hauteur divisée par deux, l'image écrasée verticalement.
+
+**La correction** : `object-fit:contain`, `height:auto`, largeur explicite (`60px`, l'auto-hauteur se calcule alors sur le vrai ratio 90:84 → 56px), conteneur redimensionné en carré (`padding:14px` uniforme au lieu de `10px 14px` asymétrique) pour l'accueillir sans le comprimer.
+
+**Vérification systématique des autres occurrences** (mesuré `naturalWidth`/`naturalHeight` contre la taille rendue, avec Playwright) :
+
+| Emplacement | Taille naturelle | Taille rendue (avant) | Taille rendue (après) | Verdict |
+|---|---|---|---|---|
+| Logo, en-tête (`.brand img`) | 102×96 | 51×48 (déjà correct — `width:auto` était déjà présent) | 51×48 | Toujours correct |
+| Logo, pied de page (`.footer-logo img`) | 90×84 | **90×42 (écrasé)** | 60×56 | **Corrigé** |
+| Favicon (`.ico`) | 32×32 (carré) | — | — | Sans objet (icône carrée, pas de ratio à préserver) |
+| Favicon (`.svg`) | viewBox 128×128 (carré) | — | — | Sans objet |
+| Image de partage Open Graph | — | — | — | N'existe pas encore (`TODO(url)`, section 14) |
+
+**Contrôle ajouté en permanence** à `scripts/verifier-pages.mjs` : sur chaque route construite, toute `<img>` en `object-fit:fill` (la valeur par défaut quand `object-fit` n'est pas précisé — c'est la seule valeur qui étire réellement les pixels, contrairement à `cover`/`contain` qui recadrent ou letterboxent sans déformer) dont le ratio affiché s'écarte de plus de 2 % de son ratio naturel est signalée et fait échouer la vérification. Exécuté sur les 27 routes après correction : **0 image déformée**.
+
+## 18. Direction visuelle — inspiration isga.ma
+
+Quatre procédés repris, palette et structure inchangées comme demandé.
+
+### 18.1 En-tête allégé
+
+- Barre du haut : hauteur réduite (`padding:9px 0` → `6px 0`), corps de texte réduit (14px → 12,5px), contraste adouci (blanc opaque → 85 % pour la phrase, 70 % pour les coordonnées — toujours largement conforme, voir tableau de contraste). **Bug trouvé en le faisant** : `.topbar-contact{display:none}` sous 980px masquait déjà entièrement le téléphone sur mobile, à l'exact opposé de la consigne. Corrigé : sous 980px, seule la phrase d'annonce disparaît ; sous 680px, le tag et l'e-mail disparaissent aussi mais **le téléphone reste seul visible en permanence** (vérifié : `innerText` de `.topbar` sur un viewport 390px ne contient que les deux numéros).
+- En-tête réduit à logo + menu + un seul bouton (« Inscrire mon enfant ») : déjà le cas structurellement (un seul bouton existait déjà), vérifié en comptant les `.btn` du header.
+- Menu jamais caché derrière un hamburger au-dessus de 980px : déjà le cas (`.nav-toggle{display:none}` sauf en media query ≤980px) — vérifié, pas modifié.
+- « Nos centres » sorti du sous-menu « À propos » et promu en entrée directe du menu principal, comme demandé explicitement (« un parent doit voir Nos centres… sans cliquer »).
+
+### 18.2 Paire typographique
+
+Une troisième police, **Playfair Display, un seul poids (600), un seul style (italique)** — `ital,wght@1,600` uniquement, aucune graisse ni style supplémentaire chargés. Remplace le sur-titre `▪ NOTRE MÉTHODE` (capitales espacées + carré vert décoratif, répété 14 fois) par un sur-titre en serif italique, sans capitales, sans carré — `.eyebrow::before` (le carré) supprimé du CSS, pas seulement caché.
+
+**Poids mesuré** (Playwright, capture réseau, page d'accueil) : **22,6 Ko** pour le fichier woff2 de Playfair Display italique — sous les 30 Ko demandés. Un seul fichier chargé pour cette police (confirmé par la capture réseau), donc bien un seul poids/style, pas une police variable complète.
+
+### 18.3 Deux respirations pleine largeur, pas plus
+
+1. **Bande chiffre-clé** : fond bleu profond en dégradé, « 79+ » en très grand, avec la phrase « enseignants formés aux méthodes modernes, dans nos cinq centres à Ouagadougou » — les deux fragments existaient déjà séparément sur le site (le chiffre dans le sélecteur de niveau, la formulation « cinq centres à Ouagadougou » réutilisée telle quelle ailleurs).
+2. **Bande citation** : la photo déjà utilisée ailleurs sur le site (`846A2755.jpg`, pas une nouvelle image) en fond assombri (voile à 74 % d'opacité, vérifié en contraste pire cas), avec la citation exacte suggérée : *« L'échec en mathématiques n'est presque jamais une question de talent »* — texte réel d'`About.astro`, reproduit mot pour mot.
+
+Aucune troisième respiration ajoutée, comme demandé.
+
+### 18.4 Révélations au défilement
+
+Implémenté en `IntersectionObserver` pur (`src/scripts/scroll-reveal.js`), **aucune nouvelle dépendance de production** (vérifié : `package.json` inchangé, seul `@astrojs/sitemap` reste la dépendance ajoutée depuis le début du découpage). Fondu + translation de 12px, 400ms, une seule fois (l'élément est désobservé après son apparition), uniquement sur les titres `h2` de section et les grilles de cartes — jamais sur le hero ni sur un bouton (sélecteur volontairement limité à `.section h2, .cards-3, .cards-4, .centres, .books, .apps`).
+
+**Sécurité vérifiée à trois niveaux, empiriquement, pas seulement lue dans le code :**
+
+- **JavaScript désactivé** (`javaScriptEnabled:false` dans Playwright) : tous les titres et grilles restent à `opacity:1`. La classe qui déclenche l'état masqué (`reveal-ready`) n'est ajoutée que par ce script — sans lui, la règle CSS correspondante ne s'applique jamais.
+- **`prefers-reduced-motion:reduce`** : `reveal-ready` n'est jamais ajoutée (vérifié), aucun élément ne passe par un état masqué.
+- **Défilement réel d'un visiteur** : vérifié avec un vrai geste de défilement simulé (`scrollIntoViewIfNeeded`, puis confirmé avec `page.mouse.wheel`) — les éléments passent bien de masqué à visible en franchissant le seuil de la fenêtre.
+
+**Un vrai bug trouvé et corrigé pendant cette vérification** : une capture d'écran plein cadre (utilisée par `scripts/verifier-pages.mjs`) ne déclenche pas de vrais événements de défilement en mode headless — les sections situées hors du premier écran restaient donc à `opacity:0` sur mes propres captures, alors qu'un visiteur qui défile réellement les voit apparaître normalement (confirmé par le test de défilement simulé ci-dessus). Ce n'était pas un bug pour les visiteurs, mais ça rendait mes captures de vérification trompeuses. Deux corrections :
+1. `scripts/verifier-pages.mjs` simule désormais un vrai défilement (`page.mouse.wheel`, pas `window.scrollTo()` en `page.evaluate()` — la première méthode déclenche de vraies frames de rendu en mode headless, pas la seconde, vérifié empiriquement) avant chaque capture.
+2. `@media print` force `opacity:1` sur tout élément `.reveal`, par précaution : une mise en page pour impression ne défile pas non plus.
+
+### Vérification finale (build de production + Playwright)
+
+- **27 routes, 0 violation axe-core, 0 lien mort, 0 ancre orpheline, 0 image déformée.**
+- `scripts/verifier-contrastes.mjs` : **43/43** (8 nouvelles paires ajoutées pour le sur-titre serif, la barre du haut assouplie et les deux respirations — toutes vérifiées, aucune sous le seuil).
+- Captures avant/après : je n'ai pas de capture "avant" à l'identique (les changements ont été appliqués directement, sans capture de référence préalable) — le rapport initial de cette section documente l'état "avant" par la mesure exacte que vous m'avez donnée (90×42px) plutôt que par une image. Les captures "après", ordinateur et mobile, accueil et `/services/remediation`, sont dans `captures/` (non versionné, régénérable avec `npm run build && npm run preview && node scripts/verifier-pages.mjs --shots=captures`).

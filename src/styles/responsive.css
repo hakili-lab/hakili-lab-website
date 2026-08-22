@@ -10,7 +10,7 @@
   .mainnav .nav-cta{display:none}
   .nav-toggle{display:block}
   .brand-line{display:none}
-  .topbar-contact{display:none}
+  .topbar-sentence{display:none}
   .split,.contact-grid,.brochure{grid-template-columns:1fr;gap:36px}
   .cards-3,.posts,.quotes,.books,.cards-4{grid-template-columns:1fr 1fr}
   .steps{grid-template-columns:1fr 1fr}
@@ -22,6 +22,8 @@
   body{padding-bottom:74px}
 }
 @media (max-width:680px){
+  .topbar-tag,.topbar-email{display:none}
+  .topbar-contact{margin-left:0}
   .section{padding:64px 0}
   .hero{padding:66px 0 128px}
   .cards-3,.cards-4,.apps,.posts,.quotes,.books,.form-row,.centres,.level-panel,.steps{grid-template-columns:1fr}

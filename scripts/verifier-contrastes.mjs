@@ -98,6 +98,14 @@ const cases = [
   ['Bloc "chiffres cles" (.stats) : libelle blanc 82% / degrade bleu->bleu profond', blend(T.white, 0.82, T.blueDeep), T.blueDeep, 14.5, false, 'text'],
   ['Lien "Nous rendre visite" unifie en bleu / fond blanc', T.blue, T.white, 14.5, false, 'text'],
   ['Lien d\'evitement ".skip-link" (visible au focus) blanc / fond bleu', T.white, T.blue, 15, true, 'text'],
+  ['Sur-titre serif italique (.eyebrow, vert) / fond blanc', T.green, T.white, 19, false, 'text'],
+  ['Sur-titre serif italique (.eyebrow, vert) / fond nuage', T.green, T.cloud, 19, false, 'text'],
+  ['Sur-titre serif italique (.eyebrow-light, blanc opaque) / fond bleu (bloc contact)', T.white, T.blue, 19, false, 'text'],
+  ['Barre du haut : phrase 85% / fond bleu profond (corrige, avant blanc opaque)', blend(T.white, 0.85, T.blueDeep), T.blueDeep, 12.5, false, 'text'],
+  ['Barre du haut : telephone/e-mail 70% / fond bleu profond (corrige, avant 80%)', blend(T.white, 0.7, T.blueDeep), T.blueDeep, 12.5, false, 'text'],
+  ['Respiration "chiffre cle" : 79+ blanc / degrade bleu->bleu profond', T.white, T.blueDeep, 56, true, 'text'],
+  ['Respiration "chiffre cle" : phrase blanc 90% / degrade bleu->bleu profond', blend(T.white, 0.9, T.blueDeep), T.blueDeep, 18, false, 'text'],
+  ['Respiration "citation" : blanc opaque italique / voile marine (pire cas photo blanche, ~.74)', T.white, blend(T.footerBg, 0.74, T.white), 24, true, 'text'],
 ];
 
 const rows = cases.map(([label, fg, bg, size, bold, kind]) => {
