@@ -435,4 +435,152 @@ Le nom du fichier associe déjà le slug à chaque centre : `pissy.md`, `tampouy
 - Liens morts restants : uniquement vers `/methode`, `/inscription`, `/contact` — les trois pages suivantes du plan, attendu à ce stade.
 - Captures dans `captures/` (non versionnées).
 
-*(Pause ici pour la vérification visuelle des services, comme convenu. Suite : étape 5, `/manuels` et `/amira`.)*
+**Le reste du découpage a été terminé sans pause, sous contrainte de temps (démonstration le jour même)**, avec une règle absolue à chaque commit : `npm run build` sans erreur, zéro lien mort, zéro ancre orpheline, zéro violation axe-core. Le détail complet (P0 à P4) suit ci-dessous.
+
+### P0 — Navigation (commit `d168510`)
+
+**Le bug le plus visible du site à ce stade** : depuis n'importe quelle page hors accueil, 14 des 19 liens du menu ne menaient nulle part (`#services`, `#centres`… n'existent que sur `/`). Corrigé :
+
+- Toutes les ancres du menu et du pied de page sont devenues absolues (`#services` → `/#services`) : depuis n'importe quelle page, le lien ramène à l'accueil au bon endroit plutôt que de rester sur place sans effet.
+- Chaque entrée dont la page réelle existait déjà (Services, ses 4 formules, Centres) a été repointée directement vers cette page, dans le même commit que les pages suivantes créées.
+- `scripts/verifier-pages.mjs` : ajout d'un contrôle permanent en deux passes — collecte tous les `id` de chaque route construite, puis vérifie que chaque `href` avec une ancre (absolue ou relative) correspond à un `id` réel sur la page ciblée. C'est le test qui aurait attrapé le bug tout seul ; il tourne désormais à chaque vérification.
+- Entrée de menu « Diagnostic et remédiation » supprimée : elle faisait doublon avec « Cours de remédiation », les deux pointant vers `/services/remediation` avec des libellés différents.
+
+### P1 — Les pages manquantes (commits `d168510`, `17b334c`, `7cc5638`)
+
+Toutes construites depuis le contenu réel déjà présent dans le monopage, extrait programmatiquement (jamais retapé à la main), avec titre/méta-description rédigés, fil d'Ariane, JSON-LD adapté au type, et lien de retour vers leur index.
+
+- **`/contact`** : coordonnées seules (téléphone en lien `tel:`, e-mail en lien `mailto:`, liste des centres). Pas de formulaire — pour ne pas dupliquer `/inscription`, JSON-LD `ContactPoint`.
+- **`/inscription`** : le formulaire seul, avec le test de positionnement gratuit en accroche et le bouton WhatsApp en premier (partageable directement).
+- **`/methode`** : les 4 étapes, plus le détail de l'étape 1 (test de positionnement) fusionné depuis `details.js`.
+- **`/manuels`** + **`/manuels/<slug>`** (4 pages) : couvertures en vrais liens, une fiche par niveau, JSON-LD `Book`.
+- **`/amira`** : page dédiée construite depuis `details.js`, JSON-LD `MobileApplication`.
+- **`/faq`** : la seule question à vraie réponse, JSON-LD `FAQPage`.
+- **`/a-propos`**, **`/enseignants`**, **`/galerie`** : contenu repris tel quel des anciens composants `About`/`Teachers`/`Gallery`.
+
+### P2 — Centres : consigne révisée en cours de route (commit `4b7b69d`)
+
+Le jour de la démonstration, la consigne du tour précédent (« pas de page sans adresse réelle ») a été explicitement révisée : la règle est *« jamais de contenu d'attente »*, pas *« jamais de contenu manquant »*. Une fiche qui dit ce qui est vrai et propose un moyen d'agir pour le reste est légitime.
+
+- `adresse` redevient un champ optionnel dans le schéma (il continue de rejeter les valeurs d'attente sur les champs réellement obligatoires : nom, résumé, horaires).
+- Les 5 fiches de centre sont désormais publiées.
+- Aucun bloc pour l'adresse manquante — ni « Adresse : » vide, ni « à confirmer ». À la place, un encart : *« Pour l'adresse exacte et l'itinéraire, appelez-nous »*, avec les deux numéros réels en liens `tel:` et un lien vers `/contact`.
+- Le JSON-LD `LocalBusiness` reste omis tant qu'adresse **et** coordonnées GPS ne sont pas toutes les deux réelles — jamais un balisage structuré creux.
+
+### P3 — Accueil condensé (commit `7cc5638`)
+
+**14 841 px → 6 090 px** sur 1280 px de large (mesuré avec `page.evaluate(() => document.body.scrollHeight)` via Playwright, pas estimé), soit environ **6,8 écrans** contre ~17,6 avant — sous la cible de 8. HTML de la page : 24 Ko contre 47,6 Ko dans la version précédente (session du rapport initial).
+
+Ordre retenu, chaque bloc se terminant par un seul lien vers la page complète : héros → sélecteur de niveau (les chiffres clés y sont déjà intégrés, pas de bloc séparé) → méthode en 4 étapes + lien `/methode` → 4 formules en cartes (contenu tiré de la collection `services`) + lien `/services` → trois centres sur cinq (Pissy, Tampouy, Saaba ; contenu tiré de la collection `centres`) + lien `/centres` → bloc plaquette (inchangé) → FAQ réduite à la question réelle + lien `/faq` → bloc contact court + lien `/inscription`.
+
+Les identifiants historiques (`#accueil`, `#methode`, `#services`, `#centres`, `#faq`, `#contact`) sont conservés sur les blocs correspondants, comme demandé, même si plus aucun lien du site ne les utilise directement (voir P0) — ils servent désormais à la redirection des ancres héritées (ci-dessous).
+
+**Nettoyage effectué dans la foulée** : les anciens composants remplacés par des pages dédiées (`About`, `Teachers`, `Services`, `Centres`, `Productions`, `Testimonials`, `Gallery`, `Blog`, `Faq`, `Partners`, `Contact`) n'étaient plus importés nulle part après la réécriture de l'accueil — vérifié par recherche avant suppression. Supprimés, avec `src/data/sections.js` (le mécanisme `SECTIONS_PRETES`, devenu sans utilité une fois `Testimonials`/`Partners` supprimés). Le build a été relancé après suppression pour confirmer qu'aucune référence ne subsistait.
+
+### P4 — Finitions
+
+- **`@astrojs/sitemap`** : déjà branché sur `SITE_URL` depuis l'étape 1 précédente : rien à refaire. Les entrées non publiées n'y apparaissent jamais, par construction — une entrée de collection non prête ne génère tout simplement pas de route, donc l'intégration (qui scanne les routes réellement construites) ne peut pas la lister.
+- **`robots.txt`** : cohérent, pointe vers `/sitemap-index.xml`.
+- **Redirection des ancres héritées** (nouveau, commit `7cc5638`) : `src/scripts/legacy-anchors.js`, chargé uniquement sur l'accueil, lit `location.hash` au chargement et redirige (`location.replace`, sans polluer l'historique) vers la nouvelle route pour les 10 ancres de la table demandée.
+- **« Diagnostic et remédiation » en double** : supprimé dès P0.
+- **Modale contre page sur `/services`** : **non fait, faute de temps.** Les 4 cartes « matières » et « Suivi des parents » restent accessibles uniquement via la fenêtre modale JavaScript (contenu réel, mais sans URL propre, donc ni partageable ni indexable). C'est le seul point de la liste explicitement sacrifiable en dernier que je n'ai pas traité — voir section « Ce que je n'ai pas fait ».
+
+### Vérification finale (build de production, pas le serveur de dev)
+
+`npm run build && npm run preview && node scripts/verifier-pages.mjs --shots=captures`, exécuté à chaque commit et une dernière fois après le nettoyage des composants morts :
+
+- **27 routes construites, 0 violation axe-core, 0 lien interne mort, 0 ancre orpheline** (dernière exécution, après suppression des composants morts).
+- `scripts/verifier-contrastes.mjs` : 33/33. Le script vérifie les combinaisons du design system (jetons de couleur), partagées par construction entre toutes les pages puisque chaque nouvelle page réutilise les mêmes classes CSS que les pages déjà auditées — aucune nouvelle couleur n'a été introduite pendant le découpage.
+- Apostrophes typographiques et espaces fines : le contenu des nouvelles pages a été extrait programmatiquement (jamais retapé), donc hérite directement des corrections du bloc 9 — vérifié par relecture des fichiers de collection générés (voir capture d'écran de `/services/remediation` notamment).
+- Témoignages, partenaires et articles de blog : toujours masqués. Les deux premiers le sont maintenant plus radicalement qu'avant (leurs composants ont été supprimés, pas seulement désactivés par un indicateur) ; les articles de blog restent à `brouillon: true`.
+- Captures 1280 px et 390 px de chaque route dans `captures/` (non versionné, régénérable avec la commande ci-dessus).
+
+## 11. Arborescence livrée
+
+| URL | Titre | Poids HTML |
+|---|---|---|
+| `/` | Hakili Lab — Tutorat en mathématiques et physique-chimie à Ouagadougou | 23,9 Ko |
+| `/methode` | Notre méthode — le test de positionnement avant tout cours — Hakili Lab | 11,4 Ko |
+| `/services` | Nos services — cours, remédiation et préparation aux examens — Hakili Lab | 12,0 Ko |
+| `/services/cours-appui`, `/remediation`, `/camp-vacances`, `/preparation-examens` | *{Nom de la formule}* — Hakili Lab | ~9,4–10,4 Ko |
+| `/centres` | Nos centres à Ouagadougou — Hakili Lab | 14,0 Ko |
+| `/centres/pissy`, `/tampouy`, `/saaba`, `/siao`, `/nagrin` | Centre Hakili Lab de *{nom}* — horaires et itinéraire | ~9,8 Ko |
+| `/manuels` | Collection Hakili Lab — nos manuels de mathématiques — Hakili Lab | 10,1 Ko |
+| `/manuels/mathematiques-6e`, `-5e`, `-4e`, `-3e` | Mathématiques *{niveau}* — Collection Hakili Lab | ~9,3 Ko |
+| `/amira` | Amira — le professeur de mathématiques disponible 24h/24 — Hakili Lab | 10,0 Ko |
+| `/a-propos` | Qui sommes-nous — Hakili Lab, depuis 2020 | 10,5 Ko |
+| `/enseignants` | Nos enseignants — recrutement et formation continue — Hakili Lab | 11,5 Ko |
+| `/galerie` | Galerie — la vie dans nos centres — Hakili Lab | 12,3 Ko |
+| `/faq` | Questions fréquentes — Hakili Lab | 8,9 Ko |
+| `/contact` | Contact — Hakili Lab | 9,7 Ko |
+| `/inscription` | Inscrivez votre enfant — test de positionnement gratuit — Hakili Lab | 13,5 Ko |
+| `/blog`, `/blog/<slug>` | Nos articles — Hakili Lab (index seul ; 0 article publié) | 8,1 Ko |
+| `/404` | Page introuvable — Hakili Lab | 8,1 Ko |
+
+Chaque page a sa propre méta-description rédigée à partir de son contenu réel (pas de gabarit mécanique) — voir le code source de chaque page pour le texte exact, elles sont trop longues pour tenir dans ce tableau.
+
+## 12. Table de correspondance
+
+**Ancienne section du monopage → nouvelle page :**
+
+| Ancienne section | Nouvelle page |
+|---|---|
+| `#apropos` (About) | `/a-propos` |
+| `#methode` (Method) | `/methode` (résumé conservé sur l'accueil) |
+| `#enseignants` (Teachers) | `/enseignants` |
+| `#services` (Services, matières + formules) | `/services` + 4 pages de formule (résumé des formules conservé sur l'accueil) |
+| `#centres` (Centres) | `/centres` + 5 pages de centre (résumé de 3 centres conservé sur l'accueil) |
+| `#productions` (Productions) | `/manuels` + 4 fiches, et `/amira` |
+| `#galerie` (Gallery) | `/galerie` |
+| `#faq` (Faq) | `/faq` (résumé conservé sur l'accueil) |
+| `#contact` (Contact) | `/contact` (coordonnées) + `/inscription` (formulaire, résumé conservé sur l'accueil) |
+| Témoignages, Partenaires | toujours masqués (composants supprimés) |
+| Blog (teaser accueil) | retiré de l'accueil ; `/blog` reste une route existante, vide tant qu'aucun article n'est publié |
+
+**Ancienne ancre → nouvelle route** (implémenté dans `src/scripts/legacy-anchors.js`, actif sur l'accueil) :
+
+`#apropos` → `/a-propos` · `#methode` → `/methode` · `#enseignants` → `/enseignants` · `#services` → `/services` · `#centres` → `/centres` · `#productions` → `/manuels` · `#galerie` → `/galerie` · `#faq` → `/faq` · `#contact` → `/contact` · `#accueil` → `/`.
+
+## 13. Pages trop maigres
+
+- **`/manuels/mathematiques-6e`, `-5e`, `-4e`, `-3e`** : la description courte (« Cours, méthodes et situations d'intégration ») est identique sur les 4 fiches — c'était déjà le cas dans le monopage, la migration n'a fait que le rendre plus visible en page dédiée. Il manque un vrai extrait, une table des matières ou un exemple de page pour que chaque fiche se distingue des trois autres.
+- **`/galerie`** : 5 photos avec seulement un texte alternatif, aucune légende ni contexte. Fonctionnel mais mince pour une page dédiée.
+- **`/faq`** : une seule question. Honnête (c'était la seule à avoir une vraie réponse), mais une page entière pour une question interroge — à enrichir dès que vous avez d'autres réponses réelles, ou à fusionner ailleurs si elle reste courte.
+- **`/blog`** : la route existe mais est vide (0 article publié). Ce n'est pas un défaut de la migration — c'était déjà l'état du contenu réel avant.
+
+## 14. Ce que je dois vous fournir ensuite
+
+| # | Quoi | Où / détail |
+|---|---|---|
+| 1 | Le domaine de production | `src/data/site.js` (`SITE_URL`) et `astro.config.mjs` (`site`) — une seule valeur à changer, tout le reste se recalcule automatiquement (canonical, Open Graph, sitemap). |
+| 2 | Une image de partage Open Graph (1200×630) | `src/layouts/BaseLayout.astro`, lignes 51 et 56. |
+| 3 | Photos réelles des centres, de la galerie, de l'accueil | Voir la section « Images » du rapport initial (toujours valable : 3 fichiers uniques réutilisés partout). |
+| 4 | Pour chacun des 5 centres, **centre par centre** : adresse, classes ouvertes, coordonnées GPS, lien Google Maps | `src/content/centres/<slug>.md`, lignes commentées `# adresse:`, `# classesOuvertes:`, `# latitude:`/`# longitude:`, `# googleMapsUrl:` — décommenter et remplir. Dès qu'adresse **et** GPS sont renseignés, le balisage `LocalBusiness` s'active tout seul (aucune autre manipulation). |
+| 5 | Un extrait feuilletable des manuels | `src/pages/manuels/index.astro` ligne 34 (bouton "Feuilleter un extrait", pointe vers `/contact` en attendant). |
+| 6 | Tarifs réels (cours, manuels, Amira) | Actuellement "À définir" dans les données sources (`src/data/details.js`) — masqués à l'affichage (jamais montrés tels quels), mais absents des fiches tant qu'ils ne sont pas renseignés. |
+| 7 | Contenu réel des 3 articles de blog (ou de nouveaux articles) | `src/content/blog/*.md` — passer `brouillon: false` une fois le texte réel écrit (voir rapport initial, section 5). |
+
+## 15. Ce que je n'ai pas fait, et pourquoi
+
+- **Modale → sections ancrées sur `/services`** (P4, dernier de la liste de sacrifice) : les 4 cartes « matières » et « Suivi des parents » ouvrent toujours une fenêtre modale sans URL propre. Contenu réel, fonctionnel, mais ni partageable ni indexable par un moteur de recherche. Sacrifié explicitement en dernier faute de temps avant la démonstration.
+- **CSS mort** : `testimonials.css` et `partners.css` restent importés dans `main.css` alors que plus aucun composant n'utilise ces classes (les composants ont été supprimés). Poids négligeable (quelques centaines d'octets), sans effet visible, mais à nettoyer à l'occasion.
+- **Contenu réel manquant** listé section 14 : adresses des centres, domaine, tarifs, extraits de manuels, articles de blog — dépend entièrement de vous, rien à faire côté code au-delà de remplir les champs déjà préparés.
+- **Fiches de niveau détaillées par matière** (mathématiques primaire/secondaire, physique-chimie, anglais) : elles restent des cartes avec fenêtre modale sur `/services`, comme sur l'ancien accueil — pas de page dédiée par matière, non demandée dans l'arborescence cible.
+
+## 16. Parcours de démonstration
+
+1. **`/`** — montrez le hero et laissez le sélecteur de niveau répondre (cliquez Primaire/Secondaire, puis une classe) : c'est le seul élément vraiment interactif de la page, il marche bien et illustre la méthode.
+2. Descendez jusqu'aux 4 formules et cliquez sur une carte (ex. « Cours de remédiation ») → **`/services/remediation`** : montre une page complète, avec la fusion réussie du contenu "Diagnostic et remédiation".
+3. Revenez, cliquez « Nos centres » dans le menu → **`/centres`** → cliquez sur Pissy → **`/centres/pissy`** : montrez l'encart honnête « appelez-nous pour l'adresse exacte » plutôt qu'une fausse adresse — c'est un bon exemple de la rigueur appliquée sur ce projet.
+4. Menu « Productions » → **`/manuels`** → une fiche de manuel, puis **`/amira`**.
+5. Menu « À propos » → **`/methode`** (les 4 étapes + le détail du test de positionnement).
+6. **`/inscription`** : montrez le bouton WhatsApp en premier — expliquez qu'il ouvre directement une conversation pré-remplie.
+7. **`/contact`** pour les coordonnées.
+
+**Ce qu'il vaut mieux ne pas faire devant votre public :**
+
+- Ne vous attardez pas sur les 4 fiches de manuels l'une après l'autre : leur texte se ressemble beaucoup (voir section 13).
+- Ne cliquez pas sur « Feuilleter un extrait » (`/manuels`) : il renvoie vers `/contact` en attendant un vrai extrait, ce qui peut surprendre.
+- N'ouvrez pas `/blog` : la page existe mais est vide (aucun article publié) — pas d'entrée de menu y renvoie, donc un public ne la trouvera pas tout seul, inutile de la montrer.
+- Évitez de zoomer sur les photos : ce sont des photos de banque d'images (décor nord-américain), à remplacer — voir section 14.
+- Si quelqu'un clique sur les icônes « matières » de `/services` (Mathématiques, Physique-chimie…), une fenêtre s'ouvre : c'est volontaire et fonctionnel, mais n'a pas d'URL propre — ne le présentez pas comme une "page".
