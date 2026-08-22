@@ -1,7 +1,7 @@
 .site-header{position:sticky;top:0;z-index:70;background:rgba(255,255,255,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .header-inner{display:flex;align-items:center;gap:24px;height:80px}
 .brand{flex:none;display:flex;align-items:center;gap:14px}
-.brand img{height:48px;width:auto}
+.brand img{height:48px;width:auto;object-fit:contain;max-width:100%}
 
 .mainnav{display:flex;gap:2px;margin-left:auto;align-items:center}
 .navitem{position:relative}
