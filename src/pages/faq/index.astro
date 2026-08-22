@@ -1,0 +1,38 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+
+const question = 'Comment se passe l’inscription ?';
+const reponse = 'Prise de contact, test de positionnement gratuit, proposition d’un groupe et d’un horaire, puis inscription.';
+
+const faqJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    {
+      '@type': 'Question',
+      name: question,
+      acceptedAnswer: { '@type': 'Answer', text: reponse },
+    },
+  ],
+};
+---
+<SiteLayout
+  title="Questions fréquentes — Hakili Lab"
+  description="Comment se passe l'inscription à Hakili Lab ? Prise de contact, test de positionnement gratuit, proposition d'un groupe et d'un horaire, puis inscription."
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'FAQ' }]}
+  jsonLd={faqJsonLd}
+>
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Questions fréquentes</span>
+    <h1 class="h2">Ce que les parents nous demandent</h1>
+    <p class="lead">Quelques réponses aux questions les plus courantes avant une inscription.</p>
+    <div class="faq">
+      <details open><summary>{question}</summary><div class="answer">{reponse}</div></details>
+    </div>
+    <div class="hero-actions" style="margin-top:30px">
+      <a class="btn btn-outline" href="/contact">D’autres questions ? Contactez-nous</a>
+    </div>
+  </div>
+</section>
+</SiteLayout>

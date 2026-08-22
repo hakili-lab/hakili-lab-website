@@ -1,0 +1,40 @@
+---
+import { getCollection } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
+
+const allManuels = await getCollection('manuels');
+const order = ['mathematiques-6e', 'mathematiques-5e', 'mathematiques-4e', 'mathematiques-3e'];
+const manuels = allManuels
+  .filter((m) => m.data.pretPourPublication)
+  .sort((a, b) => order.indexOf(a.data.slug) - order.indexOf(b.data.slug));
+---
+<SiteLayout
+  title="Collection Hakili Lab — nos manuels de mathématiques — Hakili Lab"
+  description="La Collection Hakili Lab : nos manuels de mathématiques, de la 6e à la 3e, écrits par nos enseignants et alignés sur le programme burkinabè."
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos manuels' }]}
+>
+<section class="section section-cloud">
+  <div class="wrap">
+    <span class="eyebrow">Nos productions</span>
+    <h1 class="h2">Collection Hakili Lab, édition 2026</h1>
+    <p class="lead">Nous ne nous contentons pas d’enseigner : nous produisons nos propres outils, sur papier et en ligne, pour que l’élève continue à progresser entre deux séances.</p>
+
+    <div class="group-title">Nos manuels</div>
+    <p class="group-sub">Écrits par nos enseignants, alignés sur le programme burkinabè et l’approche par les compétences. Version papier et extraits numériques.</p>
+    <div class="books">
+      {manuels.map((m) => (
+        <a class="book" href={`/manuels/${m.data.slug}`}>
+          <div class="book-cover"><small>Collection Hakili Lab</small><div><b>{m.data.niveau}</b><div class="sub">{m.data.matiere}</div></div></div>
+          <div class="book-body"><h2>Mathématiques {m.data.niveau}</h2><span>{m.data.resumeCourt}</span></div>
+        </a>
+      ))}
+    </div>
+    <div id="etablissements" style="margin-top:28px;display:flex;gap:14px;flex-wrap:wrap">
+      <!-- TODO(url): lien vers un extrait feuilletable des manuels, une fois disponible -->
+      <a class="btn btn-outline" href="/contact">Feuilleter un extrait</a>
+      <a class="btn btn-primary" href="/contact">Commander pour un établissement</a>
+    </div>
+  </div>
+</section>
+</SiteLayout>

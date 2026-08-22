@@ -1,0 +1,75 @@
+---
+import { getCollection, render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { isPlaceholder } from '../../lib/placeholders.js';
+import { SITE_URL } from '../../data/site.js';
+
+export async function getStaticPaths() {
+  const manuels = await getCollection('manuels', ({ data }) => data.pretPourPublication);
+  return manuels.map((manuel) => ({
+    params: { slug: manuel.data.slug },
+    props: { manuel },
+  }));
+}
+
+const { manuel } = Astro.props;
+const d = manuel.data;
+const { Content } = await render(manuel);
+const realFacts = d.facts.filter((f) => !isPlaceholder(f.valeur));
+
+const bookJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Book',
+  name: `Mathématiques ${d.niveau}`,
+  bookFormat: 'https://schema.org/Paperback',
+  inLanguage: 'fr',
+  url: `${SITE_URL}/manuels/${d.slug}`,
+  publisher: { '@type': 'EducationalOrganization', name: 'Hakili Lab' },
+};
+---
+<SiteLayout
+  title={`Mathématiques ${d.niveau} — Collection Hakili Lab`}
+  description={d.resumeCourt}
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos manuels', href: '/manuels' }, { label: `Mathématiques ${d.niveau}` }]}
+  jsonLd={bookJsonLd}
+>
+<article class="section">
+  <div class="wrap article">
+    <a class="post-link" href="/manuels">&larr; Tous les manuels</a>
+    <span class="eyebrow">Nos manuels</span>
+    <h1 class="h2">Mathématiques {d.niveau}</h1>
+
+    <div class="article-body"><Content /></div>
+
+    <div class="modal-cols">
+      <div>
+        <h2>Pour qui</h2>
+        <ul>
+          {d.publicVise.map((x) => <li>{x}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Caractéristiques</h2>
+        <ul>
+          {d.caracteristiques.map((x) => <li>{x}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    {realFacts.length > 0 && (
+      <div class="modal-facts" style="margin-top:30px">
+        {realFacts.map((f) => (
+          <div class="fact">
+            <span>{f.label}</span>
+            <b>{f.valeur}</b>
+          </div>
+        ))}
+      </div>
+    )}
+
+    <div class="hero-actions" style="margin-top:30px">
+      <a class="btn btn-primary" href="/contact">{d.cta}</a>
+    </div>
+  </div>
+</article>
+</SiteLayout>

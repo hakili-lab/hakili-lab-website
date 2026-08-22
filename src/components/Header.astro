@@ -36,19 +36,19 @@ const hasBlogPosts = (await getCollection('blog', ({ data }) => !data.brouillon)
         </div>
       </div>
       <div class="navitem">
-        <a href="/#productions">Productions <i class="caret"></i></a>
+        <a href="/manuels">Productions <i class="caret"></i></a>
         <div class="submenu">
           <div class="submenu-head">Collection Hakili Lab</div>
-          <a href="/#productions">Manuels de mathématiques<small>De la sixième à la Terminale</small></a>
-          <a href="/#contact">Commande pour établissements<small>Tarifs dégressifs</small></a>
+          <a href="/manuels">Manuels de mathématiques<small>De la sixième à la Terminale</small></a>
+          <a href="/manuels#etablissements">Commande pour établissements<small>Tarifs dégressifs</small></a>
           <div class="submenu-head">Applications</div>
-          <a href="/#productions">Amira<small>Le professeur de maths 24 h sur 24</small></a>
+          <a href="/amira">Amira<small>Le professeur de maths 24 h sur 24</small></a>
         </div>
       </div>
       <div class="navitem"><a href="/#galerie">Galerie</a></div>
       {hasBlogPosts && <div class="navitem"><a href="/blog">Blog</a></div>}
-      <div class="navitem"><a href="/#contact">Contact</a></div>
-      <a class="btn btn-green btn-sm nav-cta" href="/#contact">Inscrire mon enfant</a>
+      <div class="navitem"><a href="/contact">Contact</a></div>
+      <a class="btn btn-green btn-sm nav-cta" href="/inscription">Inscrire mon enfant</a>
     </nav>
   </div>
 </header>
