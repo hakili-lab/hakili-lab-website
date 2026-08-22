@@ -15,12 +15,12 @@ const hasBlogPosts = (await getCollection('blog', ({ data }) => !data.brouillon)
     <nav class="mainnav" id="nav">
       <div class="navitem"><a href="/">Accueil</a></div>
       <div class="navitem">
-        <a href="/#apropos">À propos <i class="caret"></i></a>
+        <a href="/a-propos">À propos <i class="caret"></i></a>
         <div class="submenu">
           <div class="submenu-head">Hakili Lab</div>
-          <a href="/#apropos">Qui sommes-nous<small>Notre raison d’être, depuis 2020</small></a>
+          <a href="/a-propos">Qui sommes-nous<small>Notre raison d’être, depuis 2020</small></a>
           <a href="/methode">Notre méthode<small>Diagnostiquer avant d’enseigner</small></a>
-          <a href="/#enseignants">Nos enseignants<small>Recrutement et formation continue</small></a>
+          <a href="/enseignants">Nos enseignants<small>Recrutement et formation continue</small></a>
           <a href="/centres">Nos centres<small>Cinq adresses à Ouagadougou</small></a>
         </div>
       </div>
@@ -45,7 +45,7 @@ const hasBlogPosts = (await getCollection('blog', ({ data }) => !data.brouillon)
           <a href="/amira">Amira<small>Le professeur de maths 24 h sur 24</small></a>
         </div>
       </div>
-      <div class="navitem"><a href="/#galerie">Galerie</a></div>
+      <div class="navitem"><a href="/galerie">Galerie</a></div>
       {hasBlogPosts && <div class="navitem"><a href="/blog">Blog</a></div>}
       <div class="navitem"><a href="/contact">Contact</a></div>
       <a class="btn btn-green btn-sm nav-cta" href="/inscription">Inscrire mon enfant</a>
