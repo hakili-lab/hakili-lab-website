@@ -7,49 +7,48 @@ const hasBlogPosts = (await getCollection('blog', ({ data }) => !data.brouillon)
 ---
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="brand" href="#accueil">
+    <a class="brand" href="/">
       <Image src={logo} alt="Hakili Lab" width={102} height={96} format="webp" loading="eager" />
       <span class="brand-line">CENTRE D’EXCELLENCE<em>EN MATHEMATIQUES</em></span>
     </a>
     <button class="nav-toggle" aria-label="Ouvrir le menu" aria-expanded="false" id="navToggle"><span></span><span></span><span></span></button>
     <nav class="mainnav" id="nav">
-      <div class="navitem"><a href="#accueil">Accueil</a></div>
+      <div class="navitem"><a href="/">Accueil</a></div>
       <div class="navitem">
-        <a href="#apropos">À propos <i class="caret"></i></a>
+        <a href="/#apropos">À propos <i class="caret"></i></a>
         <div class="submenu">
           <div class="submenu-head">Hakili Lab</div>
-          <a href="#apropos">Qui sommes-nous<small>Notre raison d’être, depuis 2020</small></a>
-          <a href="#methode">Notre méthode<small>Diagnostiquer avant d’enseigner</small></a>
-          <a href="#enseignants">Nos enseignants<small>Recrutement et formation continue</small></a>
-          <a href="#centres">Nos centres<small>Cinq adresses à Ouagadougou</small></a>
+          <a href="/#apropos">Qui sommes-nous<small>Notre raison d’être, depuis 2020</small></a>
+          <a href="/methode">Notre méthode<small>Diagnostiquer avant d’enseigner</small></a>
+          <a href="/#enseignants">Nos enseignants<small>Recrutement et formation continue</small></a>
+          <a href="/centres">Nos centres<small>Cinq adresses à Ouagadougou</small></a>
         </div>
       </div>
       <div class="navitem">
-        <a href="#services">Services <i class="caret"></i></a>
+        <a href="/services">Services <i class="caret"></i></a>
         <div class="submenu">
           <div class="submenu-head">Par cycle <small>Du CP1 à la Terminale</small></div>
           <div class="submenu-head">Formules</div>
-          <a href="#services">Cours d’appui<small>Suivre le programme de la classe</small></a>
-          <a href="#services">Cours de remédiation<small>Combler les lacunes anciennes</small></a>
-          <a href="#services">Camp Vacances<small>Programme intensif des congés</small></a>
-          <a href="#services">Préparation aux examens<small>CEP, BEPC, Baccalauréat</small></a>
+          <a href="/services/cours-appui">Cours d’appui<small>Suivre le programme de la classe</small></a>
+          <a href="/services/remediation">Cours de remédiation<small>Combler les lacunes anciennes</small></a>
+          <a href="/services/camp-vacances">Camp Vacances<small>Programme intensif des congés</small></a>
+          <a href="/services/preparation-examens">Préparation aux examens<small>CEP, BEPC, Baccalauréat</small></a>
         </div>
       </div>
       <div class="navitem">
-        <a href="#productions">Productions <i class="caret"></i></a>
+        <a href="/#productions">Productions <i class="caret"></i></a>
         <div class="submenu">
           <div class="submenu-head">Collection Hakili Lab</div>
-          <a href="#productions">Manuels de mathématiques<small>De la sixième à la Terminale</small></a>
-          <a href="#contact">Commande pour établissements<small>Tarifs dégressifs</small></a>
+          <a href="/#productions">Manuels de mathématiques<small>De la sixième à la Terminale</small></a>
+          <a href="/#contact">Commande pour établissements<small>Tarifs dégressifs</small></a>
           <div class="submenu-head">Applications</div>
-          <a href="#productions">Amira<small>Le professeur de maths 24 h sur 24</small></a>
-          <a href="#productions">Diagnostic et remédiation<small>Situer l’élève et combler ses lacunes</small></a>
+          <a href="/#productions">Amira<small>Le professeur de maths 24 h sur 24</small></a>
         </div>
       </div>
-      <div class="navitem"><a href="#galerie">Galerie</a></div>
-      {hasBlogPosts && <div class="navitem"><a href="#blog">Blog</a></div>}
-      <div class="navitem"><a href="#contact">Contact</a></div>
-      <a class="btn btn-green btn-sm nav-cta" href="#contact">Inscrire mon enfant</a>
+      <div class="navitem"><a href="/#galerie">Galerie</a></div>
+      {hasBlogPosts && <div class="navitem"><a href="/blog">Blog</a></div>}
+      <div class="navitem"><a href="/#contact">Contact</a></div>
+      <a class="btn btn-green btn-sm nav-cta" href="/#contact">Inscrire mon enfant</a>
     </nav>
   </div>
 </header>

@@ -1,0 +1,84 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { detail } from '../../data/details.js';
+import { isPlaceholder } from '../../lib/placeholders.js';
+
+const test = detail['test de positionnement'];
+const realFacts = test.f.filter((f) => !isPlaceholder(f[1]));
+---
+<SiteLayout
+  title="Notre méthode — le test de positionnement avant tout cours — Hakili Lab"
+  description="Beaucoup d'élèves suivent des cours supplémentaires sans progresser, parce qu'on leur réexplique le programme du moment au lieu de reprendre ce qui manque en dessous. Notre méthode inverse cet ordre : quatre étapes, toujours dans le même ordre."
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Notre méthode' }]}
+>
+<section class="section section-cloud">
+  <div class="wrap">
+    <span class="eyebrow">Notre méthode</span>
+    <h1 class="h2">Quatre étapes, toujours dans le même ordre</h1>
+    <p class="lead">Beaucoup d’élèves suivent des cours supplémentaires sans progresser, parce qu’on leur réexplique le programme du moment au lieu de reprendre ce qui manque en dessous. Notre méthode inverse cet ordre.</p>
+
+    <div class="steps">
+      <article class="step">
+        <div class="step-num">1</div>
+        <h2>Le test de positionnement</h2>
+        <p>Avant tout cours, l’élève passe un test qui situe son niveau réel, notion par notion. Nous savons alors où le fil s’est cassé, souvent une ou deux classes plus tôt.</p>
+      </article>
+      <article class="step">
+        <div class="step-num">2</div>
+        <h2>Le groupe de niveau</h2>
+        <p>L’élève rejoint un petit groupe constitué à partir du test, de sa classe d’origine et de son niveau réel. Deux élèves de 3<sup>e</sup> peuvent ainsi travailler dans des groupes différents.</p>
+      </article>
+      <article class="step">
+        <div class="step-num">3</div>
+        <h2>La remédiation, puis la progression</h2>
+        <p>Nous comblons d’abord les notions manquantes, dans l’ordre où elles s’enchaînent, avant de revenir au programme de la classe. C’est plus lent au début, beaucoup plus rapide ensuite.</p>
+      </article>
+      <article class="step">
+        <div class="step-num">4</div>
+        <h2>La mesure des progrès</h2>
+        <p>Des évaluations régulières montrent ce qui est acquis et ce qui résiste encore. Les parents reçoivent un point de situation clair, sans jargon.</p>
+      </article>
+    </div>
+
+    <p class="steps-note"><strong>Entre deux séances, le travail continue.</strong> L’élève dispose des manuels de la Collection Hakili Lab pour s’entraîner, et d’Amira pour poser ses questions à toute heure. C’est ce qui distingue un accompagnement suivi d’un simple cours du samedi.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap" style="max-width:760px">
+    <span class="eyebrow">Étape 1, en détail</span>
+    <h2 class="h2">Le test de positionnement</h2>
+    <p class="lead">{test.p}</p>
+
+    <div class="modal-cols" style="margin-top:30px">
+      <div>
+        <h3>Pour qui</h3>
+        <ul>
+          {test.who.map((x) => <li set:html={x} />)}
+        </ul>
+      </div>
+      <div>
+        <h3>Comment cela se passe</h3>
+        <ul>
+          {test.how.map((x) => <li set:html={x} />)}
+        </ul>
+      </div>
+    </div>
+
+    {realFacts.length > 0 && (
+      <div class="modal-facts" style="margin-top:30px">
+        {realFacts.map(([label, valeur]) => (
+          <div class="fact">
+            <span>{label}</span>
+            <b set:html={valeur} />
+          </div>
+        ))}
+      </div>
+    )}
+
+    <div class="hero-actions" style="margin-top:30px">
+      <a class="btn btn-green" href="/inscription">{test.cta}</a>
+    </div>
+  </div>
+</section>
+</SiteLayout>
