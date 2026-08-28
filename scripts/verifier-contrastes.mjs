@@ -1,4 +1,4 @@
-// Vérificateur de contraste WCAG 2.1 — Hakili Lab
+// Vérificateur de contraste WCAG 2.1, Hakili Lab
 // Calcule le ratio de contraste (luminance relative) pour chaque paire texte/fond
 // relevée dans le CSS du site, et compare au seuil requis par la taille/graisse du texte.
 
@@ -88,7 +88,7 @@ const cases = [
   ['Message de succès formulaire vert (corrigé) / fond blanc', T.green, T.white, 14.5, false, 'text'],
   ['Message d\'erreur formulaire (danger) / fond blanc', T.danger, T.white, 14.5, false, 'text'],
   ['Contour focus clavier bleu (corrigé) / fond blanc (composant UI, seuil 3:1)', T.blue, T.white, 0, false, 'ui'],
-  ['Hero — texte h1/lead blanc sur överlay le plus sombre (pire cas photo blanche)', T.white, heroBg94, 36, true, 'text'],
+  ['Hero : texte h1/lead blanc sur överlay le plus sombre (pire cas photo blanche)', T.white, heroBg94, 36, true, 'text'],
   ['Hero-lead blanc 86% sur overlay (pire cas photo blanche)', blend(T.white, 0.86, heroBg94), heroBg94, 19, false, 'text'],
   ['Hero-meta blanc 70% sur overlay (pire cas photo blanche)', blend(T.white, 0.7, heroBg94), heroBg94, 14.5, false, 'text'],
   ['Légende vidéo "Une journée..." blanc opaque sur voile renforcé (pire cas photo blanche)', T.white, videoCapBg, 14.5, false, 'text'],

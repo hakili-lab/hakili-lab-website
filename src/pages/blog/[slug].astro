@@ -17,7 +17,7 @@ const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 
 const plainDescription = post.data.description.replace(/<[^>]+>/g, '');
 ---
 <SiteLayout
-  title={`${post.data.titre} — Hakili Lab`}
+  title={`${post.data.titre}, Hakili Lab`}
   description={plainDescription}
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Blog', href: '/blog' }, { label: post.data.titre }]}
 >

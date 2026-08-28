@@ -28,7 +28,7 @@ const localBusinessJsonLd =
     ? {
         '@context': 'https://schema.org',
         '@type': 'LocalBusiness',
-        name: `Hakili Lab — ${d.nom}`,
+        name: `Hakili Lab (${d.nom})`,
         parentOrganization: 'Hakili Lab',
         description: d.description,
         url: `${SITE_URL}/centres/${d.slug}`,
@@ -46,7 +46,7 @@ const localBusinessJsonLd =
     : undefined;
 ---
 <SiteLayout
-  title={`Centre Hakili Lab de ${d.nom} — horaires et itinéraire`}
+  title={`Centre Hakili Lab de ${d.nom} : horaires et itinéraire`}
   description={d.description}
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos centres', href: '/centres' }, { label: d.nom }]}
   jsonLd={localBusinessJsonLd}

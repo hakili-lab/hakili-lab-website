@@ -3,7 +3,7 @@
 // (#accueil, #services, #centres, #faq, #contact) : chacune est comparee aux
 // liens du menu qui pointent vers elle par ancre ("#id"). Une page dediee
 // (une seule section, generalement sans id) retombe sur l'observation de
-// <main id="contenu"> lui-meme, compare au chemin de la page courante — donc
+// <main id="contenu"> lui-meme, compare au chemin de la page courante, donc
 // le lien "Nos centres" s'allume des qu'on est sur /centres, par exemple.
 (function () {
   var navLinks = [].slice.call(document.querySelectorAll('.mainnav > .navitem > a[href]'));
