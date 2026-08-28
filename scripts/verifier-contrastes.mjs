@@ -61,6 +61,8 @@ const heroBg94 = blend(hexToRgb('#003E7E'), 0.94, T.white);
 // Fond effectif de la légende vidéo (voile ~.74 d'opacité à la position de la légende,
 // plaqué sur le pire cas : une zone de photo blanche)
 const videoCapBg = blend(T.footerBg, 0.74, T.white);
+// Fond de la lightbox de la galerie : quasi opaque (.94), pire cas = blanc dessous.
+const lightboxBg = blend(T.footerBg, 0.94, T.white);
 
 const cases = [
   ['Texte courant (ink) / fond blanc', T.ink, T.white, 16.5, false, 'text'],
@@ -103,9 +105,10 @@ const cases = [
   ['Sur-titre serif italique (.eyebrow-light, blanc opaque) / fond bleu (bloc contact)', T.white, T.blue, 19, false, 'text'],
   ['Barre du haut : phrase 85% / fond bleu profond (corrige, avant blanc opaque)', blend(T.white, 0.85, T.blueDeep), T.blueDeep, 12.5, false, 'text'],
   ['Barre du haut : telephone/e-mail 70% / fond bleu profond (corrige, avant 80%)', blend(T.white, 0.7, T.blueDeep), T.blueDeep, 12.5, false, 'text'],
-  ['Respiration "chiffre cle" : 79+ blanc / degrade bleu->bleu profond', T.white, T.blueDeep, 56, true, 'text'],
-  ['Respiration "chiffre cle" : phrase blanc 90% / degrade bleu->bleu profond', blend(T.white, 0.9, T.blueDeep), T.blueDeep, 18, false, 'text'],
   ['Respiration "citation" : blanc opaque italique / voile marine (pire cas photo blanche, ~.74)', T.white, blend(T.footerBg, 0.74, T.white), 24, true, 'text'],
+  ['Lightbox galerie : lien "Retour a la galerie" blanc / fond marine quasi opaque', T.white, lightboxBg, 15, true, 'text'],
+  ['Lightbox galerie : compteur "n / 40" blanc 80% / fond marine quasi opaque', blend(T.white, 0.8, lightboxBg), lightboxBg, 14, false, 'text'],
+  ['PersonCard : initiales bleu / fond bleu 10% (espace reserve sans photo)', T.blue, blend(T.blue, 0.1, T.white), 38, true, 'text'],
 ];
 
 const rows = cases.map(([label, fg, bg, size, bold, kind]) => {

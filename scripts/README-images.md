@@ -45,11 +45,12 @@ actuels, ou en mettant à jour les `import` correspondants dans les composants
 `.astro`), `npm run build` régénère automatiquement toutes les variantes
 responsives.
 
-## État actuel (photos à remplacer)
+## État actuel (28/08/2026)
 
-Le site n'utilise aujourd'hui que **3 fichiers photo uniques**
-(`846A26820.jpg`, `846A2755.jpg`, `banner1.jpg`), réutilisés sur les 19
-emplacements du site (hero, "Nos centres" ×5, galerie ×5, "Qui sommes-nous").
-Ce sont des photos de banque d'images à décor nord-américain, à remplacer par
-de vraies photos des centres Hakili Lab — voir la liste détaillée dans
-`RAPPORT-SITE.md`, section "Images dont j'ai besoin".
+Les vraies photos de Hakili Lab sont en place depuis longtemps (`1.jpg` à
+`42.jpeg`, les portraits de l'équipe, les photos de chaque centre). Les 3
+fichiers de banque d'images du tout premier gabarit (`846A26820.jpg`,
+`846A2755.jpg`, `banner1.jpg`) ne sont plus utilisés nulle part dans le
+code — voir `docs/RAPPORT-PROJET.md`, section 2 ("Orphelins"), qui liste
+précisément ce qui reste sur le disque sans être référencé, et section 3
+pour la liste des fichiers candidats à la suppression.

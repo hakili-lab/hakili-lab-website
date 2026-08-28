@@ -1,10 +1,17 @@
-# Hakili Lab — maquette du site (Astro)
+# Hakili Lab — site (Astro)
 
-Découpage en fichiers de la maquette monolithique `hakililab.html` (conservée
-à la racine comme référence pour tout futur contrôle de fidélité), en projet
-Astro statique. Rendu et contenu strictement identiques à l'original : voir
-`AMELIORATIONS.md` pour ce qui a été repéré mais volontairement laissé en
-l'état.
+Site vitrine du centre de tutorat Hakili Lab (Ouagadougou), en Astro statique.
+
+> **Note (28/08/2026)** : ce README date de la toute première session du
+> projet (conversion d'une maquette HTML unique) et ne reflète plus
+> l'architecture actuelle (collections de contenu, blog, plusieurs pages,
+> `src/data/centres.js`, etc.). Pour une vue à jour du projet — stack,
+> inventaire des fichiers, ce qui manque avant mise en ligne — voir
+> `docs/RAPPORT-PROJET.md`. Pour déployer, voir `README-DEPLOIEMENT.md`.
+> La maquette d'origine `hakililab.html` et `AMELIORATIONS.md` (notes sur
+> cette première conversion) ont été retirés du dépôt ; ce qui restait
+> pertinent dans `AMELIORATIONS.md` a été repris dans
+> `docs/RAPPORT-PROJET.md` section 7.
 
 ## Installation et lancement
 
@@ -61,8 +68,6 @@ src/
 
 ## Ce qui n'a pas été fait
 
-Voir `AMELIORATIONS.md` : incohérences déjà présentes dans la maquette
-d'origine (accents, superscripts, contenu placeholder), choix de découpage
-pris par déduction là où le brief ne détaillait pas chaque règle CSS, et la
-vérification visuelle aux 4 largeurs demandées, qui reste à faire sur un
-poste local (`npm run dev`).
+Voir `docs/RAPPORT-PROJET.md`, section 7 (notes historiques reprises de
+l'ancien `AMELIORATIONS.md`) et section 4 (« Ce qui manque ») pour l'état à
+jour de ce point.
