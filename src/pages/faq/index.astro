@@ -3,6 +3,10 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
 
 const question = 'Comment se passe l’inscription ?';
 const reponse = 'Prise de contact, test de positionnement gratuit, proposition d’un groupe et d’un horaire, puis inscription.';
+const questionDeux = 'À quels niveaux s’adressent les cours ?';
+const reponseDeux = 'Hakili Lab accompagne les élèves du primaire au secondaire, selon les besoins et les groupes disponibles.';
+const questionTrois = 'Le test de positionnement est-il gratuit ?';
+const reponseTrois = 'Oui, le test de positionnement est gratuit et permet de proposer un accompagnement adapté au niveau de chaque élève.';
 
 const faqJsonLd = {
   '@context': 'https://schema.org',
@@ -13,22 +17,36 @@ const faqJsonLd = {
       name: question,
       acceptedAnswer: { '@type': 'Answer', text: reponse },
     },
+    {
+      '@type': 'Question',
+      name: questionDeux,
+      acceptedAnswer: { '@type': 'Answer', text: reponseDeux },
+    },
+    {
+      '@type': 'Question',
+      name: questionTrois,
+      acceptedAnswer: { '@type': 'Answer', text: reponseTrois },
+    },
   ],
 };
 ---
 <SiteLayout
-  title="Questions fréquentes — Hakili Lab"
+  title="Questions fréquentes"
   description="Comment se passe l'inscription à Hakili Lab ? Prise de contact, test de positionnement gratuit, proposition d'un groupe et d'un horaire, puis inscription."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'FAQ' }]}
   jsonLd={faqJsonLd}
+  hideBreadcrumb
 >
 <section class="section">
   <div class="wrap">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow">Questions fréquentes</span>
     <h1 class="h2">Ce que les parents nous demandent</h1>
     <p class="lead">Quelques réponses aux questions les plus courantes avant une inscription.</p>
     <div class="faq">
       <details open><summary>{question}</summary><div class="answer">{reponse}</div></details>
+      <details><summary>{questionDeux}</summary><div class="answer">{reponseDeux}</div></details>
+      <details><summary>{questionTrois}</summary><div class="answer">{reponseTrois}</div></details>
     </div>
     <div class="hero-actions" style="margin-top:30px">
       <a class="btn btn-outline" href="/contact">D’autres questions ? Contactez-nous</a>

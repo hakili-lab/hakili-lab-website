@@ -11,6 +11,7 @@
 @import "./components/split.css";
 @import "./components/breathers.css";
 @import "./components/cards.css";
+@import "./components/person-card.css";
 @import "./components/modal.css";
 @import "./components/steps.css";
 @import "./components/recruit.css";
@@ -20,6 +21,7 @@
 @import "./components/brochure.css";
 @import "./components/partners.css";
 @import "./components/gallery.css";
+@import "./components/lightbox.css";
 @import "./components/blog.css";
 @import "./components/faq.css";
 @import "./components/contact.css";

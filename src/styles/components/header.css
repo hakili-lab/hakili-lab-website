@@ -5,8 +5,10 @@
 
 .mainnav{display:flex;gap:2px;margin-left:auto;align-items:center}
 .navitem{position:relative}
-.navitem > a{display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:500;padding:10px 10px;border-radius:8px;white-space:nowrap;transition:color .18s,background .18s}
+.navitem > a{position:relative;display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:500;padding:10px 10px;border-radius:8px;white-space:nowrap;transition:color .18s,background .18s}
 .navitem > a:hover{color:var(--blue);background:var(--cloud)}
+.navitem > a.is-current{color:var(--blue)}
+.navitem > a.is-current::after{content:"";position:absolute;left:10px;right:10px;bottom:3px;height:2px;background:var(--blue);border-radius:2px}
 .caret{width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.55}
 .submenu{position:absolute;top:calc(100% + 10px);left:0;min-width:300px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 22px 48px rgba(0,62,126,.14);padding:10px;opacity:0;visibility:hidden;transform:translateY(8px);transition:.18s}
 .navitem:hover .submenu,.navitem:focus-within .submenu{opacity:1;visibility:visible;transform:translateY(0)}

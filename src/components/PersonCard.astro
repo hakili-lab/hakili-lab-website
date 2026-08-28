@@ -1,0 +1,42 @@
+---
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  name: string;
+  role: string;
+  bio: string;
+  photo?: ImageMetadata | null;
+}
+
+const { name, role, bio, photo } = Astro.props;
+
+// Initiales par defaut (prenom + nom) : fonctionne aussi bien pour les
+// espaces reserves ("Nom du fondateur" -> "ND") que pour un vrai nom une
+// fois fourni.
+function initials(fullName: string) {
+  const words = fullName.trim().split(/\s+/).filter(Boolean);
+  if (words.length === 0) return '';
+  if (words.length === 1) return words[0][0].toUpperCase();
+  return (words[0][0] + words[words.length - 1][0]).toUpperCase();
+}
+---
+<article class="person-card">
+  <div class="person-photo">
+    {photo ? (
+      <Picture
+        src={photo}
+        formats={['avif', 'webp']}
+        widths={[300, 500]}
+        sizes="(max-width: 680px) 45vw, 260px"
+        alt={name}
+        loading="lazy"
+      />
+    ) : (
+      <div class="person-photo-placeholder" aria-hidden="true">{initials(name)}</div>
+    )}
+  </div>
+  <b class="person-name">{name}</b>
+  <span class="person-role">{role}</span>
+  <p class="person-bio">{bio}</p>
+</article>

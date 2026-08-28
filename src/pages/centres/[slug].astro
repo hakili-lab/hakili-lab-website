@@ -1,20 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { SITE_URL } from '../../data/site.js';
 import { isPlaceholder } from '../../lib/placeholders.js';
+import { centres } from '../../data/centres.js';
 
-export async function getStaticPaths() {
-  const centres = await getCollection('centres', ({ data }) => data.pretPourPublication);
-  return centres.map((centre) => ({
-    params: { slug: centre.data.slug },
-    props: { centre },
-  }));
+export function getStaticPaths() {
+  return centres
+    .filter((centre) => centre.pretPourPublication)
+    .map((centre) => ({
+      params: { slug: centre.slug },
+      props: { centre },
+    }));
 }
 
 const { centre } = Astro.props;
-const d = centre.data;
+const d = centre;
 
 const hasClassesOuvertes = !isPlaceholder(d.classesOuvertes);
 const hasAdresse = !isPlaceholder(d.adresse);
@@ -29,7 +30,7 @@ const localBusinessJsonLd =
         '@type': 'LocalBusiness',
         name: `Hakili Lab — ${d.nom}`,
         parentOrganization: 'Hakili Lab',
-        description: d.resume,
+        description: d.description,
         url: `${SITE_URL}/centres/${d.slug}`,
         email: 'info@hakililab.com',
         telephone: ['+22657919191', '+22658795050'],
@@ -46,7 +47,7 @@ const localBusinessJsonLd =
 ---
 <SiteLayout
   title={`Centre Hakili Lab de ${d.nom} — horaires et itinéraire`}
-  description={d.resume}
+  description={d.description}
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos centres', href: '/centres' }, { label: d.nom }]}
   jsonLd={localBusinessJsonLd}
 >
@@ -55,12 +56,12 @@ const localBusinessJsonLd =
     <div>
       <span class="eyebrow">Nos centres</span>
       <h1 class="since">{d.nom}</h1>
-      <p class="lead">{d.resume}</p>
+      <p class="lead">{d.description}</p>
 
       <div class="modal-facts" style="margin-top:28px">
         <div class="fact">
           <span>Horaires</span>
-          <b>{d.horaires}</b>
+          <b>{d.horaires.resume}</b>
         </div>
         {hasClassesOuvertes && (
           <div class="fact">
@@ -82,13 +83,11 @@ const localBusinessJsonLd =
         </p>
       )}
 
-      <div class="hero-actions" style="margin-top:30px">
-        <a class="btn btn-primary" href="/inscription">Prendre rendez-vous dans ce centre</a>
-        {d.googleMapsUrl && (
+      {d.googleMapsUrl && (
+        <div class="hero-actions" style="margin-top:30px">
           <a class="btn btn-outline" href={d.googleMapsUrl} target="_blank" rel="noopener">Voir sur Google Maps</a>
-        )}
-        <a class="btn btn-outline" href="/contact">Nous contacter</a>
-      </div>
+        </div>
+      )}
     </div>
     {d.image && (
       <Picture

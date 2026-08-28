@@ -19,6 +19,7 @@ const hasBlogPosts = (await getCollection('blog', ({ data }) => !data.brouillon)
         <div class="submenu">
           <div class="submenu-head">Hakili Lab</div>
           <a href="/a-propos">Qui sommes-nous<small>Notre raison d’être, depuis 2020</small></a>
+          <a href="/a-propos#valeurs">Nos valeurs<small>Notre engagement envers l’excellence éducative</small></a>
           <a href="/methode">Notre méthode<small>Diagnostiquer avant d’enseigner</small></a>
           <a href="/enseignants">Nos enseignants<small>Recrutement et formation continue</small></a>
         </div>
@@ -40,15 +41,15 @@ const hasBlogPosts = (await getCollection('blog', ({ data }) => !data.brouillon)
         <div class="submenu">
           <div class="submenu-head">Collection Hakili Lab</div>
           <a href="/manuels">Manuels de mathématiques<small>De la sixième à la Terminale</small></a>
-          <a href="/manuels#etablissements">Commande pour établissements<small>Tarifs dégressifs</small></a>
           <div class="submenu-head">Applications</div>
           <a href="/amira">Amira<small>Le professeur de maths 24 h sur 24</small></a>
+          <a href="/dr-maya">Dr Maya<small>Diagnostic et remédiation numériques</small></a>
         </div>
       </div>
       <div class="navitem"><a href="/galerie">Galerie</a></div>
       {hasBlogPosts && <div class="navitem"><a href="/blog">Blog</a></div>}
       <div class="navitem"><a href="/contact">Contact</a></div>
-      <a class="btn btn-green btn-sm nav-cta" href="/inscription">Inscrire mon enfant</a>
+      <a class="btn btn-green btn-sm nav-cta" href="https://forms.gle/FMWP9KZtjrxyVT3x6" target="_blank" rel="noopener">Inscrire mon enfant</a>
     </nav>
   </div>
 </header>

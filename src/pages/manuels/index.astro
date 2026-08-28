@@ -1,21 +1,38 @@
 ---
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import { getCollection } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
-const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 
 const allManuels = await getCollection('manuels');
-const order = ['mathematiques-6e', 'mathematiques-5e', 'mathematiques-4e', 'mathematiques-3e'];
+const order = [
+  'mathematiques-6e',
+  'mathematiques-5e',
+  'mathematiques-4e',
+  'mathematiques-3e',
+  'mathematiques-2nde',
+  'mathematiques-1re',
+  'mathematiques-terminale',
+];
 const manuels = allManuels
   .filter((m) => m.data.pretPourPublication)
   .sort((a, b) => order.indexOf(a.data.slug) - order.indexOf(b.data.slug));
+
+// Le bouton ne s'affiche que si un extrait general existe reellement dans
+// public/extraits/ (meme logique que les champs optionnels des centres :
+// jamais un lien qui mene nulle part). Voir public/extraits/README.md.
+const extraitGeneral = 'collection-hakili-lab.pdf';
+const hasExtraitGeneral = existsSync(path.join(process.cwd(), 'public', 'extraits', extraitGeneral));
 ---
 <SiteLayout
-  title="Collection Hakili Lab — nos manuels de mathématiques — Hakili Lab"
-  description="La Collection Hakili Lab : nos manuels de mathématiques, de la 6e à la 3e, écrits par nos enseignants et alignés sur le programme burkinabè."
+  title="Collection Hakili Lab"
+  description="La Collection Hakili Lab : nos manuels de mathématiques, de la 6e à la Terminale, écrits par nos enseignants et alignés sur le programme burkinabè."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos manuels' }]}
+  hideBreadcrumb
 >
 <section class="section section-cloud">
   <div class="wrap">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow">Nos productions</span>
     <h1 class="h2">Collection Hakili Lab, édition 2026</h1>
     <p class="lead">Nous ne nous contentons pas d’enseigner : nous produisons nos propres outils, sur papier et en ligne, pour que l’élève continue à progresser entre deux séances.</p>
@@ -30,11 +47,11 @@ const manuels = allManuels
         </a>
       ))}
     </div>
-    <div id="etablissements" style="margin-top:28px;display:flex;gap:14px;flex-wrap:wrap">
-      <!-- TODO(url): lien vers un extrait feuilletable des manuels, une fois disponible -->
-      <a class="btn btn-outline" href="/contact">Feuilleter un extrait</a>
-      <a class="btn btn-primary" href="/contact">Commander pour un établissement</a>
-    </div>
+    {hasExtraitGeneral && (
+      <div style="margin-top:28px;display:flex;gap:14px;flex-wrap:wrap">
+        <a class="btn btn-outline" href={`/extraits/${extraitGeneral}`} target="_blank" rel="noopener">Feuilleter un extrait</a>
+      </div>
+    )}
   </div>
 </section>
 </SiteLayout>

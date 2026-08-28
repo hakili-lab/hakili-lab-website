@@ -3,15 +3,17 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
 const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
 ---
 <SiteLayout
-  title="Inscrivez votre enfant — test de positionnement gratuit — Hakili Lab"
+  title="Inscrivez votre enfant"
   description="Écrivez-nous ou appelez-nous. Nous vous proposons un test de positionnement gratuit avant toute inscription, dans l'un de nos cinq centres à Ouagadougou."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Inscription' }]}
+  hideBreadcrumb
 >
 <section class="section contact">
   <div class="wrap">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow eyebrow-light">Inscription</span>
     <h1 class="h2">Inscrivez votre enfant</h1>
-    <p class="contact-lead">Écrivez-nous ou appelez-nous. Nous vous proposons un test de positionnement gratuit avant toute inscription.</p>
+    <p class="contact-lead">Avant de vous inscrire, un test de positionnement gratuit nous permet de proposer le bon groupe et le bon horaire à votre enfant.</p>
 
     <form class="form" id="contactForm" novalidate style="margin-top:34px;max-width:640px">
       <div class="form-row">
@@ -39,7 +41,7 @@ const web3formsKey = import.meta.env.PUBLIC_WEB3FORMS_KEY;
           <optgroup label="Nos productions">
             <option>Les manuels de la Collection Hakili Lab</option>
             <option>L’application Amira</option>
-            <option>L’application de diagnostic et de remédiation</option>
+            <option>Dr Maya (diagnostic et remédiation)</option>
           </optgroup>
           <option>Autre</option>
         </select>

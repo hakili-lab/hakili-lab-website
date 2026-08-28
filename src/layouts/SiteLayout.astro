@@ -12,10 +12,14 @@ interface Props {
   description?: string;
   breadcrumbs?: { label: string; href?: string }[];
   jsonLd?: object | object[];
+  hideBreadcrumb?: boolean;
 }
 
-const { title, description, breadcrumbs, jsonLd } = Astro.props;
+const { title, description, breadcrumbs, jsonLd, hideBreadcrumb } = Astro.props;
 
+// hideBreadcrumb ne joue que sur l'affichage : le balisage JSON-LD
+// BreadcrumbList reste emis sur toute page qui recoit un tableau breadcrumbs,
+// meme quand le fil d'Ariane visuel est remplace par un lien de retour.
 const extraJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const allJsonLd = breadcrumbs && breadcrumbs.length > 1
   ? [...extraJsonLd, breadcrumbJsonLd(breadcrumbs)]
@@ -27,7 +31,7 @@ const allJsonLd = breadcrumbs && breadcrumbs.length > 1
 <Header />
 
 <main id="contenu">
-  {breadcrumbs && breadcrumbs.length > 1 && <Breadcrumbs items={breadcrumbs} />}
+  {breadcrumbs && breadcrumbs.length > 1 && !hideBreadcrumb && <Breadcrumbs items={breadcrumbs} />}
   <slot />
 </main>
 
@@ -37,6 +41,7 @@ const allJsonLd = breadcrumbs && breadcrumbs.length > 1
 
 <script>
   import '../scripts/nav.js';
+  import '../scripts/nav-active.js';
   import '../scripts/detail-modal.js';
   import '../scripts/scroll-reveal.js';
 </script>

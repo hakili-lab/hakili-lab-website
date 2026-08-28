@@ -1,13 +1,17 @@
 ---
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import PersonCard from '../../components/PersonCard.astro';
+import { enseignants } from '../../data/team.js';
 ---
 <SiteLayout
-  title="Nos enseignants — recrutement et formation continue — Hakili Lab"
+  title="Nos enseignants"
   description="Un bon enseignant de mathématiques ne se reconnaît pas à sa maîtrise de la matière, mais à sa capacité à comprendre pourquoi un élève se trompe. Recrutement exigeant, formation avant et pendant, suivi de la qualité."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos enseignants' }]}
+  hideBreadcrumb
 >
 <section class="section">
   <div class="wrap">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow">Nos enseignants</span>
     <h1 class="h2">Une méthode ne vaut que par ceux qui l’appliquent</h1>
     <p class="lead">Un bon enseignant de mathématiques ne se reconnaît pas à sa maîtrise de la matière, que tous nos enseignants possèdent, mais à sa capacité à comprendre pourquoi un élève se trompe. Cela s’apprend, et c’est ce que nous formons.</p>
@@ -43,6 +47,12 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
         <h2>Des auteurs, pas seulement des enseignants</h2>
         <p>Ce sont nos enseignants qui écrivent les manuels de la Collection Hakili Lab, à partir de ce qu’ils observent en classe. Le manuel et le cours parlent donc la même langue.</p>
       </article>
+    </div>
+
+    <div class="group-title">L’équipe</div>
+    <p class="group-sub">Quelques-uns des enseignants qui forment nos élèves au quotidien.</p>
+    <div class="person-grid">
+      {enseignants.map((p) => <PersonCard name={p.name} role={p.role} bio={p.bio} photo={p.photo} />)}
     </div>
 
     <div class="recruit">

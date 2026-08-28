@@ -19,13 +19,15 @@ const appJsonLd = {
 };
 ---
 <SiteLayout
-  title="Amira — le professeur de mathématiques disponible 24h/24 — Hakili Lab"
+  title="Amira, le professeur de mathématiques disponible 24h/24 "
   description={d.p}
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Amira' }]}
   jsonLd={appJsonLd}
+  hideBreadcrumb
 >
 <section class="section">
   <div class="wrap" style="max-width:760px">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="app-tag">Application</span>
     <h1 class="h2" style="margin-top:16px">Amira</h1>
     <p class="lead">{d.p}</p>
@@ -57,7 +59,7 @@ const appJsonLd = {
     )}
 
     <div class="hero-actions" style="margin-top:30px">
-      <a class="btn btn-green" href="/contact">{d.cta}</a>
+      <a class="btn btn-green" href="https://amira.hakililab.com/" target="_blank" rel="noopener noreferrer">{d.cta}</a>
     </div>
   </div>
 </section>

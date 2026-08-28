@@ -1,28 +1,142 @@
 ---
-import { Picture } from 'astro:assets';
+import { Picture, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import photoA from '../../assets/photos/846A26820.jpg';
-import photoB from '../../assets/photos/846A2755.jpg';
-import photoC from '../../assets/photos/banner1.jpg';
 
-const gallerySizes = '(max-width: 680px) 50vw, (max-width: 1080px) 33vw, 400px';
+// Legende par fichier plutot que generique : chaque photo decrit reellement
+// ce qu'on y voit (verifie image par image), pas un texte repete 40 fois.
+// 3.jpeg et 21.jpeg sont des doublons exacts (memes octets) de 1.jpg et
+// 20.jpeg : volontairement absents pour ne pas montrer deux fois la meme photo.
+const captions: Record<string, string> = {
+  '1.jpg': 'Élève au tableau corrige un exercice de géométrie, enseignant assis à côté',
+  '2.jpeg': "Groupe d'enseignants de Hakili Lab en séance de formation",
+  '4.jpeg': 'Enseignants de Hakili Lab en séance de formation, salle aux murs ocre',
+  '5.jpeg': 'Élève debout devant la classe, camarades assis à leurs tables',
+  '6.jpeg': 'Élèves à leurs tables devant un rideau bleu, un camarade pensif',
+  '7.jpeg': "Portrait d'un élève souriant en classe, camarades autour",
+  '8.jpeg': 'Enseignant explique une notion de projection orthogonale au tableau',
+  '9.jpeg': 'Enseignant écrit une factorisation au tableau devant des élèves en tenue Hakili Lab',
+  '10.jpeg': 'Groupe d’élèves attentifs, certains penchés sur leur cahier',
+  '11.jpeg': 'Équipe pédagogique de Hakili Lab, photo de groupe',
+  '12.jpeg': 'Façade du bâtiment de Hakili Lab, élèves au balcon',
+  '13.jpeg': 'Groupe d’élèves et un enseignant devant un tableau de géométrie',
+  '14.jpeg': 'Équipe de Hakili Lab, photo de groupe dans une salle',
+  '15.jpeg': 'Groupe d’élèves du Camp Vacances devant un tableau blanc',
+  '16.jpeg': 'Groupe d’élèves en tenue Hakili Lab, photo au tableau',
+  '17.jpeg': 'Groupe d’élèves posent devant un tableau blanc',
+  '18.jpeg': 'Groupe d’élèves posent devant un tableau couvert d’exercices d’algèbre',
+  '19.jpeg': 'Groupe d’élèves posent sur la terrasse du centre, en tenue Hakili Lab',
+  '20.jpeg': 'Élèves assis en rangs pendant une présentation',
+  '22.jpeg': 'Élèves du Camp Vacances suivent une présentation en groupe',
+  '23.jpeg': 'Élèves assis, certains pensifs, pendant une séance de cours',
+  '24.jpeg': 'Salle comble d’élèves suivant un cours par visioconférence',
+  '25.jpeg': "Élèves suivent un cours par visioconférence, enseignant à l'écran",
+  '26.jpeg': 'Élèves suivent une leçon, écran de visioconférence au fond',
+  '27.jpeg': 'Élèves assis en classe, garçon en costume au premier plan',
+  '28.jpeg': 'Élève avec un casque audio travaille sur un ordinateur portable',
+  '29.jpeg': 'Deux élèves assises, en pleine discussion',
+  '30.jpeg': 'Deux élèves avec casque audio travaillent chacune sur un ordinateur',
+  '31.jpeg': 'Trois élèves avec casque travaillent en salle informatique',
+  '32.jpeg': 'Équipe de Hakili Lab, photo de groupe autour d’une table',
+  '33.jpeg': 'Élève avec casque travaille sur un ordinateur portable, une camarade à côté',
+  '34.jpeg': 'Élève écrit dans son cahier de mathématiques en classe',
+  '35.jpeg': 'Groupe d’élèves avec casque travaillent sur des ordinateurs',
+  '36.jpeg': 'Salle de classe comble, élèves attentifs sous la lumière naturelle',
+  '37.jpeg': 'Enseignant explique un exercice au tableau devant un mur de briques',
+  '38.jpeg': 'Équipe de Hakili Lab réunie en salle de réunion',
+  '39.jpeg': 'Enseignant écrit un exercice au tableau, élèves attentifs',
+  '40.jpeg': 'Élèves aux tables devant une fenêtre à grille en fer forgé',
+  '41.jpeg': 'Enseignant écrit un exercice au tableau devant une classe attentive',
+  '42.jpeg': 'Enseignant explique la formule du binôme de Newton au tableau',
+};
+
+const modules = import.meta.glob<{ default: ImageMetadata }>('../../assets/photos/*.{jpg,jpeg}', { eager: true });
+
+const photos = Object.entries(modules)
+  .map(([path, mod]) => {
+    const file = path.split('/').pop()!;
+    return { file, src: mod.default, n: parseInt(file, 10) };
+  })
+  .filter((p) => captions[p.file])
+  .sort((a, b) => a.n - b.n);
+
+const gallerySizes = '(max-width: 680px) 50vw, (max-width: 1080px) 33vw, 280px';
+// N'affiche que les 12 premieres photos au chargement (le reste derriere un
+// bouton "Voir plus") : seulement si JS s'execute, voir gallery-lightbox.js.
+// Sans JS, rien n'est cache (le bouton reste hidden) - jamais de contenu qui
+// disparait sans moyen de le retrouver.
+const GALLERY_INITIAL_COUNT = 12;
+
+// Une seule image large par photo, generee une fois a la compilation, pour
+// la vue agrandie (lightbox) : pas besoin de reconstruire un srcset complet
+// pour cet usage, une largeur suffit.
+const lightboxPhotos = await Promise.all(
+  photos.map(async (p) => {
+    const full = await getImage({ src: p.src, format: 'webp', width: 1400 });
+    return { src: full.src, alt: captions[p.file] };
+  })
+);
 ---
 <SiteLayout
-  title="Galerie — la vie dans nos centres — Hakili Lab"
-  description="La vie dans les centres Hakili Lab : élèves en séance de travail, enseignants au tableau, remise des prix du concours de mathématiques."
+  title="Galerie"
+  description="La vie dans les centres Hakili Lab : élèves en séance de travail, enseignants au tableau, salle informatique, Camp Vacances."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Galerie' }]}
+  hideBreadcrumb
 >
 <section class="section">
   <div class="wrap">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow">Galerie</span>
     <h1 class="h2">La vie dans nos centres</h1>
-    <div class="gallery">
-      <figure><Picture src={photoA} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Élèves en séance de travail" loading="lazy" /></figure>
-      <figure><Picture src={photoB} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Enseignant au tableau" loading="lazy" /></figure>
-      <figure><Picture src={photoC} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Vue d’un centre Hakili Lab" loading="lazy" /></figure>
-      <figure><Picture src={photoB} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Travail en petit groupe" loading="lazy" /></figure>
-      <figure><Picture src={photoA} formats={['avif', 'webp']} widths={[300, 600, 900]} sizes={gallerySizes} alt="Remise des prix du concours de mathématiques" loading="lazy" /></figure>
+    <div class="gallery" id="galleryGrid">
+      {photos.map((p, i) => (
+        <figure class={i >= GALLERY_INITIAL_COUNT ? 'gallery-extra' : ''}>
+          <button type="button" class="gallery-trigger" aria-label={`Voir en grand : ${captions[p.file]}`}>
+            <Picture
+              src={p.src}
+              formats={['avif', 'webp']}
+              widths={[300, 600, 900]}
+              sizes={gallerySizes}
+              alt=""
+              loading={i < 6 ? 'eager' : 'lazy'}
+            />
+          </button>
+        </figure>
+      ))}
+    </div>
+    <button type="button" class="gallery-more" id="galleryMore" hidden>
+      Voir les {photos.length - GALLERY_INITIAL_COUNT} autres photos
+    </button>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <span class="eyebrow">Vidéos</span>
+    <h2 class="h2 is-minor">En vidéo</h2>
+    <div class="gallery-videos">
+      <video controls preload="metadata" aria-label="Vidéo 1">
+        <source src="/videos/v1.mp4" type="video/mp4" />
+      </video>
+      <video controls preload="metadata" aria-label="Vidéo 2">
+        <source src="/videos/v2.mp4" type="video/mp4" />
+      </video>
     </div>
   </div>
 </section>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Photo agrandie" hidden>
+  <div class="lightbox-bar">
+    <button class="lightbox-back" id="lightboxBack" type="button">&larr; Retour à la galerie</button>
+    <span class="lightbox-count" id="lightboxCount" aria-live="polite"></span>
+  </div>
+  <button class="lightbox-prev" id="lightboxPrev" type="button" aria-label="Photo précédente">&lsaquo;</button>
+  <img class="lightbox-img" id="lightboxImg" alt="" />
+  <button class="lightbox-next" id="lightboxNext" type="button" aria-label="Photo suivante">&rsaquo;</button>
+</div>
+<script type="application/json" id="galleryData" is:inline set:html={JSON.stringify(lightboxPhotos)} />
 </SiteLayout>
+
+<script>
+  import '../../scripts/gallery-lightbox.js';
+</script>

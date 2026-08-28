@@ -8,12 +8,14 @@ const posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueO
 const dateFormatter = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
 ---
 <SiteLayout
-  title="Nos articles — Hakili Lab"
+  title="Nos articles"
   description="Les actualités de Hakili Lab et des conseils pratiques pour accompagner votre enfant en mathématiques et physique-chimie."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Blog' }]}
+  hideBreadcrumb
 >
 <section class="section" id="blog-index">
   <div class="wrap">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow">Actualités et conseils</span>
     <h1 class="h2">Nos articles</h1>
     <p class="lead">Les actualités de Hakili Lab et des conseils pratiques pour accompagner votre enfant.</p>

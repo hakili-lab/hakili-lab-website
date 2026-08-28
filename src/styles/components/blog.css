@@ -10,7 +10,7 @@
 .post-link{margin-top:18px;color:var(--blue);font-weight:600;font-size:14.5px}
 a.post-link{display:block;margin-top:0;margin-bottom:22px}
 .article{max-width:760px}
-.article-image{width:100%;border-radius:var(--r);margin-top:28px}
+.article-image{width:100%;height:auto;border-radius:var(--r);margin-top:28px}
 .article-body{margin-top:28px;color:var(--ink);font-size:17px;line-height:1.7}
 .article-body p{margin-top:18px}
 .article-body p:first-child{margin-top:0}

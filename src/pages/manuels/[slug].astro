@@ -1,4 +1,6 @@
 ---
+import { existsSync } from 'node:fs';
+import path from 'node:path';
 import { getCollection, render } from 'astro:content';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { isPlaceholder } from '../../lib/placeholders.js';
@@ -16,6 +18,11 @@ const { manuel } = Astro.props;
 const d = manuel.data;
 const { Content } = await render(manuel);
 const realFacts = d.facts.filter((f) => !isPlaceholder(f.valeur));
+
+// Un extrait par manuel : le lien n'apparait que si public/extraits/<slug>.pdf
+// existe vraiment (voir public/extraits/README.md pour deposer le fichier).
+const extraitFile = `${d.slug}.pdf`;
+const hasExtrait = existsSync(path.join(process.cwd(), 'public', 'extraits', extraitFile));
 
 const bookJsonLd = {
   '@context': 'https://schema.org',
@@ -35,7 +42,6 @@ const bookJsonLd = {
 >
 <article class="section">
   <div class="wrap article">
-    <a class="post-link" href="/manuels">&larr; Tous les manuels</a>
     <span class="eyebrow">Nos manuels</span>
     <h1 class="h2">Mathématiques {d.niveau}</h1>
 
@@ -69,6 +75,9 @@ const bookJsonLd = {
 
     <div class="hero-actions" style="margin-top:30px">
       <a class="btn btn-primary" href="/contact">{d.cta}</a>
+      {hasExtrait && (
+        <a class="btn btn-outline" href={`/extraits/${extraitFile}`} target="_blank" rel="noopener">Feuilleter un extrait</a>
+      )}
     </div>
   </div>
 </article>

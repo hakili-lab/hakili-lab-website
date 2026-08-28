@@ -14,8 +14,6 @@ deroule:
 facts:
   - label: "Rythme"
     valeur: "À définir"
-  - label: "Effectif"
-    valeur: "À définir"
   - label: "Tarif"
     valeur: "À définir"
 cta: "Demander une place"

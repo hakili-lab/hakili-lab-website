@@ -10,6 +10,6 @@
 // sans jamais inventer un nom de domaine plausible.
 export const SITE_URL = 'https://example.com';
 
-export const SITE_TITLE = 'Hakili Lab — Tutorat en mathématiques et physique-chimie à Ouagadougou';
+export const SITE_TITLE = 'Hakili Lab - Centre d\'Excellence en Mathématiques';
 export const SITE_DESCRIPTION =
   "Hakili Lab est un centre de tutorat en mathématiques et physique-chimie à Ouagadougou, du CP1 à la Terminale : test de positionnement gratuit, groupes de niveau et enseignants formés, dans cinq centres.";

@@ -1,0 +1,62 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import { detail } from '../../data/details.js';
+import { isPlaceholder } from '../../lib/placeholders.js';
+import { SITE_URL } from '../../data/site.js';
+
+const d = detail['dr maya'];
+const realFacts = d.f.filter((f) => !isPlaceholder(f[1]));
+
+const appJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'MobileApplication',
+  name: 'Dr Maya',
+  description: d.p,
+  url: `${SITE_URL}/dr-maya`,
+  applicationCategory: 'EducationApplication',
+  operatingSystem: 'Web',
+  publisher: { '@type': 'EducationalOrganization', name: 'Hakili Lab' },
+};
+---
+<SiteLayout
+  title="Dr Maya : Diagnostic et remédiation numériques "
+  description={d.p}
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Dr Maya' }]}
+  jsonLd={appJsonLd}
+  hideBreadcrumb
+>
+<section class="section">
+  <div class="wrap" style="max-width:760px">
+    <a class="post-link" href="/">&larr; Accueil</a>
+    <span class="app-tag">Application</span>
+    <h1 class="h2" style="margin-top:16px">Dr Maya</h1>
+    <p class="lead">{d.p}</p>
+
+    <div class="modal-cols" style="margin-top:30px">
+      <div>
+        <h2>Pour qui</h2>
+        <ul>
+          {d.who.map((x) => <li>{x}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>Comment cela fonctionne</h2>
+        <ul>
+          {d.how.map((x) => <li>{x}</li>)}
+        </ul>
+      </div>
+    </div>
+
+    {realFacts.length > 0 && (
+      <div class="modal-facts" style="margin-top:30px">
+        {realFacts.map(([label, valeur]) => (
+          <div class="fact">
+            <span>{label}</span>
+            <b>{valeur}</b>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+</SiteLayout>

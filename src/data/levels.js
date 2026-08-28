@@ -11,5 +11,5 @@ export var data={
     s3:{t:"3<sup>e</sup>",d:"Consolidation du cycle et préparation du BEPC, avec un entraînement sur les épreuves des années passées.",m:"Maths, physique-chimie",o:"BEPC"},
     s2:{t:"2<sup>nde</sup>",d:"Prendre les méthodes de travail attendues au lycée et combler les lacunes du collège avant qu’il ne soit tard.",m:"Maths, physique-chimie",o:"Méthodes de lycée"},
     s1:{t:"1<sup>re</sup>",d:"Approfondissement selon la série, avec un travail soutenu sur le raisonnement et la rédaction.",m:"Maths, physique-chimie",o:"Approfondissement"},
-    st:{t:"Terminale",d:"Préparation intensive du baccalauréat, ciblée sur les erreurs les plus fréquentes aux épreuves.",m:"Maths, physique-chimie",o:"Baccalauréat"}
+    st:{t:"Terminale",d:"Préparation intensive du baccalauréat, ciblée sur les erreurs les plus fréquentes aux épreuves.",m:"Maths, physique-chimie, SVT",o:"Baccalauréat"}
   };

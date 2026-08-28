@@ -1,15 +1,13 @@
 ---
-import { getCollection } from 'astro:content';
 import { Picture } from 'astro:assets';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { SITE_URL } from '../../data/site.js';
+import { centres as allCentres } from '../../data/centres.js';
 
-const allCentres = await getCollection('centres');
-const centres = allCentres.sort((a, b) => a.data.nom.localeCompare(b.data.nom, 'fr'));
-const centresPrets = centres.filter((c) => c.data.pretPourPublication);
+const centres = [...allCentres].sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+const centresPrets = centres.filter((c) => c.pretPourPublication);
 
-// Seuls les centres publies ont une page a referencer : un centre sans
-// adresse n'a pas de page (voir content.config.ts), donc pas d'entree ici.
+// Seuls les centres publies ont une page a referencer.
 const itemListJsonLd =
   centresPrets.length > 0
     ? {
@@ -18,32 +16,34 @@ const itemListJsonLd =
         itemListElement: centresPrets.map((c, i) => ({
           '@type': 'ListItem',
           position: i + 1,
-          name: `Hakili Lab — ${c.data.nom}`,
-          url: `${SITE_URL}/centres/${c.data.slug}`,
+          name: `Hakili Lab — ${c.nom}`,
+          url: `${SITE_URL}/centres/${c.slug}`,
         })),
       }
     : undefined;
 ---
 <SiteLayout
-  title="Nos centres à Ouagadougou — Hakili Lab"
+  title="Nos centres"
   description="Les cinq centres Hakili Lab à Ouagadougou : Pissy, Tampouy, Saaba, SIAO et Nagrin. Horaires, classes ouvertes et itinéraire pour chaque centre."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Nos centres' }]}
   jsonLd={itemListJsonLd}
+  hideBreadcrumb
 >
 <section class="section">
   <div class="wrap">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow">Nos centres</span>
     <h1 class="h2">Cinq centres à Ouagadougou</h1>
     <p class="lead">Chaque centre accueille les élèves après les cours en semaine et le week-end.</p>
     <div class="centres">
       {centres.map((centre) => {
-        const photo = centre.data.image && (
+        const photo = centre.image && (
           <Picture
-            src={centre.data.image}
+            src={centre.image}
             formats={['avif', 'webp']}
             widths={[400, 760]}
             sizes="(max-width: 680px) 100vw, (max-width: 1080px) 50vw, 380px"
-            alt={`Centre de ${centre.data.nom}`}
+            alt={`Centre de ${centre.nom}`}
             loading="lazy"
           />
         );
@@ -51,13 +51,12 @@ const itemListJsonLd =
           <article class="centre">
             <div class="centre-photo">
               {photo}
-              <b>{centre.data.nom}</b>
+              <b>{centre.nom}</b>
             </div>
             <div class="centre-body">
-              <h2>{centre.data.nom}</h2>
-              <p>{centre.data.resume}</p>
-              {centre.data.pretPourPublication && (
-                <a class="centre-link" href={`/centres/${centre.data.slug}`}>Voir le centre de {centre.data.nom}</a>
+              <h2>{centre.nom}</h2>
+              {centre.pretPourPublication && (
+                <a class="centre-link" href={`/centres/${centre.slug}`}>Voir le centre de {centre.nom}</a>
               )}
             </div>
           </article>
@@ -65,7 +64,7 @@ const itemListJsonLd =
       })}
     </div>
     <div class="centres-cta">
-      <a class="btn btn-primary" href="/inscription">Prendre rendez-vous dans un centre</a>
+      <a class="btn btn-primary" href="https://forms.gle/FMWP9KZtjrxyVT3x6" target="_blank" rel="noopener">Prendre rendez-vous dans un centre</a>
     </div>
   </div>
 </section>

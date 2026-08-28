@@ -5,6 +5,7 @@
   .mainnav{display:none}
   .mainnav.open{display:flex;position:absolute;top:80px;left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;gap:0;padding:12px 28px 22px;border-bottom:1px solid var(--line);max-height:70vh;overflow:auto}
   .mainnav.open .navitem > a{padding:13px 0;border-bottom:1px solid var(--line);border-radius:0}
+  .mainnav.open .navitem > a.is-current::after{left:0;right:0;bottom:0}
   .mainnav.open .submenu{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:none;padding:4px 0 10px 14px;min-width:0}
   .mainnav.open .submenu-head{display:none}
   .mainnav .nav-cta{display:none}
@@ -24,6 +25,7 @@
 @media (max-width:680px){
   .topbar-tag,.topbar-email{display:none}
   .topbar-contact{margin-left:0}
+  .topbar-contact-label{display:inline;font-weight:600}
   .section{padding:64px 0}
   .hero{padding:66px 0 128px}
   .cards-3,.cards-4,.apps,.posts,.quotes,.books,.form-row,.centres,.level-panel,.steps{grid-template-columns:1fr}
@@ -32,9 +34,9 @@
   .modal-cols{grid-template-columns:1fr;gap:24px}
   .cycles{display:flex;width:100%}
   .cycle{flex:1;padding:11px 12px}
-  .brochure{padding:32px 24px}
-  .gallery{grid-template-columns:1fr 1fr;grid-template-rows:150px 150px 150px}
-  .gallery figure:first-child{grid-column:span 2;grid-row:auto}
+  .brochure{padding:30px 24px}
+  .brochure-download{justify-self:start}
+  .gallery{grid-template-columns:repeat(auto-fill,minmax(140px,1fr));grid-auto-rows:150px}
   .footer-grid{grid-template-columns:1fr}
   .contact .form-actions{flex-direction:column}
   .contact .form-actions .btn{width:100%}

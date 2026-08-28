@@ -10,7 +10,8 @@ import Method from '../components/Method.astro';
 import Brochure from '../components/Brochure.astro';
 import Footer from '../components/Footer.astro';
 import DetailModal from '../components/DetailModal.astro';
-import quotePhoto from '../assets/photos/846A2755.jpg';
+import { centres as allCentres } from '../data/centres.js';
+import quotePhoto from '../assets/photos/37.jpeg';
 
 const serviceOrder = ['cours-appui', 'remediation', 'camp-vacances', 'preparation-examens'];
 const services = (await getCollection('services', ({ data }) => data.pretPourPublication)).sort(
@@ -18,10 +19,9 @@ const services = (await getCollection('services', ({ data }) => data.pretPourPub
 );
 
 const centreOrder = ['pissy', 'tampouy', 'saaba'];
-const allCentres = await getCollection('centres', ({ data }) => data.pretPourPublication);
 const centres = allCentres
-  .filter((c) => centreOrder.includes(c.data.slug))
-  .sort((a, b) => centreOrder.indexOf(a.data.slug) - centreOrder.indexOf(b.data.slug));
+  .filter((c) => c.pretPourPublication && centreOrder.includes(c.slug))
+  .sort((a, b) => centreOrder.indexOf(a.slug) - centreOrder.indexOf(b.slug));
 
 const faqQuestion = 'Comment se passe l’inscription ?';
 const faqReponse = 'Prise de contact, test de positionnement gratuit, proposition d’un groupe et d’un horaire, puis inscription.';
@@ -37,13 +37,6 @@ const faqReponse = 'Prise de contact, test de positionnement gratuit, propositio
 <LevelFinder />
 
 <Method />
-
-<section class="section-breather-stat">
-  <div class="wrap">
-    <span class="breather-num">79+</span>
-    <p>enseignants formés aux méthodes modernes, dans nos cinq centres à Ouagadougou.</p>
-  </div>
-</section>
 
 <section class="section" id="services">
   <div class="wrap">
@@ -74,22 +67,21 @@ const faqReponse = 'Prise de contact, test de positionnement gratuit, propositio
       {centres.map((centre) => (
         <article class="centre">
           <div class="centre-photo">
-            {centre.data.image && (
+            {centre.image && (
               <Picture
-                src={centre.data.image}
+                src={centre.image}
                 formats={['avif', 'webp']}
                 widths={[400, 760]}
                 sizes="(max-width: 680px) 100vw, (max-width: 1080px) 50vw, 380px"
-                alt={`Centre de ${centre.data.nom}`}
+                alt={`Centre de ${centre.nom}`}
                 loading="lazy"
               />
             )}
-            <b>{centre.data.nom}</b>
+            <b>{centre.nom}</b>
           </div>
           <div class="centre-body">
-            <h3>{centre.data.nom}</h3>
-            <p>{centre.data.resume}</p>
-            <a class="centre-link" href={`/centres/${centre.data.slug}`}>Voir le centre de {centre.data.nom}</a>
+            <h3>{centre.nom}</h3>
+            <a class="centre-link" href={`/centres/${centre.slug}`}>Voir le centre de {centre.nom}</a>
           </div>
         </article>
       ))}
@@ -110,7 +102,7 @@ const faqReponse = 'Prise de contact, test de positionnement gratuit, propositio
     loading="lazy"
     class="breather-quote-img"
   />
-  <blockquote>« L’échec en mathématiques n’est presque jamais une question de talent. »</blockquote>
+  <blockquote>« L’échec en mathématiques n’est presque jamais une question de capacité. »</blockquote>
 </section>
 
 <Brochure />
@@ -132,9 +124,9 @@ const faqReponse = 'Prise de contact, test de positionnement gratuit, propositio
   <div class="wrap" style="max-width:560px;text-align:center">
     <span class="eyebrow eyebrow-light" style="justify-content:center">Contact</span>
     <h2 class="h2">Inscrivez votre enfant</h2>
-    <p class="contact-lead" style="margin-left:auto;margin-right:auto">Écrivez-nous ou appelez-nous. Nous vous proposons un test de positionnement gratuit avant toute inscription.</p>
+    <p class="contact-lead" style="margin-left:auto;margin-right:auto">La première étape est toujours la même : un test de positionnement gratuit, pour savoir précisément où reprendre.</p>
     <div class="hero-actions" style="margin-top:26px;justify-content:center">
-      <a class="btn btn-green" href="/inscription">Inscrire mon enfant</a>
+      <a class="btn btn-green" href="https://forms.gle/FMWP9KZtjrxyVT3x6" target="_blank" rel="noopener">Inscrire mon enfant</a>
       <a class="btn btn-ghost" href="/contact">Nos coordonnées</a>
     </div>
   </div>
@@ -148,6 +140,7 @@ const faqReponse = 'Prise de contact, test de positionnement gratuit, propositio
 <script>
   import '../scripts/legacy-anchors.js';
   import '../scripts/nav.js';
+  import '../scripts/nav-active.js';
   import '../scripts/level-finder.js';
   import '../scripts/detail-modal.js';
   import '../scripts/hero-slideshow.js';

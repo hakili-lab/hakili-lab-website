@@ -7,12 +7,14 @@ const test = detail['test de positionnement'];
 const realFacts = test.f.filter((f) => !isPlaceholder(f[1]));
 ---
 <SiteLayout
-  title="Notre méthode — le test de positionnement avant tout cours — Hakili Lab"
+  title="Notre méthode"
   description="Beaucoup d'élèves suivent des cours supplémentaires sans progresser, parce qu'on leur réexplique le programme du moment au lieu de reprendre ce qui manque en dessous. Notre méthode inverse cet ordre : quatre étapes, toujours dans le même ordre."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Notre méthode' }]}
+  hideBreadcrumb
 >
 <section class="section section-cloud">
   <div class="wrap">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow">Notre méthode</span>
     <h1 class="h2">Quatre étapes, toujours dans le même ordre</h1>
     <p class="lead">Beaucoup d’élèves suivent des cours supplémentaires sans progresser, parce qu’on leur réexplique le programme du moment au lieu de reprendre ce qui manque en dessous. Notre méthode inverse cet ordre.</p>
@@ -47,7 +49,7 @@ const realFacts = test.f.filter((f) => !isPlaceholder(f[1]));
 <section class="section">
   <div class="wrap" style="max-width:760px">
     <span class="eyebrow">Étape 1, en détail</span>
-    <h2 class="h2">Le test de positionnement</h2>
+    <h2 class="h2">Comment se déroule le test</h2>
     <p class="lead">{test.p}</p>
 
     <div class="modal-cols" style="margin-top:30px">
@@ -77,7 +79,7 @@ const realFacts = test.f.filter((f) => !isPlaceholder(f[1]));
     )}
 
     <div class="hero-actions" style="margin-top:30px">
-      <a class="btn btn-green" href="/inscription">{test.cta}</a>
+      <a class="btn btn-green" href="https://forms.gle/FMWP9KZtjrxyVT3x6" target="_blank" rel="noopener">{test.cta}</a>
     </div>
   </div>
 </section>

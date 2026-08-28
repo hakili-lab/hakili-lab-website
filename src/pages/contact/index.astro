@@ -18,13 +18,15 @@ const contactPointJsonLd = {
 };
 ---
 <SiteLayout
-  title="Contact — Hakili Lab"
+  title="Contact"
   description="Écrivez-nous ou appelez-nous : +226 57 91 91 91 / 58 79 50 50, info@hakililab.com. Cinq centres à Ouagadougou : Pissy, Tampouy, Saaba, SIAO, Nagrin."
   breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Contact' }]}
   jsonLd={contactPointJsonLd}
+  hideBreadcrumb
 >
 <section class="section contact">
   <div class="wrap" style="max-width:640px">
+    <a class="post-link" href="/">&larr; Accueil</a>
     <span class="eyebrow eyebrow-light">Contact</span>
     <h1 class="h2">Contactez-nous</h1>
     <p class="contact-lead">Écrivez-nous ou appelez-nous. Nous vous proposons un test de positionnement gratuit avant toute inscription.</p>
@@ -34,7 +36,7 @@ const contactPointJsonLd = {
       <li><span class="icon"><svg viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg></span><div><b>Cinq centres à Ouagadougou</b><span>Pissy, Tampouy, Saaba, SIAO, Nagrin — <a href="/centres">voir les centres</a></span></div></li>
     </ul>
     <div class="hero-actions" style="margin-top:34px">
-      <a class="btn btn-ghost" href="/inscription">Inscrire mon enfant</a>
+      <a class="btn btn-ghost" href="https://forms.gle/FMWP9KZtjrxyVT3x6" target="_blank" rel="noopener">Inscrire mon enfant</a>
     </div>
   </div>
 </section>
