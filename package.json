@@ -8,7 +8,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "astro preview --port 4321",
+    "verify": "node scripts/verifier-pages.mjs",
+    "verify:contrast": "node scripts/verifier-contrastes.mjs",
     "astro": "astro"
   },
   "dependencies": {

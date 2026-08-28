@@ -152,23 +152,42 @@ Rien n'a été supprimé — liste uniquement, par ordre de priorité.
 
 ## 4. Ce qui manque
 
-| Manque | Important avant mise en ligne ? | Détail |
+**Section revérifiée le 28 août 2026, après les commits et le push.** Le tableau précédent datait d'avant et affichait encore comme 🔴 critiques quatre points depuis résolus. Chaque ligne ci-dessous a été reconfrontée au dépôt réel, pas recopiée.
+
+### 4.1 Résolu depuis la première rédaction
+
+| Point | Résolu par | Vérification faite |
 |---|---|---|
-| **Formulaire de plaquette non fonctionnel** | 🔴 **Oui, critique** | Voir section 2 — `brochure-form.js` n'est plus importé. Le formulaire d'accueil ne fait rien. |
-| **111 fichiers jamais commités, dont des pages entières** | 🔴 **Oui, critique** | Voir alerte transversale section 2. Sans commit, aucun déploiement basé sur Git ne peut publier l'état actuel du site. |
-| **Aucun remote Git configuré** | 🔴 Oui, avant tout déploiement | `git remote -v` vide. Nécessaire dès que l'hébergement choisi se base sur un push Git (Netlify/Vercel/Cloudflare Pages en mode intégration continue). |
-| **Domaine de production (`SITE_URL`)** | 🔴 Oui, avant mise en ligne réelle | `src/data/site.js` pointe encore vers `https://example.com` (choix volontaire et documenté, RFC 2606, en attendant le vrai domaine). Toutes les URLs canoniques, Open Graph, JSON-LD et le sitemap en dépendent. |
-| **Favicon non câblé** | 🟡 Souhaitable, pas bloquant | Aucune balise `<link rel="icon">` dans `BaseLayout.astro`, alors que 3 fichiers favicon existent dans `public/`. `favicon.ico` fonctionne par convention navigateur ; `favicon.svg`/`favicon.png` non. À noter aussi : `favicon.png` pèse 1,09 Mo et `favicon.ico` 132 Ko — tailles inhabituelles pour des favicons (généralement quelques Ko), probablement des exports non recompressés du logo source. |
-| **Image de partage Open Graph** | 🟡 Souhaitable | Déjà signalé dans le code lui-même (`TODO(url)` dans `BaseLayout.astro`) : pas d'image `og:image`/`twitter:image` — les partages sur réseaux sociaux n'auront pas de vignette. |
-| **Tests automatisés** | 🟡 Peut attendre | Aucun framework de test (Vitest, Playwright Test en mode assertion, etc.) — seuls les scripts de vérification manuels existants (section 6) jouent ce rôle, de façon non automatisée. |
-| **CI/CD** | 🟡 Peut attendre, mais recommandé dès le premier déploiement | Aucun `.github/workflows/`. Sans CI, rien n'empêche de déployer un état du dépôt qui casse le build (`npm run build`) sans que personne ne le sache avant que le site soit déjà en ligne cassé. |
-| **`LICENSE`** | 🟢 Peut attendre | Absent. Pertinence à évaluer : site vitrine d'une entreprise, pas un projet open-source — probablement pas nécessaire, à confirmer avec le propriétaire du projet. |
-| **`CONTRIBUTING.md`** | 🟢 Non pertinent en l'état | Pas d'équipe de contributeurs externes identifiée — sans objet tant que le projet reste piloté par une seule personne. |
-| **`robots.txt` statique** | 🟢 Non manquant | Faux positif à vérifier explicitement : généré dynamiquement par `src/pages/robots.txt.ts` à chaque build (contenu vérifié, référence bien le sitemap). Rien à ajouter. |
-| **`sitemap.xml`** | 🟢 Non manquant | Généré automatiquement par l'intégration `@astrojs/sitemap` (`sitemap-index.xml` + fichiers associés), confirmé présent dans chaque build (`dist/sitemap-index.xml`). |
-| **Page 404 personnalisée** | 🟢 Non manquant | `src/pages/404.astro` existe, stylée comme le reste du site, avec liens de secours (accueil, centres, inscription, contact). |
-| **Formats de favicon complets (apple-touch-icon, manifest PWA)** | 🟢 Peut attendre | Pas d'`apple-touch-icon`, pas de `site.webmanifest`. Cohérent avec l'absence totale de balises favicon actuellement (voir plus haut) — à traiter ensemble. |
-| **Raccourcis npm pour les scripts de vérification** | 🟢 Confort, pas un manque fonctionnel | `package.json` ne définit que `dev`/`build`/`preview`/`astro`. Ajouter par exemple `"verify": "node scripts/verifier-pages.mjs"` et `"verify:contrast": "node scripts/verifier-contrastes.mjs"` éviterait de retaper la commande complète à chaque fois. |
+| Formulaire de plaquette non fonctionnel | commit `48f945a` (25/08/2026) | `src/components/Brochure.astro` est un lien de téléchargement direct (`<a href="/plaquette-rentree.pdf" download>`), sans JS ni Web3Forms. `brochure-form.js` a été retiré du dépôt. |
+| Fichiers sources jamais commités | commits `64d4381` puis `e204cfe` | `git status` propre. Pages, données, photos, guides : tout est dans l'historique. |
+| Aucun remote Git | — | `git remote -v` → `origin` = `github.com/hakili-lab/hakili-lab-website` ; branche `main` poussée et à jour. |
+| Domaine de production (`SITE_URL`) | — | `src/data/site.js` → `SITE_URL = 'https://www.hakililab.com'`. `astro.config.mjs` (`site`), `src/pages/robots.txt.ts`, les URLs canoniques, Open Graph, JSON-LD et le sitemap en dérivent tous automatiquement. Il reste à choisir un hébergeur et à faire pointer le DNS du domaine vers lui : action d'exploitation, pas un manque dans le code (voir `README-DEPLOIEMENT.md`). |
+| Favicon non câblé | commit `046aca2` | `src/layouts/BaseLayout.astro` porte `<link rel="icon">` (svg, png 32×32, ico) + `<link rel="apple-touch-icon">`. Les fichiers ont été recompressés : `favicon.png` ≈ 2 Ko, `favicon.ico` ≈ 5,5 Ko, `apple-touch-icon.png` ≈ 12 Ko (contre le ~1 Mo signalé à l'origine). |
+| `apple-touch-icon` + manifest PWA | — | `public/apple-touch-icon.png` câblé ; `public/site.webmanifest` ajouté (nom « Hakili Lab », icônes, `theme_color` `#005CB9`, `display: standalone`) et `<link rel="manifest">` dans `BaseLayout.astro`. |
+| Raccourcis npm pour les scripts de vérification | — | `package.json` définit `verify` (`node scripts/verifier-pages.mjs`) et `verify:contrast` (`node scripts/verifier-contrastes.mjs`). |
+
+### 4.2 Reste à traiter
+
+| Manque | Bloquant ? | Détail |
+|---|---|---|
+| **Image de partage Open Graph** | 🟡 Souhaitable, non bloquant | Toujours pas d'`og:image`/`twitter:image` (commentaires `TODO(url)` restants dans `BaseLayout.astro`). En attente d'un visuel 1200×630 fourni par le propriétaire du projet. Sans lui, les partages sur réseaux sociaux n'ont pas de vignette. |
+| **Tests automatisés** | 🟡 Peut attendre | Aucun framework de test (Vitest, Playwright Test en assertions…). `npm run verify` et `npm run verify:contrast` (section 6) tiennent ce rôle, à lancer manuellement. |
+
+### 4.3 Décisions explicites (pas des oublis)
+
+| Sujet | Décision | Raison |
+|---|---|---|
+| CI/CD (`.github/workflows/`) | Pas mise en place pour l'instant | Projet piloté par une seule personne. L'hébergeur statique (Cloudflare Pages / Netlify / Vercel) exécute déjà `npm run build` à chaque déploiement et ne publie pas un build en échec. À reconsidérer si des contributeurs rejoignent le projet. |
+| `LICENSE` | Pas de fichier de licence | Site vitrine commercial, pas un projet open source. |
+| `CONTRIBUTING.md` | Pas de guide de contribution | Sans objet tant que le projet reste piloté par une seule personne. |
+
+### 4.4 Vérifié non manquant (faux positifs confirmés)
+
+| Élément | Constat |
+|---|---|
+| `robots.txt` | Généré par `src/pages/robots.txt.ts` à chaque build (route API Astro). Contenu vérifié : `User-agent: *`, `Allow: /`, `Sitemap: https://www.hakililab.com/sitemap-index.xml`. |
+| `sitemap.xml` | Généré par `@astrojs/sitemap` (`dist/sitemap-index.xml` + fichiers associés), présent à chaque build. |
+| Page 404 personnalisée | `src/pages/404.astro`, stylée comme le reste du site, avec liens de secours (accueil, centres, inscription, contact). |
 
 ---
 
@@ -191,11 +210,11 @@ Les 10 fichiers à lire en premier pour comprendre comment ce projet est constru
 
 ## 6. Scripts de vérification existants
 
-Trois scripts dans `scripts/`, tous à lancer **manuellement** — aucun n'est automatisé (pas de hook Git pre-commit dans `.git/hooks/`, aucun `.husky/`, aucune CI, et pas même un alias dans `package.json` pour les lancer sans retaper le chemin complet).
+Trois scripts dans `scripts/`, tous à lancer **manuellement** — aucun n'est automatisé (pas de hook Git pre-commit dans `.git/hooks/`, aucun `.husky/`, aucune CI). Deux d'entre eux ont un raccourci `package.json` : `npm run verify` (→ `verifier-pages.mjs`) et `npm run verify:contrast` (→ `verifier-contrastes.mjs`).
 
 ### `scripts/verifier-pages.mjs`
 
-Le plus complet. Pilote un vrai Chromium (Playwright) sur chaque route d'un **build déjà généré et servi** (`npm run build && npm run preview`, par défaut sur `http://localhost:4321`, override possible avec `--base=`). Pour chaque route, vérifie :
+Le plus complet. Pilote un vrai Chromium (Playwright) sur chaque route d'un **build déjà généré et servi** (`npm run build && npm run preview`, servi sur `http://localhost:4321` — port fixé dans le script `preview` —, override possible avec `--base=`). Pour chaque route, vérifie :
 
 - **Accessibilité** : audit `axe-core` complet (règles WCAG 2.0/2.1 niveaux A et AA).
 - **Liens internes morts** : tout `<a href="/...">` doit correspondre à une route réellement construite (ou, depuis la dernière correction, à un fichier statique réellement présent dans `dist/`, comme un PDF).
@@ -203,11 +222,11 @@ Le plus complet. Pilote un vrai Chromium (Playwright) sur chaque route d'un **bu
 - **Images déformées** : toute image en `object-fit:fill` (comportement par défaut si `object-fit` n'est pas précisé) dont le ratio affiché s'écarte de plus de 2 % de son ratio naturel.
 - **Répétitions de contenu** : détecteur de doublons (blocs de texte identiques sur une même page, blocs identiques sur plus de 2 pages, quasi-doublons à ≥85 % de similarité par trigrammes, chiffres-clés répétés) avec une liste d'exceptions documentées et justifiées dans le script lui-même.
 
-Commande : `node scripts/verifier-pages.mjs [--shots=dossier] [--base=http://localhost:4321]`. L'option `--shots` ajoute une capture d'écran plein-page par route, à 1280 px et 390 px de large.
+Commande : `npm run verify` (ou `node scripts/verifier-pages.mjs [--shots=dossier] [--base=http://localhost:4321]` ; passer des options via `npm run verify -- --shots=…`). L'option `--shots` ajoute une capture d'écran plein-page par route, à 1280 px et 390 px de large.
 
 ### `scripts/verifier-contrastes.mjs`
 
-Calculateur de contraste WCAG 2.1 écrit à la main (luminance relative), sans dépendance à un navigateur. Contient une table de toutes les paires texte/fond utilisées sur le site, tenue à jour manuellement à chaque nouvelle combinaison de couleurs introduite. Compare chaque paire au seuil requis (4,5:1 texte normal, 3:1 grand texte/composants d'interface). Commande : `node scripts/verifier-contrastes.mjs`.
+Calculateur de contraste WCAG 2.1 écrit à la main (luminance relative), sans dépendance à un navigateur. Contient une table de toutes les paires texte/fond utilisées sur le site, tenue à jour manuellement à chaque nouvelle combinaison de couleurs introduite. Compare chaque paire au seuil requis (4,5:1 texte normal, 3:1 grand texte/composants d'interface). Commande : `npm run verify:contrast` (ou `node scripts/verifier-contrastes.mjs`).
 
 ### `scripts/optimiser-images.mjs`
 

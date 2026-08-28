@@ -2,7 +2,7 @@
 
 Pour quelqu'un qui reprend ce projet sans avoir suivi son développement. Commandes exactes, à copier-coller telles quelles.
 
-> **Avant de déployer**, lisez la section "Constat transversal" et la section 4 de `docs/RAPPORT-PROJET.md` — il y a un bug fonctionnel actif (formulaire de plaquette) et 111 fichiers jamais commités à traiter d'abord, sans quoi ce que vous mettrez en ligne ne correspondra pas à l'état réel du travail effectué.
+> **État au 28/08/2026** (voir `docs/RAPPORT-PROJET.md` section 4 pour le détail) : le code est prêt. `SITE_URL` pointe déjà sur `https://www.hakililab.com`, le favicon et le manifest sont câblés, le dépôt est sur GitHub (`github.com/hakili-lab/hakili-lab-website`, branche `main`) et à jour. Restent : choisir un hébergeur et y faire pointer le DNS du domaine (ce guide), et une image de partage Open Graph (en attente d'un visuel).
 
 ---
 
@@ -13,12 +13,12 @@ Pour quelqu'un qui reprend ce projet sans avoir suivi son développement. Comman
   node --version
   npm --version
   ```
-- Un accès au dépôt Git du projet (actuellement local uniquement, aucun remote configuré — voir "Déploiement" plus bas).
+- Un accès au dépôt GitHub du projet (`github.com/hakili-lab/hakili-lab-website`).
 
 ### Cloner et installer
 
 ```sh
-git clone <url-du-depot> hakili-lab
+git clone https://github.com/hakili-lab/hakili-lab-website.git hakili-lab
 cd hakili-lab
 npm install
 ```
@@ -33,7 +33,7 @@ Une seule variable est nécessaire pour que le site fonctionne complètement :
 
 | Variable | Sert à | Où l'obtenir |
 |---|---|---|
-| `PUBLIC_WEB3FORMS_KEY` | Envoi du formulaire de contact et du champ e-mail de la plaquette (service Web3Forms). | Créer un compte gratuit sur [web3forms.com](https://web3forms.com), récupérer la clé associée au domaine du site. |
+| `PUBLIC_WEB3FORMS_KEY` | Envoi par e-mail du formulaire d'inscription (`/inscription`, service Web3Forms). Lue dans `src/pages/inscription/index.astro`. La plaquette de la rentrée est un téléchargement direct de `public/plaquette-rentree.pdf`, sans e-mail ni clé. | Créer un compte gratuit sur [web3forms.com](https://web3forms.com), récupérer la clé associée au domaine du site. |
 
 ### En local
 
@@ -64,21 +64,21 @@ Génère le site statique dans `dist/`. **Vérifier que la commande se termine p
 ```sh
 npm run preview
 ```
-Sert le contenu de `dist/` (le build réel, pas un serveur de dev) sur `http://localhost:4321` par défaut. C'est cette commande qu'il faut avoir lancée avant d'exécuter les scripts de vérification ci-dessous, puisqu'ils testent le build réel.
+Sert le contenu de `dist/` (le build réel, pas un serveur de dev) sur `http://localhost:4321` (port fixé dans le script `preview` de `package.json`). C'est cette commande qu'il faut avoir lancée avant d'exécuter les scripts de vérification ci-dessous, puisqu'ils testent le build réel.
 
 ### Vérifier que le build est correct avant de déployer
 
 Avec `npm run preview` démarré dans un terminal, dans un second terminal :
 
 ```sh
-node scripts/verifier-pages.mjs
+npm run verify
 ```
-Doit se terminer sur `0 violation(s) axe-core, 0 lien(s) mort(s), 0 ancre(s) orpheline(s), 0 image(s) deformee(s), 0 repetition(s) de contenu`. Toute ligne différente de zéro liste précisément la route et le problème.
+Raccourci de `node scripts/verifier-pages.mjs` (qui vise `http://localhost:4321` par défaut). Doit se terminer sur une ligne tout à zéro : `35 route(s) verifiee(s), 0 violation(s) axe-core, 0 lien(s) mort(s), 0 ancre(s) orpheline(s), 0 image(s) deformee(s), 0 repetition(s) de contenu, 0 quasi-doublon(s), 0 chiffre(s)-cle repete(s)`. Toute ligne différente de zéro liste précisément la route et le problème.
 
 ```sh
-node scripts/verifier-contrastes.mjs
+npm run verify:contrast
 ```
-Doit se terminer sur `Toutes les combinaisons passent.`
+Raccourci de `node scripts/verifier-contrastes.mjs`. Doit se terminer sur `Toutes les combinaisons passent.`
 
 Arrêter ensuite le serveur de prévisualisation (`Ctrl+C` dans son terminal, ou `npx astro preview stop` s'il tourne en arrière-plan).
 
@@ -86,7 +86,7 @@ Arrêter ensuite le serveur de prévisualisation (`Ctrl+C` dans son terminal, ou
 
 ## Déploiement
 
-**Aucun hébergeur n'est actuellement configuré** pour ce projet (vérifié : aucun fichier `netlify.toml`/`vercel.json`/`wrangler.toml`, aucun `.github/workflows/`, et `git remote -v` ne retourne rien — le dépôt local n'est connecté à aucun service distant).
+Le dépôt est sur GitHub (`origin` → `github.com/hakili-lab/hakili-lab-website`, branche `main`), mais **aucun hébergeur n'y est encore branché** (vérifié : aucun fichier `netlify.toml`/`vercel.json`/`wrangler.toml`, aucun `.github/workflows/`).
 
 Le site est un export 100 % statique (`dist/`, sans serveur Node ni fonction serverless requise), compatible avec n'importe quel hébergeur de sites statiques. Options courantes, sans trancher à votre place :
 
@@ -99,13 +99,12 @@ Le site est un export 100 % statique (`dist/`, sans serveur Node ni fonction ser
 
 Marche générale une fois l'hébergeur choisi (identique pour Cloudflare Pages/Netlify/Vercel) :
 
-1. Créer un dépôt Git distant (GitHub/GitLab) et y pousser ce projet :
+1. Vérifier que le dépôt GitHub est à jour :
    ```sh
-   git remote add origin <url-du-nouveau-depot>
-   git push -u origin master
+   git status        # doit être propre
+   git push          # rien à pousser si tout est déjà en ligne
    ```
-   (voir la section "Constat transversal" de `docs/RAPPORT-PROJET.md` avant cette étape — il faut d'abord committer les 111 fichiers non suivis, sans quoi ce push ne contiendra pas l'état réel du site.)
-2. Connecter ce dépôt distant depuis l'interface de l'hébergeur choisi.
+2. Connecter le dépôt `hakili-lab/hakili-lab-website` (branche `main`) depuis l'interface de l'hébergeur choisi.
 3. Renseigner la commande de build : `npm run build`, et le dossier de sortie : `dist`.
 4. Renseigner `PUBLIC_WEB3FORMS_KEY` dans les variables d'environnement de l'hébergeur (voir plus haut).
 5. Déclencher le premier déploiement.
@@ -114,19 +113,11 @@ Marche générale une fois l'hébergeur choisi (identique pour Cloudflare Pages/
 
 ## Domaine personnalisé
 
-Une fois un nom de domaine choisi et pointé vers l'hébergeur (procédure DNS propre à chaque hébergeur — CNAME ou enregistrement A selon le cas) :
+Le domaine `www.hakililab.com` est déjà inscrit dans `src/data/site.js` (`SITE_URL`), d'où dérivent l'URL canonique, l'Open Graph, le JSON-LD, le sitemap et `robots.txt`. Il reste à le raccorder à l'hébergeur :
 
-1. Ouvrir `src/data/site.js` et remplacer :
-   ```js
-   export const SITE_URL = 'https://example.com';
-   ```
-   par la vraie valeur, par exemple :
-   ```js
-   export const SITE_URL = 'https://www.hakililab.com';
-   ```
-   Sans barre oblique finale.
-2. Vérifier que `astro.config.mjs` importe déjà `SITE_URL` depuis ce même fichier pour son champ `site` — c'est déjà le cas, aucune modification à faire là.
-3. Recompiler (`npm run build`) et redéployer : l'URL canonique, les balises Open Graph, le JSON-LD et le sitemap se mettent à jour automatiquement à partir de cette seule valeur.
+1. Chez le registrar du domaine, faire pointer `www.hakililab.com` vers l'hébergeur (procédure DNS propre à chacun — CNAME ou enregistrement A selon le cas), et ajouter le domaine dans l'interface de l'hébergeur.
+2. Si le domaine final devait différer de `https://www.hakililab.com`, le corriger dans `src/data/site.js` (avec le `https://`, **sans barre oblique finale**) — c'est la seule valeur à changer — puis recompiler et redéployer.
+3. Vérifier après coup : `https://www.hakililab.com/robots.txt` et `/sitemap-index.xml` doivent répondre et référencer le bon domaine.
 
 ---
 
@@ -134,13 +125,13 @@ Une fois un nom de domaine choisi et pointé vers l'hébergeur (procédure DNS p
 
 Une fois le site en ligne sur sa vraie URL, vérifier concrètement :
 
-- [ ] **Formulaire de contact** (`/contact`) : soumettre un test, confirmer la réception de l'e-mail.
-- [ ] **Formulaire de plaquette** (bloc "Recevez la plaquette de la rentrée" sur l'accueil) : **ne fonctionnera pas tant que le bug documenté dans `docs/RAPPORT-PROJET.md` section 2 n'est pas corrigé** (script `brochure-form.js` non importé) — à corriger avant ce test, pas après.
-- [ ] **Liens WhatsApp** (`/inscription`) : cliquer, confirmer l'ouverture de WhatsApp avec le bon numéro pré-rempli.
-- [ ] **`https://<domaine>/sitemap-index.xml`** : doit répondre et lister les URLs réelles du site (pas `example.com`).
-- [ ] **`https://<domaine>/robots.txt`** : doit répondre et référencer le bon sitemap.
-- [ ] Relancer `node scripts/verifier-pages.mjs --base=https://<domaine>` pour vérifier liens et ancres sur le site réellement en ligne (et pas seulement en local).
-- [ ] Vérifier que `/dr-maya`, `/amira`, `/galerie` et les autres pages ajoutées récemment sont bien accessibles en production (elles ne le seront que si le commit/push a bien inclus les 111 fichiers actuellement non suivis — voir plus haut).
+- [ ] **Formulaire d'inscription** (`/inscription`) : c'est le seul formulaire du site. Tester les deux boutons — « Envoyer sur WhatsApp » (doit ouvrir WhatsApp avec le message pré-rempli vers le bon numéro) et « Envoyer par e-mail » (Web3Forms, confirmer la réception du mail). Nécessite `PUBLIC_WEB3FORMS_KEY` renseignée au build.
+- [ ] **Page contact** (`/contact`) : pas de formulaire, seulement des coordonnées — vérifier les liens `tel:`, `mailto:` et le bouton « Inscrire mon enfant » (Google Forms).
+- [ ] **Plaquette de la rentrée** (bloc « Recevez la plaquette de la rentrée » sur l'accueil) : cliquer sur « Télécharger », confirmer que `plaquette-rentree.pdf` se télécharge bien.
+- [ ] **`https://www.hakililab.com/sitemap-index.xml`** : doit répondre et lister les URLs réelles du site.
+- [ ] **`https://www.hakililab.com/robots.txt`** : doit répondre et référencer le bon sitemap.
+- [ ] Relancer `npm run verify -- --base=https://www.hakililab.com` pour vérifier liens et ancres sur le site réellement en ligne (et pas seulement en local).
+- [ ] Parcourir la navigation complète (`/dr-maya`, `/amira`, `/galerie`, fiches centres, articles de blog…) pour confirmer que toutes les pages répondent en production.
 
 ---
 
@@ -151,4 +142,4 @@ Une fois le site en ligne sur sa vraie URL, vérifier concrètement :
 - **Mettre à jour un tarif ou une caractéristique de service/manuel** : directement dans les fichiers `src/content/services/*.md` ou `src/content/manuels/*.md` (frontmatter), ou dans `src/data/details.js` pour les fiches "En savoir plus" (services, manuels, applications).
 - **Mettre à jour une donnée de centre** (horaires, adresse, coordonnées) : `src/data/centres.js`, validé par un schéma Zod au build — une valeur manquante sur un centre marqué `pretPourPublication:true` fait échouer `npm run build` avec un message précis plutôt que de publier une fiche à moitié vide.
 
-Après toute modification de contenu, relancer la boucle `npm run build` → `npm run preview` → `node scripts/verifier-pages.mjs` → `node scripts/verifier-contrastes.mjs` décrite plus haut avant de redéployer.
+Après toute modification de contenu, relancer la boucle `npm run build` → `npm run preview` → `npm run verify` → `npm run verify:contrast` décrite plus haut avant de redéployer.

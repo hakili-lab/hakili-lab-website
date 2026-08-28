@@ -5,7 +5,7 @@ import { SITE_URL } from './src/data/site.js';
 
 // https://astro.build/config
 export default defineConfig({
-  site: SITE_URL, // TODO(url): src/data/site.js porte la vraie valeur a remplacer
+  site: SITE_URL, // defini dans src/data/site.js
   server: { port: 3000 },
   integrations: [
     sitemap({
