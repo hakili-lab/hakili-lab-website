@@ -1,3 +1,5 @@
+// Logique d'onglets du selecteur de niveau (LevelFinder.astro) : peint la
+// description du niveau choisi a partir de src/data/levels.js.
 import { data } from '../data/levels.js';
 
 function paint(k, tabEl) {

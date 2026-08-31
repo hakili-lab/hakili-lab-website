@@ -1,3 +1,5 @@
+// Configuration Astro du site : URL de production (pour le sitemap et les
+// URLs canoniques) et generation du sitemap-index.xml au build.
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';

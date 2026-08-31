@@ -1,3 +1,5 @@
+// Route API Astro qui genere /robots.txt dynamiquement au build (pas un
+// fichier statique dans public/), pour pointer vers SITE_URL sans le dupliquer.
 import type { APIRoute } from 'astro';
 import { SITE_URL } from '../data/site.js';
 

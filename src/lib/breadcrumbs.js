@@ -1,3 +1,5 @@
+// Construit le balisage JSON-LD BreadcrumbList a partir des memes items que
+// le fil d'Ariane visuel (Breadcrumbs.astro), utilise par SiteLayout.astro.
 import { SITE_URL } from '../data/site.js';
 
 export function breadcrumbJsonLd(items) {

@@ -1,3 +1,6 @@
+// Schemas Zod des collections de contenu (blog, services, manuels). Une
+// entree qui ne respecte pas son schema fait echouer `astro build`, pas
+// seulement un avertissement.
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { isPlaceholder } from './lib/placeholders.js';

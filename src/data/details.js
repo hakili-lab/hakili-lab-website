@@ -1,3 +1,6 @@
+// Fiches "En savoir plus" affichees en modale (DetailModal.astro) et lues
+// directement par certaines pages (/methode, /amira, /dr-maya).
+//
 // 7 entrees : les autres (formules, programmes, manuels) ont ete retirees
 // le 2026-08-22 car verifie qu'aucune carte ni page ne les reference plus.
 // Deux verifications necessaires, pas une seule (la premiere passe de ce

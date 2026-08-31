@@ -1,3 +1,6 @@
+// Diaporama en fondu du bandeau d'accueil (Hero.astro) : clone les <template>
+// data-hero-slide dans le DOM puis fait tourner .is-active toutes les
+// DURATION ms. Rien ne bouge sans JS ni avec prefers-reduced-motion.
 var DURATION = 4000; // doit rester synchronisé avec la transition de .hero-media img (hero.css)
 var media = document.querySelector('.hero-media');
 

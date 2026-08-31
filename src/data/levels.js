@@ -1,3 +1,5 @@
+// Description de chaque niveau scolaire (primaire + secondaire), affichee
+// par le selecteur de niveau de l'accueil (LevelFinder.astro / level-finder.js).
 export var data={
     cp1:{t:"CP1",d:"Premiers apprentissages du nombre et du calcul, dans un cadre rassurant et très progressif.",m:"Mathématiques",o:"Bases du nombre"},
     cp2:{t:"CP2",d:"Consolidation des premières opérations et entrée dans les petits problèmes du quotidien.",m:"Mathématiques",o:"Calcul et problèmes"},

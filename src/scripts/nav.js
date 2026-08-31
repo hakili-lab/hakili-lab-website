@@ -1,3 +1,5 @@
+// Menu mobile (Header.astro) : ouverture/fermeture du panneau et de son
+// bouton hamburger, fermeture au clic exterieur ou sur Echap.
 var toggle = document.getElementById('navToggle'), nav = document.getElementById('nav');
 
 function isMobileMenuOpen() { return nav.classList.contains('open'); }

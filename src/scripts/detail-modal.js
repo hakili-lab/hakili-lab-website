@@ -1,3 +1,6 @@
+// Ouvre la fiche detail modale (DetailModal.astro) au clic sur une carte
+// "En savoir plus" : retrouve l'entree de src/data/details.js dont le titre
+// normalise correspond au titre de la carte cliquee.
 import { detail } from '../data/details.js';
 import { isPlaceholder } from '../lib/placeholders.js';
 
