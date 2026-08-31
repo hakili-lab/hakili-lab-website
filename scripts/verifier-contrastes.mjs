@@ -78,7 +78,6 @@ const cases = [
   ['Baseline "EN MATHEMATIQUES" agrandie (12px) vert (corrigé) / fond blanc', T.green, T.white, 12, false, 'text'],
   ['.eyebrow-light blanc 72% / fond bleu (section contact)', blend(T.white, 0.85, T.blue), T.blue, 12.5, false, 'text'],
   ['.contact-lead blanc 84% / fond bleu', blend(T.white, 0.84, T.blue), T.blue, 16.5, false, 'text'],
-  ['.contact-items span blanc 78% / fond bleu', blend(T.white, 0.78, T.blue), T.blue, 15, false, 'text'],
   ['Pied de page texte blanc 72% / fond marine (#0B1B2E)', blend(T.white, 0.72, T.footerBg), T.footerBg, 15, false, 'text'],
   ['Bandeau .topbar-contact blanc 80% / fond bleu profond', blend(T.white, 0.8, T.blueDeep), T.blueDeep, 14, false, 'text'],
   ['.topbar-tag texte foncé / fond citron vert (lime)', T.topbarTagInk, T.lime, 11.5, true, 'text'],

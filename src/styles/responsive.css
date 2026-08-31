@@ -12,7 +12,7 @@
   .nav-toggle{display:block}
   .brand-line{display:none}
   .topbar-sentence{display:none}
-  .split,.contact-grid,.brochure{grid-template-columns:1fr;gap:36px}
+  .split,.brochure{grid-template-columns:1fr;gap:36px}
   .cards-3,.posts,.quotes,.books,.cards-4{grid-template-columns:1fr 1fr}
   .steps{grid-template-columns:1fr 1fr}
   .step::before{display:none}

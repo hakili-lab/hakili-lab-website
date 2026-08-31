@@ -11,7 +11,7 @@ var LEGACY_ANCHORS = {
   '#productions': '/manuels',
   '#galerie': '/galerie',
   '#faq': '/faq',
-  '#contact': '/contact',
+  '#contact': '/#contact',
   '#accueil': '/',
 };
 

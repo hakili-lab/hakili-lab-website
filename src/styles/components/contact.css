@@ -1,12 +1,6 @@
 .contact{background:var(--blue);color:#fff}
 .contact .h2{color:#fff}
-.contact-grid{display:grid;grid-template-columns:1fr 1.05fr;gap:60px;align-items:start}
 .contact-lead{color:rgba(255,255,255,.84);margin-top:16px;max-width:44ch}
-.contact-items{list-style:none;padding:0;margin:34px 0 0;display:grid;gap:18px}
-.contact-items li{display:flex;gap:14px;align-items:flex-start}
-.contact-items .icon{background:rgba(255,255,255,.14);color:#fff;flex:none}
-.contact-items b{display:block;font-family:'Poppins',sans-serif;font-weight:600;font-size:15.5px}
-.contact-items span{color:rgba(255,255,255,.78);font-size:15px}
 .form{background:#fff;border-radius:var(--r);padding:32px;color:var(--ink)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .field{display:block;margin-bottom:16px}

@@ -62,7 +62,7 @@ const EXCEPTIONS = new Map([
   // formulaire : la coherence exige qu'elle soit identique partout ou elle
   // s'applique, ce n'est pas du contenu editorial qui devrait varier.
   [
-    'pour l adresse exacte et l itineraire appelez nous 57 91 91 91 58 79 50 50 ou contactez nous',
+    'pour l adresse exacte et l itineraire appelez nous 57 91 91 91 58 79 50 50',
     "Micro-copie de repli pour centre sans adresse publique encore renseignee (comme un message d'etat vide) : coherence voulue, pas un doublon editorial.",
   ],
   // "Enseignants et etablissements" (public vise) + les 3 descripteurs de
