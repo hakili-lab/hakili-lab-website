@@ -2,7 +2,7 @@
 
 Pour quelqu'un qui reprend ce projet sans avoir suivi son développement. Commandes exactes, à copier-coller telles quelles.
 
-> **État au 28/08/2026** (voir `docs/RAPPORT-PROJET.md` section 4 pour le détail) : le code est prêt. `SITE_URL` pointe déjà sur `https://www.hakililab.com`, le favicon et le manifest sont câblés, le dépôt est sur GitHub (`github.com/hakili-lab/hakili-lab-website`, branche `main`) et à jour. Restent : choisir un hébergeur et y faire pointer le DNS du domaine (ce guide), et une image de partage Open Graph (en attente d'un visuel).
+> **État au 31/08/2026** (voir `docs/RAPPORT-PROJET.md` section 4 pour le détail) : le code est prêt. `SITE_URL` pointe déjà sur `https://www.hakililab.com`, le favicon et le manifest sont câblés, le dépôt est sur GitHub (`github.com/hakili-lab/hakili-lab-website`, branche `main`) et à jour. Les pages `/contact` et `/inscription` ainsi que Web3Forms ont été retirées (plus aucune page fantôme, plus aucune variable d'environnement requise). Restent : choisir un hébergeur et y faire pointer le DNS du domaine (ce guide), et une image de partage Open Graph (en attente d'un visuel).
 
 ---
 
@@ -29,23 +29,10 @@ npm install
 
 ## Variables d'environnement
 
-Une seule variable est nécessaire pour que le site fonctionne complètement :
-
-| Variable | Sert à | Où l'obtenir |
-|---|---|---|
-| `PUBLIC_WEB3FORMS_KEY` | Envoi par e-mail du formulaire d'inscription (`/inscription`, service Web3Forms). Lue dans `src/pages/inscription/index.astro`. La plaquette de la rentrée est un téléchargement direct de `public/plaquette-rentree.pdf`, sans e-mail ni clé. | Créer un compte gratuit sur [web3forms.com](https://web3forms.com), récupérer la clé associée au domaine du site. |
-
-### En local
-
-```sh
-cp .env.example .env
-```
-
-Puis ouvrir `.env` et coller la clé après `PUBLIC_WEB3FORMS_KEY=`. Ce fichier est ignoré par Git (`.gitignore`) — ne jamais le committer avec une vraie clé dedans.
-
-### En production
-
-Déclarer la même variable (`PUBLIC_WEB3FORMS_KEY`, avec la vraie valeur) dans l'interface de l'hébergeur choisi — chaque hébergeur a son propre emplacement pour les variables d'environnement (Netlify : *Site settings → Environment variables* ; Vercel : *Project settings → Environment Variables* ; Cloudflare Pages : *Settings → Environment variables*). Le préfixe `PUBLIC_` est une convention Astro : la variable est injectée dans le code envoyé au navigateur, donc pas besoin de la marquer "secrète" côté hébergeur — mais elle doit être présente **au moment du build**, pas seulement à l'exécution.
+Aucune. Le site n'a plus de formulaire ni de service tiers à configurer
+(le contact se fait par lien `tel:`/`mailto:`/WhatsApp direct, la plaquette
+de la rentrée est un téléchargement direct de `public/plaquette-rentree.pdf`) :
+`npm run build` fonctionne sans aucun fichier `.env` ni variable système.
 
 ---
 
@@ -73,7 +60,7 @@ Avec `npm run preview` démarré dans un terminal, dans un second terminal :
 ```sh
 npm run verify
 ```
-Raccourci de `node scripts/verifier-pages.mjs` (qui vise `http://localhost:4321` par défaut). Doit se terminer sur une ligne tout à zéro : `35 route(s) verifiee(s), 0 violation(s) axe-core, 0 lien(s) mort(s), 0 ancre(s) orpheline(s), 0 image(s) deformee(s), 0 repetition(s) de contenu, 0 quasi-doublon(s), 0 chiffre(s)-cle repete(s)`. Toute ligne différente de zéro liste précisément la route et le problème.
+Raccourci de `node scripts/verifier-pages.mjs` (qui vise `http://localhost:4321` par défaut). Doit se terminer sur une ligne tout à zéro : `34 route(s) verifiee(s), 0 violation(s) axe-core, 0 lien(s) mort(s), 0 ancre(s) orpheline(s), 0 image(s) deformee(s), 0 repetition(s) de contenu, 0 quasi-doublon(s), 0 chiffre(s)-cle repete(s)`. Toute ligne différente de zéro liste précisément la route et le problème.
 
 ```sh
 npm run verify:contrast
@@ -93,9 +80,9 @@ Le site est un export 100 % statique (`dist/`, sans serveur Node ni fonction ser
 | Hébergeur | Différenciateur |
 |---|---|
 | **Cloudflare Pages** | Gratuit à large échelle, réseau de diffusion mondial rapide, intégration Git native (build automatique à chaque push). |
-| **Netlify** | Interface la plus simple pour démarrer, formulaires natifs intégrés (alternative possible à Web3Forms), déploiements de prévisualisation par pull request. |
+| **Netlify** | Interface la plus simple pour démarrer, déploiements de prévisualisation par pull request. |
 | **Vercel** | Très bonne intégration avec Astro, déploiements de prévisualisation par pull request également, analytics basiques inclus en gratuit. |
-| **GitHub Pages** | Gratuit, mais nécessite un contournement pour les variables d'environnement au build (secrets GitHub Actions) et pas de redirections serveur natives. |
+| **GitHub Pages** | Gratuit, mais pas de redirections serveur natives. |
 
 Marche générale une fois l'hébergeur choisi (identique pour Cloudflare Pages/Netlify/Vercel) :
 
@@ -106,8 +93,7 @@ Marche générale une fois l'hébergeur choisi (identique pour Cloudflare Pages/
    ```
 2. Connecter le dépôt `hakili-lab/hakili-lab-website` (branche `main`) depuis l'interface de l'hébergeur choisi.
 3. Renseigner la commande de build : `npm run build`, et le dossier de sortie : `dist`.
-4. Renseigner `PUBLIC_WEB3FORMS_KEY` dans les variables d'environnement de l'hébergeur (voir plus haut).
-5. Déclencher le premier déploiement.
+4. Déclencher le premier déploiement (aucune variable d'environnement à renseigner, voir plus haut).
 
 ---
 
@@ -125,8 +111,7 @@ Le domaine `www.hakililab.com` est déjà inscrit dans `src/data/site.js` (`SITE
 
 Une fois le site en ligne sur sa vraie URL, vérifier concrètement :
 
-- [ ] **Formulaire d'inscription** (`/inscription`) : c'est le seul formulaire du site. Tester les deux boutons — « Envoyer sur WhatsApp » (doit ouvrir WhatsApp avec le message pré-rempli vers le bon numéro) et « Envoyer par e-mail » (Web3Forms, confirmer la réception du mail). Nécessite `PUBLIC_WEB3FORMS_KEY` renseignée au build.
-- [ ] **Page contact** (`/contact`) : pas de formulaire, seulement des coordonnées — vérifier les liens `tel:`, `mailto:` et le bouton « Inscrire mon enfant » (Google Forms).
+- [ ] **Contact** : le site n'a plus de page dédiée ni de formulaire — vérifier que les liens `tel:`, `mailto:` et les boutons « Contact »/« Nos coordonnées » (WhatsApp) fonctionnent, ainsi que le bouton « Inscrire mon enfant » (Google Forms).
 - [ ] **Plaquette de la rentrée** (bloc « Recevez la plaquette de la rentrée » sur l'accueil) : cliquer sur « Télécharger », confirmer que `plaquette-rentree.pdf` se télécharge bien.
 - [ ] **`https://www.hakililab.com/sitemap-index.xml`** : doit répondre et lister les URLs réelles du site.
 - [ ] **`https://www.hakililab.com/robots.txt`** : doit répondre et référencer le bon sitemap.

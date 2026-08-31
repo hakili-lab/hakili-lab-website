@@ -4,7 +4,8 @@ Site vitrine du centre de tutorat Hakili Lab (Ouagadougou), en mathématiques
 et physique-chimie du primaire au secondaire. Astro, rendu 100 % statique.
 
 Le site est multipage : accueil, à propos, méthode, enseignants, services,
-centres, manuels, Amira, Dr Maya, galerie, blog, FAQ, contact, inscription.
+centres, manuels, Amira, Dr Maya, galerie, blog, FAQ. Le contact se fait par
+WhatsApp (lien direct) ou par téléphone/e-mail, pas via une page dédiée.
 Le contenu éditorial (articles, fiches service, fiches manuels) vit dans des
 collections de contenu Markdown ; les centres et l'équipe dans des modules de
 données JS validés par Zod au build.

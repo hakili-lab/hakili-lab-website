@@ -181,31 +181,27 @@ logo attendu (dimensions/résolution) : rien de existant à citer ici.
 
 ## 7. Coordonnées
 
-### Téléphone — incohérence trouvée
+### Téléphone — incohérence résolue
 
-Deux numéros réels coexistent partout dans le site :
-`+226 57 91 91 91` et `+226 58 79 50 50`. Le premier est traité comme
-numéro principal à 3 endroits (JSON-LD `ContactPoint`/`Organization`,
-lien cliquable de la barre du haut), mais **le bouton d'appel du menu
-mobile (bandeau collant en bas de l'écran) appelle l'autre numéro** :
-
-| Emplacement | Numéro utilisé comme numéro « par défaut » | Fichier |
-| --- | --- | --- |
-| Barre du haut, lien `tel:` (le texte affiche les deux numéros, mais le lien n'en compose qu'un) | 57 91 91 91 | `src/components/TopBar.astro:6` |
-| JSON-LD `Organization` (accueil et toutes les pages) | 57 91 91 91 en premier | `src/layouts/BaseLayout.astro:21` |
-| JSON-LD `ContactPoint` de la page Contact | 57 91 91 91 | `src/pages/contact/index.astro:12` |
-| JSON-LD `LocalBusiness` de chaque fiche centre | 57 91 91 91 en premier | `src/pages/centres/[slug].astro:36` |
-| **Bandeau mobile collant, bouton « Appeler »** | **58 79 50 50** | `src/components/Footer.astro:31` |
-
-À trancher : lequel des deux numéros doit être « le » numéro par défaut
-quand un seul est composé en un clic (barre du haut et bandeau mobile).
+Deux numéros réels coexistent sur le site : `+226 57 91 91 91` et
+`+226 58 79 50 50`. L'incohérence notée ici à l'origine (un bandeau
+mobile collant dont le bouton « Appeler » composait le second numéro
+alors que tout le reste du site traite le premier comme numéro
+principal) **n'a plus lieu d'être** : ce bandeau a été retiré du site
+(plus de `.mobile-cta`), et la page `/contact` qui portait le JSON-LD
+`ContactPoint` a été retirée aussi (remplacée par des liens WhatsApp
+directs). Le premier numéro (57 91 91 91) reste le numéro par défaut
+partout où un seul est composé en un clic (barre du haut, JSON-LD
+`Organization`/`LocalBusiness`) ; le second n'apparaît plus que comme
+second lien `tel:` explicite (fiches centres), jamais comme numéro
+« par défaut » implicite.
 
 ### Récapitulatif de toutes les occurrences
 
 | Type | Valeur | Nombre d'occurrences | Fichiers |
 | --- | --- | --- | --- |
-| Téléphone (les deux numéros ensemble) | `57 91 91 91` / `58 79 50 50` | 4 | `TopBar.astro:6`, `contact/index.astro:22,34`, `centres/[slug].astro:82` |
-| E-mail | `info@hakililab.com` | 6 | `BaseLayout.astro:20`, `TopBar.astro:7`, `contact/index.astro:13,22,35`, `centres/[slug].astro:35` |
+| Téléphone (les deux numéros ensemble) | `57 91 91 91` / `58 79 50 50` | 3 | `TopBar.astro:12`, `BaseLayout.astro:24`, `centres/[slug].astro:39,85` |
+| E-mail | `info@hakililab.com` | 3 | `BaseLayout.astro:23`, `TopBar.astro:13`, `centres/[slug].astro:38` |
 | Facebook | `https://web.facebook.com/hakililab` | 2 | `BaseLayout.astro:27`, `Footer.astro:23` |
 | TikTok | `https://www.tiktok.com/@hakililab` | 2 | `BaseLayout.astro:28`, `Footer.astro:23` |
 

@@ -4,6 +4,15 @@ Document de référence pour quiconque reprend ce projet. Chaque affirmation ci-
 
 Généré le 28 août 2026.
 
+> **Mise à jour du 31/08/2026** : `/contact` et `/inscription` ont été retirées
+> (pages fantômes confirmées, 0 lien interne), et Web3Forms avec elles
+> (`src/scripts/contact-form.js`, `.env`/`.env.example`,
+> `PUBLIC_WEB3FORMS_KEY`) — le site n'a plus aucune variable d'environnement
+> ni service tiers de formulaire. Les sections 1 (services externes) et 2
+> (inventaire) ci-dessous sont corrigées en conséquence ; le reste du
+> document garde son horodatage du 28/08 pour tout ce qui n'a pas changé
+> depuis.
+
 ---
 
 ## 1. Outils et stack utilisés
@@ -41,8 +50,7 @@ Généré le 28 août 2026.
 
 | Service | Où / comment | Clé ou config nécessaire |
 |---|---|---|
-| **Web3Forms** (`web3forms.com`) | Envoi du formulaire de contact (`src/scripts/contact-form.js`) et du champ e-mail de la plaquette (`src/scripts/brochure-form.js`, voir alerte plus bas) — requête `POST` vers `https://api.web3forms.com/submit`. | `PUBLIC_WEB3FORMS_KEY`, déclarée dans `.env` (non versionné, gitignored) en local ; à renseigner comme variable d'environnement équivalente chez l'hébergeur en production. Voir `.env.example` (versionné, sert de modèle). Le préfixe `PUBLIC_` d'Astro l'expose côté client — c'est voulu (Web3Forms attend la clé dans le navigateur), mais cette clé n'est donc jamais secrète une fois le site en ligne. |
-| **WhatsApp** (`wa.me`) | Lien de contact direct sur `/inscription` (`src/pages/inscription/index.astro`) et dans `src/scripts/contact-form.js`. | Aucune clé — simple lien `https://wa.me/<numéro>`, le numéro est en dur dans le code. |
+| **WhatsApp** (`wa.me`) | Retiré le 31/08/2026 : Web3Forms (`src/scripts/contact-form.js`, `/inscription`) n'existe plus. Le lien de contact direct `https://wa.me/<numéro>` est maintenant utilisé partout où le site propose un contact (menu, pied de page, 404, FAQ, enseignants, manuels, services, accueil), en lien statique simple. | Aucune clé — le numéro est en dur dans le code. |
 | **YouTube** | Un lien sortant (pas un lecteur intégré) vers une vidéo de présentation, sur `/a-propos`. | Aucune clé — lien externe simple (`target="_blank"`). |
 | **Google Maps** | Mécanisme prêt (`googleMapsUrl` par centre dans `src/data/centres.js`, bouton conditionnel dans `/centres/[slug].astro`) mais **actuellement vide (`''`) pour les 5 centres** : le bouton ne s'affiche donc encore nulle part. Pas une intégration API, juste un lien externe une fois l'URL renseignée. | Aucune clé nécessaire (pas d'API Maps utilisée, juste des liens `google.com/maps/...`). |
 | **Google Forms** | Formulaire d'inscription externe (`forms.gle/FMWP9KZtjrxyVT3x6`), cible de tous les boutons "Inscrire mon enfant" / CTA d'inscription du site. | Aucune clé — lien externe en dur, `target="_blank"`. |
@@ -107,8 +115,7 @@ Vérifiés par comparaison **de contenu** (somme MD5), pas seulement par nom de 
 | `captures/` | Ignoré (`captures/`) | Correct — 33 captures d'écran PNG issues de `scripts/verifier-pages.mjs --shots=`, correctement ignorées. |
 | `.astro/` | Ignoré (`.astro/`) | Correct (types générés par Astro). |
 | `node_modules/` | Ignoré | Correct. |
-| `.env`, `.env.production` | Ignoré | Correct — la clé Web3Forms réelle n'est jamais versionnée. |
-| `.env.example` | **Non ignoré, et suivi par Git** | Correct — c'est le modèle sans valeur, il doit être versionné. |
+| `.env`, `.env.production`, `.env.example` | — | Retirés le 31/08/2026 avec Web3Forms : le site n'a plus aucune variable d'environnement, ces fichiers n'ont plus de raison d'exister. |
 
 **Rien n'échappe au `.gitignore` en sens inverse** (rien de généré/temporaire n'est versionné par erreur). En revanche, voir l'alerte majeure de la section suivante : le problème inverse existe — des fichiers **sources, réels, non temporaires** ne sont eux, pas versionnés du tout.
 
@@ -146,7 +153,7 @@ Rien n'a été supprimé — liste uniquement, par ordre de priorité.
 | 9 | `src/assets/photos/siaoPhoto.jpeg` | Doublon de renommage, `siaoPhoto.jpg` (sans e) est le fichier réellement utilisé. | Vérifier une dernière fois `grep -r "siaoPhoto" src/` avant de supprimer, au cas où une modification récente y aurait touché. |
 | 10 | `public/favicon.png` | Soit à supprimer (si `favicon.ico`/`favicon.svg` suffisent), soit — **recommandé** — à garder et câbler via une balise `<link rel="icon">` dans `BaseLayout.astro` (voir section 4). Ne pas supprimer sans trancher ce point d'abord. | Décider d'abord de la stratégie favicon. |
 
-**Aucune route de page** (`.astro` sous `src/pages/`) n'est candidate à la suppression — toutes celles qui existent sont liées depuis la navigation ou une autre page (vérifié dans les sessions de travail précédentes via `scripts/verifier-pages.mjs`, qui rapporte 0 lien mort et 0 ancre orpheline sur les 35 routes construites).
+**Aucune route de page** (`.astro` sous `src/pages/`) n'est candidate à la suppression — toutes celles qui existent sont liées depuis la navigation ou une autre page (vérifié dans les sessions de travail précédentes via `scripts/verifier-pages.mjs`, qui rapporte 0 lien mort et 0 ancre orpheline sur les 34 routes construites).
 
 ---
 
@@ -187,7 +194,7 @@ Rien n'a été supprimé — liste uniquement, par ordre de priorité.
 |---|---|
 | `robots.txt` | Généré par `src/pages/robots.txt.ts` à chaque build (route API Astro). Contenu vérifié : `User-agent: *`, `Allow: /`, `Sitemap: https://www.hakililab.com/sitemap-index.xml`. |
 | `sitemap.xml` | Généré par `@astrojs/sitemap` (`dist/sitemap-index.xml` + fichiers associés), présent à chaque build. |
-| Page 404 personnalisée | `src/pages/404.astro`, stylée comme le reste du site, avec liens de secours (accueil, centres, inscription, contact). |
+| Page 404 personnalisée | `src/pages/404.astro`, stylée comme le reste du site, avec liens de secours (accueil, centres, inscription via Google Forms, contact via WhatsApp). |
 
 ---
 
@@ -306,4 +313,4 @@ Le logo du pied de page a été trouvé écrasé verticalement (90×42px affich�
 
 ### 8.6 Ce qui est explicitement daté et n'a pas été reporté ici
 
-Le plan de migration monopage → multipage (arborescence proposée, ordre de migration, effort estimé) : la migration a depuis été terminée dans son intégralité — cette partie était un plan, devenu sans objet une fois exécuté. Le tableau de contraste figé (33, puis 41, puis 43 combinaisons selon la version) : périmé par construction, le nombre de combinaisons réelles a changé depuis (`node scripts/verifier-contrastes.mjs` donne l'état actuel, voir section 6). Les décomptes de routes (4, puis 9, puis 27) et les poids de page mesurés à chaque étape : instantanés historiques d'un site qui compte aujourd'hui 35 routes — remplacés par l'inventaire à jour de ce rapport. Le script de démonstration ("ce qu'il faut montrer / éviter devant votre public") : propre à une présentation ponctuelle, sans valeur de référence.
+Le plan de migration monopage → multipage (arborescence proposée, ordre de migration, effort estimé) : la migration a depuis été terminée dans son intégralité — cette partie était un plan, devenu sans objet une fois exécuté. Le tableau de contraste figé (33, puis 41, puis 43 combinaisons selon la version) : périmé par construction, le nombre de combinaisons réelles a changé depuis (`node scripts/verifier-contrastes.mjs` donne l'état actuel, voir section 6). Les décomptes de routes (4, puis 9, puis 27) et les poids de page mesurés à chaque étape : instantanés historiques d'un site qui compte aujourd'hui 34 routes — remplacés par l'inventaire à jour de ce rapport. Le script de démonstration ("ce qu'il faut montrer / éviter devant votre public") : propre à une présentation ponctuelle, sans valeur de référence.
