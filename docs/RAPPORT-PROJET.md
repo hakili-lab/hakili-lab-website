@@ -111,7 +111,7 @@ Aucun orphelin trouvé dans `src/` à ce jour.
 | Dossier/fichier | Statut dans `.gitignore` | Constat |
 |---|---|---|
 | `dist/` | Ignoré (`dist/`) | Correct — présent sur le disque (dernier build), correctement absent de Git. |
-| `captures/` | Ignoré (`captures/`) | Correct — 33 captures d'écran PNG issues de `scripts/verifier-pages.mjs --shots=`, correctement ignorées. |
+| `captures/` | Ignoré (`captures/`) | Correct — captures d'écran PNG générées à la demande par `scripts/verifier-pages.mjs --shots=`, correctement ignorées. Dossier vide par défaut (rien n'est committé) ; se régénère intégralement à chaque exécution avec `--shots=`, donc pas de compte fixe à tenir à jour ici. |
 | `.astro/` | Ignoré (`.astro/`) | Correct (types générés par Astro). |
 | `node_modules/` | Ignoré | Correct. |
 | `.env`, `.env.production`, `.env.example` | — | Retirés le 31/08/2026 avec Web3Forms : le site n'a plus aucune variable d'environnement, ces fichiers n'ont plus de raison d'exister. |
