@@ -65,12 +65,20 @@ Généré le 28 août 2026.
 
 ### Mécanisme de déploiement actuellement configuré
 
-**Aucun.** Vérifié explicitement :
+**À la première rédaction : aucun.** Vérifié alors explicitement :
 - Aucun fichier `netlify.toml`, `vercel.json`, `wrangler.toml`/`.jsonc` à la racine.
 - Aucun dossier `.github/workflows/` (pas de GitHub Actions).
-- `git remote -v` ne retourne **aucun remote** — ce dépôt n'est connecté à aucun service distant (pas de GitHub/GitLab/Bitbucket configuré). Une seule branche locale, `master`.
+- `git remote -v` ne retournait **aucun remote**. Une seule branche locale, `master`.
 
-Voir `README-DEPLOIEMENT.md` pour la marche à suivre.
+**Résolu depuis :** le dépôt est sur GitHub (`github.com/hakili-lab/hakili-lab-website`,
+branche `main`) et le site est servi en auto-hébergement par un conteneur
+Docker (build multi-étapes `node:22-slim` → nginx `alpine`), derrière un port
+non standard. Le `Dockerfile` et `docker/nginx.conf` sont maintenant
+versionnés à la racine du dépôt — `docker/nginx.conf` porte `absolute_redirect
+off` pour que nginx ne perde pas le port dans ses redirections de barre
+oblique finale. Toujours pas de CI/CD (`.github/workflows/`), voir section 10.
+
+Voir `README-DEPLOIEMENT.md` (section « Auto-hébergement par conteneur Docker ») pour la marche à suivre.
 
 ---
 

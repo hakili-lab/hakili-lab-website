@@ -1,0 +1,12 @@
+# Le build se fait dans l'image (npm ci + npm run build) : rien de ce qui suit
+# ne doit entrer dans le contexte. node_modules surtout, dont les binaires
+# compiles pour l'hote (Windows) casseraient le build Linux du conteneur.
+node_modules
+dist
+.astro
+captures
+.git
+.vscode
+.idea
+*.log
+npm-debug.log*

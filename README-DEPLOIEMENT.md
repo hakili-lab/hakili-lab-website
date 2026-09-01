@@ -83,6 +83,7 @@ Le site est un export 100 % statique (`dist/`, sans serveur Node ni fonction ser
 | **Netlify** | Interface la plus simple pour démarrer, déploiements de prévisualisation par pull request. |
 | **Vercel** | Très bonne intégration avec Astro, déploiements de prévisualisation par pull request également, analytics basiques inclus en gratuit. |
 | **GitHub Pages** | Gratuit, mais pas de redirections serveur natives. |
+| **Auto-hébergement Docker** | Serveur maîtrisé de bout en bout ; c'est la méthode en place aujourd'hui (voir la section « Auto-hébergement par conteneur Docker » plus bas). |
 
 Marche générale une fois l'hébergeur choisi (identique pour Cloudflare Pages/Netlify/Vercel) :
 
@@ -94,6 +95,63 @@ Marche générale une fois l'hébergeur choisi (identique pour Cloudflare Pages/
 2. Connecter le dépôt `hakili-lab/hakili-lab-website` (branche `main`) depuis l'interface de l'hébergeur choisi.
 3. Renseigner la commande de build : `npm run build`, et le dossier de sortie : `dist`.
 4. Déclencher le premier déploiement (aucune variable d'environnement à renseigner, voir plus haut).
+
+---
+
+## Auto-hébergement par conteneur Docker
+
+C'est la méthode utilisée sur le serveur de déploiement actuel (image Docker
+servie par nginx derrière un port non standard, ex. `:8014`).
+
+**Le `Dockerfile` et `docker/nginx.conf` sont désormais versionnés dans le
+dépôt.** Il n'y a donc plus rien à créer à la main sur le serveur (l'ancienne
+procédure « créer le `Dockerfile` avec `nano` » n'a plus lieu d'être) : on
+clone le dépôt, les deux fichiers y sont déjà.
+
+```sh
+git clone https://github.com/hakili-lab/hakili-lab-website.git hakili-lab
+cd hakili-lab
+
+# Reconstruire sans cache écarte tout risque d'image périmée
+docker build --no-cache -t hakili-lab-website .
+
+docker stop hakili-lab-website 2>/dev/null || true
+docker rm   hakili-lab-website 2>/dev/null || true
+
+docker run -d --name hakili-lab-website \
+  -p 8014:80 --restart unless-stopped \
+  hakili-lab-website
+```
+
+Le build se fait **dans l'image** (`node:22-slim` → `npm ci` → `npm run
+build`), puis seul le dossier `dist/` est copié dans une image `nginx:alpine`
+finale. Rien à installer sur l'hôte hormis Docker.
+
+### Pourquoi `absolute_redirect off` dans `docker/nginx.conf`
+
+Le site est servi derrière un port non standard (`:8014`). Quand nginx reçoit
+une URL sans barre oblique finale (`/a-propos`), il renvoie par défaut une
+redirection **absolue** vers `/a-propos/` — et il reconstruit cette adresse
+**sans le port** : `Location: http://167.233.234.219/a-propos/` au lieu de
+`http://167.233.234.219:8014/a-propos/`. Le navigateur part alors sur le
+nginx partagé du serveur (port 80), qui ne connaît pas ce site : cliquer sur
+un lien du menu semble « sortir » du site.
+
+`absolute_redirect off;` force nginx à répondre avec une redirection en
+**chemin relatif** (`Location: /a-propos/`), que le navigateur résout en
+conservant l'hôte **et le port** courants. C'est un réglage d'infrastructure :
+le code du site, lui, n'a jamais construit d'URL absolue pour ses liens de
+navigation.
+
+### Mettre à jour le site déployé
+
+```sh
+cd hakili-lab
+git pull
+docker build --no-cache -t hakili-lab-website .
+docker stop hakili-lab-website && docker rm hakili-lab-website
+docker run -d --name hakili-lab-website -p 8014:80 --restart unless-stopped hakili-lab-website
+```
 
 ---
 
