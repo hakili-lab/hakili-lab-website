@@ -28,6 +28,11 @@
   .section{padding:64px 0}
   .hero{padding:66px 0 128px}
   .cards-3,.cards-4,.apps,.posts,.quotes,.books,.form-row,.centres,.level-panel,.steps{grid-template-columns:1fr}
+  /* Accueil : une seule carte centre en pleine largeur (le bouton "Voir les
+     cinq centres" juste en dessous mene au reste). Vraie mise en page a une
+     carte : le conteneur est deja passe en 1 colonne ci-dessus, les cartes
+     suivantes ne generent plus de boite. */
+  .centres-home .centre:nth-child(n+2){display:none}
   .modal{padding:16px}
   .modal-panel{padding:30px 22px}
   .modal-cols{grid-template-columns:1fr;gap:24px}
