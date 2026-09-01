@@ -4,12 +4,16 @@ Document de référence pour quiconque reprend ce projet. Chaque affirmation ci-
 
 Généré le 28 août 2026.
 
-> **Mise à jour du 31/08/2026** : `/contact` et `/inscription` ont été retirées
-> (pages fantômes confirmées, 0 lien interne), et Web3Forms avec elles
+> **Mise à jour du 31/08/2026** : `/inscription` a été retirée (page fantôme
+> confirmée, 0 lien interne), et Web3Forms avec elle
 > (`src/scripts/contact-form.js`, `.env`/`.env.example`,
 > `PUBLIC_WEB3FORMS_KEY`) — le site n'a plus aucune variable d'environnement
-> ni service tiers de formulaire. Les sections 1 (services externes) et 2
-> (inventaire) ci-dessous sont corrigées en conséquence.
+> ni service tiers de formulaire. `/contact` avait été retirée le même jour
+> puis **restaurée le 01/09/2026** en page d'affichage simple (coordonnées
+> seulement, aucun formulaire, aucune dépendance) : ses valeurs (téléphones,
+> e-mail, numéro WhatsApp) sont désormais centralisées dans `src/data/site.js`.
+> Les sections 1 (services externes) et 2 (inventaire) ci-dessous sont
+> corrigées en conséquence.
 >
 > **Mise à jour du 01/09/2026** : relecture complète, fichier par fichier
 > contre le disque réel (pas seulement les sections touchées le 31/08).
@@ -57,7 +61,7 @@ Généré le 28 août 2026.
 
 | Service | Où / comment | Clé ou config nécessaire |
 |---|---|---|
-| **WhatsApp** (`wa.me`) | Retiré le 31/08/2026 : Web3Forms (`src/scripts/contact-form.js`, `/inscription`) n'existe plus. Le lien de contact direct `https://wa.me/<numéro>` est maintenant utilisé partout où le site propose un contact (menu, pied de page, 404, FAQ, enseignants, manuels, services, accueil), en lien statique simple. | Aucune clé — le numéro est en dur dans le code. |
+| **WhatsApp** (`wa.me`) | Lien de contact direct `https://wa.me/<numéro>?text=…`, en lien statique simple. Depuis la restauration de `/contact` (01/09/2026), l'unique bouton WhatsApp du site est celui de cette page ; les autres liens « Contact » (menu, pied de page, 404, FAQ, enseignants, manuels, services, accueil) pointent de nouveau vers `/contact`. Web3Forms (`src/scripts/contact-form.js`, `/inscription`) reste supprimé. | Aucune clé — le numéro vient de `WHATSAPP_NUMBER` dans `src/data/site.js`. |
 | **YouTube** | Un lien sortant (pas un lecteur intégré) vers une vidéo de présentation, sur `/a-propos`. | Aucune clé — lien externe simple (`target="_blank"`). |
 | **Google Maps** | Mécanisme prêt (`googleMapsUrl` par centre dans `src/data/centres.js`, bouton conditionnel dans `/centres/[slug].astro`) mais **actuellement vide (`''`) pour les 5 centres** : le bouton ne s'affiche donc encore nulle part. Pas une intégration API, juste un lien externe une fois l'URL renseignée. | Aucune clé nécessaire (pas d'API Maps utilisée, juste des liens `google.com/maps/...`). |
 | **Google Forms** | Formulaire d'inscription externe (`forms.gle/FMWP9KZtjrxyVT3x6`), cible de tous les boutons "Inscrire mon enfant" / CTA d'inscription du site. | Aucune clé — lien externe en dur, `target="_blank"`. |
@@ -136,7 +140,7 @@ Aucun orphelin trouvé dans `src/` à ce jour.
 
 **Section entièrement traitée, vérifiée le 01/09/2026 fichier par fichier.** Les 10 candidats listés le 28/08 ont tous été supprimés du dépôt, sauf le premier qui a été traité différemment de ce qui était prévu : `src/scripts/brochure-form.js` n'a pas été "re-branché" comme envisagé alors — la fonctionnalité qu'il gérait a été redessinée en téléchargement direct sans JavaScript (commit `48f945a`), rendant le script inutile plutôt qu'à réintégrer, donc lui aussi supprimé. `public/favicon.png` a suivi l'option recommandée à l'époque : gardé et câblé plutôt que supprimé (commit `046aca2`). Le détail vérifié fichier par fichier est en section 2 (Orphelins, Dupliqués).
 
-Concernant les **routes de page** : deux existaient encore au 28/08 et ont depuis été retirées, `/contact` et `/inscription` (voir la note de mise à jour du 31/08 en tête de ce document — pages fantômes confirmées avant suppression, remplacées par des liens WhatsApp directs). Aucune des routes qui existent encore aujourd'hui n'est candidate à la suppression : toutes sont liées depuis la navigation ou une autre page (`scripts/verifier-pages.mjs` rapporte 0 lien mort et 0 ancre orpheline sur les 34 routes construites, vérifié le 01/09/2026).
+Concernant les **routes de page** : `/inscription` existait encore au 28/08 et a depuis été retirée (page fantôme confirmée, voir la note de mise à jour du 31/08 en tête de ce document). `/contact`, retirée le même jour, a été **restaurée le 01/09/2026** en page d'affichage simple (coordonnées seulement) et est de nouveau reliée depuis le menu, le pied de page et huit autres emplacements. Aucune des routes qui existent aujourd'hui n'est candidate à la suppression : toutes sont liées depuis la navigation ou une autre page (`scripts/verifier-pages.mjs` rapporte 0 lien mort et 0 ancre orpheline sur les 35 routes construites, vérifié le 01/09/2026).
 
 ---
 
@@ -177,7 +181,7 @@ Concernant les **routes de page** : deux existaient encore au 28/08 et ont depui
 |---|---|
 | `robots.txt` | Généré par `src/pages/robots.txt.ts` à chaque build (route API Astro). Contenu vérifié : `User-agent: *`, `Allow: /`, `Sitemap: https://www.hakililab.com/sitemap-index.xml`. |
 | `sitemap.xml` | Généré par `@astrojs/sitemap` (`dist/sitemap-index.xml` + fichiers associés), présent à chaque build. |
-| Page 404 personnalisée | `src/pages/404.astro`, stylée comme le reste du site, avec liens de secours (accueil, centres, inscription via Google Forms, contact via WhatsApp). |
+| Page 404 personnalisée | `src/pages/404.astro`, stylée comme le reste du site, avec liens de secours (accueil, centres, inscription via Google Forms, page contact). |
 
 ---
 
@@ -262,7 +266,7 @@ L'original signalait qu'une vérification visuelle multi-largeurs (1440/1080/980
 
 `RAPPORT-SITE.md` (racine du projet, 734 lignes, supprimé après cette fusion) documentait, chantier après chantier, toute la transformation du site d'une page unique (composants `About.astro`, `Teachers.astro`, `Services.astro`, `Centres.astro`, `Productions.astro`, `Contact.astro`, `Testimonials.astro`, `Partners.astro`, `Faq.astro`, `Gallery.astro`, `Blog.astro` — **aucun de ces fichiers n'existe plus aujourd'hui**, tous supprimés une fois remplacés par de vraies pages) vers la structure multipage actuelle.
 
-**Ce n'est pas recopié tel quel.** Un journal de bord de 734 lignes, avec décomptes de routes et tableaux de contraste figés à un instant passé, aurait fait doublon avec ce rapport-ci (qui décrit l'état réel *actuel*, vérifié aujourd'hui) et l'aurait rendu trompeur par endroits (le site avait alors 27 routes ; il en a 34 aujourd'hui — voir section 2). Ce qui suit condense uniquement ce qui a une valeur durable : les règles et décisions encore en vigueur, pas les instantanés de mesure.
+**Ce n'est pas recopié tel quel.** Un journal de bord de 734 lignes, avec décomptes de routes et tableaux de contraste figés à un instant passé, aurait fait doublon avec ce rapport-ci (qui décrit l'état réel *actuel*, vérifié aujourd'hui) et l'aurait rendu trompeur par endroits (le site avait alors 27 routes ; il en a 35 aujourd'hui — voir section 2). Ce qui suit condense uniquement ce qui a une valeur durable : les règles et décisions encore en vigueur, pas les instantanés de mesure.
 
 ### 8.1 Règles de contenu toujours en vigueur
 
@@ -296,4 +300,4 @@ Le logo du pied de page a été trouvé écrasé verticalement (90×42px affich�
 
 ### 8.6 Ce qui est explicitement daté et n'a pas été reporté ici
 
-Le plan de migration monopage → multipage (arborescence proposée, ordre de migration, effort estimé) : la migration a depuis été terminée dans son intégralité — cette partie était un plan, devenu sans objet une fois exécuté. Le tableau de contraste figé (33, puis 41, puis 43 combinaisons selon la version) : périmé par construction, le nombre de combinaisons réelles a changé depuis (`node scripts/verifier-contrastes.mjs` donne l'état actuel, voir section 6). Les décomptes de routes (4, puis 9, puis 27) et les poids de page mesurés à chaque étape : instantanés historiques d'un site qui compte aujourd'hui 34 routes — remplacés par l'inventaire à jour de ce rapport. Le script de démonstration ("ce qu'il faut montrer / éviter devant votre public") : propre à une présentation ponctuelle, sans valeur de référence.
+Le plan de migration monopage → multipage (arborescence proposée, ordre de migration, effort estimé) : la migration a depuis été terminée dans son intégralité — cette partie était un plan, devenu sans objet une fois exécuté. Le tableau de contraste figé (33, puis 41, puis 43 combinaisons selon la version) : périmé par construction, le nombre de combinaisons réelles a changé depuis (`node scripts/verifier-contrastes.mjs` donne l'état actuel, voir section 6). Les décomptes de routes (4, puis 9, puis 27) et les poids de page mesurés à chaque étape : instantanés historiques d'un site qui compte aujourd'hui 35 routes — remplacés par l'inventaire à jour de ce rapport. Le script de démonstration ("ce qu'il faut montrer / éviter devant votre public") : propre à une présentation ponctuelle, sans valeur de référence.

@@ -2,7 +2,7 @@
 
 Pour quelqu'un qui reprend ce projet sans avoir suivi son développement. Commandes exactes, à copier-coller telles quelles.
 
-> **État au 31/08/2026** (voir `docs/RAPPORT-PROJET.md` section 4 pour le détail) : le code est prêt. `SITE_URL` pointe déjà sur `https://www.hakililab.com`, le favicon et le manifest sont câblés, le dépôt est sur GitHub (`github.com/hakili-lab/hakili-lab-website`, branche `main`) et à jour. Les pages `/contact` et `/inscription` ainsi que Web3Forms ont été retirées (plus aucune page fantôme, plus aucune variable d'environnement requise). Restent : choisir un hébergeur et y faire pointer le DNS du domaine (ce guide), et une image de partage Open Graph (en attente d'un visuel).
+> **État au 01/09/2026** (voir `docs/RAPPORT-PROJET.md` section 4 pour le détail) : le code est prêt. `SITE_URL` pointe déjà sur `https://www.hakililab.com`, le favicon et le manifest sont câblés, le dépôt est sur GitHub (`github.com/hakili-lab/hakili-lab-website`, branche `main`) et à jour. `/inscription` et Web3Forms restent retirés (plus aucune variable d'environnement requise) ; `/contact` a été restaurée en page d'affichage simple (coordonnées seulement, aucun formulaire). Restent : choisir un hébergeur et y faire pointer le DNS du domaine (ce guide), et une image de partage Open Graph (en attente d'un visuel).
 
 ---
 
@@ -30,9 +30,10 @@ npm install
 ## Variables d'environnement
 
 Aucune. Le site n'a plus de formulaire ni de service tiers à configurer
-(le contact se fait par lien `tel:`/`mailto:`/WhatsApp direct, la plaquette
-de la rentrée est un téléchargement direct de `public/plaquette-rentree.pdf`) :
-`npm run build` fonctionne sans aucun fichier `.env` ni variable système.
+(la page `/contact` affiche seulement des coordonnées — liens `tel:`/`mailto:`
+et bouton WhatsApp direct — et la plaquette de la rentrée est un
+téléchargement direct de `public/plaquette-rentree.pdf`) : `npm run build`
+fonctionne sans aucun fichier `.env` ni variable système.
 
 ---
 
@@ -60,7 +61,7 @@ Avec `npm run preview` démarré dans un terminal, dans un second terminal :
 ```sh
 npm run verify
 ```
-Raccourci de `node scripts/verifier-pages.mjs` (qui vise `http://localhost:4321` par défaut). Doit se terminer sur une ligne tout à zéro : `34 route(s) verifiee(s), 0 violation(s) axe-core, 0 lien(s) mort(s), 0 ancre(s) orpheline(s), 0 image(s) deformee(s), 0 repetition(s) de contenu, 0 quasi-doublon(s), 0 chiffre(s)-cle repete(s)`. Toute ligne différente de zéro liste précisément la route et le problème.
+Raccourci de `node scripts/verifier-pages.mjs` (qui vise `http://localhost:4321` par défaut). Doit se terminer sur une ligne tout à zéro : `35 route(s) verifiee(s), 0 violation(s) axe-core, 0 lien(s) mort(s), 0 ancre(s) orpheline(s), 0 image(s) deformee(s), 0 repetition(s) de contenu, 0 quasi-doublon(s), 0 chiffre(s)-cle repete(s)`. Toute ligne différente de zéro liste précisément la route et le problème.
 
 ```sh
 npm run verify:contrast
@@ -169,7 +170,7 @@ Le domaine `www.hakililab.com` est déjà inscrit dans `src/data/site.js` (`SITE
 
 Une fois le site en ligne sur sa vraie URL, vérifier concrètement :
 
-- [ ] **Contact** : le site n'a plus de page dédiée ni de formulaire — vérifier que les liens `tel:`, `mailto:` et les boutons « Contact »/« Nos coordonnées » (WhatsApp) fonctionnent, ainsi que le bouton « Inscrire mon enfant » (Google Forms).
+- [ ] **Page contact** (`/contact`) : page d'affichage sans formulaire — vérifier les liens `tel:` (les deux numéros), le lien `mailto:` et le bouton « Nous écrire sur WhatsApp » (doit ouvrir WhatsApp avec le message pré-rempli vers le bon numéro), ainsi que le bouton « Inscrire mon enfant » (Google Forms).
 - [ ] **Plaquette de la rentrée** (bloc « Recevez la plaquette de la rentrée » sur l'accueil) : cliquer sur « Télécharger », confirmer que `plaquette-rentree.pdf` se télécharge bien.
 - [ ] **`https://www.hakililab.com/sitemap-index.xml`** : doit répondre et lister les URLs réelles du site.
 - [ ] **`https://www.hakililab.com/robots.txt`** : doit répondre et référencer le bon sitemap.
