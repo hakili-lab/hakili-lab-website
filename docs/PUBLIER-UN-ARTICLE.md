@@ -29,7 +29,7 @@ un nom court, en minuscules, sans accents ni espaces (utilisez des tirets
    | Champ | Ce que c'est | Exemple |
    | --- | --- | --- |
    | `titre` | Le titre affiché sur la carte et en haut de la page | `"Nos résultats au BEPC 2027"` |
-   | `description` | La courte phrase affichée sous le titre, sur la carte d'accueil | `"Le taux de réussite de nos élèves de 3e cette année."` |
+   | `description` | La courte phrase affichée sous le titre, sur la carte de l'article (page `/blog`) | `"Le taux de réussite de nos élèves de 3e cette année."` |
    | `date` | La date de publication, au format année-mois-jour | `2027-06-20` |
    | `categorie` | Une des trois catégories existantes, à recopier exactement : `Pédagogie`, `Conseils` ou `Actualité` | `Actualité` |
    | `image` | Le chemin vers une photo (voir plus bas) | `"../../assets/photos/846A2755.jpg"` |
@@ -42,8 +42,7 @@ un nom court, en minuscules, sans accents ni espaces (utilisez des tirets
    paragraphe = une ligne (ou un bloc de lignes séparé des autres par une
    ligne vide).
 5. Enregistrez le fichier. C'est terminé : l'article apparaît sur la page
-   `/blog` et, s'il fait partie des trois plus récents non-brouillons, sur
-   la page d'accueil.
+   `/blog`.
 
 ## Ajouter une photo
 
@@ -57,8 +56,8 @@ simplement pas d'image.
 
 Pour préparer un article à l'avance sans le montrer aux visiteurs,
 mettez `brouillon: true`. L'article restera invisible sur le site (ni sur
-la page d'accueil, ni sur `/blog`, ni à son adresse individuelle) jusqu'à
-ce que vous repassiez ce champ à `brouillon: false` et republiiez le site.
+`/blog`, ni à son adresse individuelle) jusqu'à ce que vous repassiez ce
+champ à `brouillon: false` et republiiez le site.
 
 ## Modifier ou retirer un article
 

@@ -33,7 +33,7 @@ Node.js ≥ 22.12.0 est requis (`package.json` → `engines`).
 | Le style d'un composant précis (header, hero, cartes, modale…)| `src/styles/components/<nom>.css`                                |
 | Les points de rupture responsive (1080 / 980 / 680 px)        | `src/styles/responsive.css`                                      |
 | Les 13 fiches « classe » du sélecteur de niveau (accueil)     | `src/data/levels.js`                                             |
-| Les 7 fiches « En savoir plus » (matières, formules, applications), affichées en modale | `src/data/details.js` (la clé doit correspondre au titre normalisé, voir plus bas) |
+| Les 8 fiches « En savoir plus » (matières, formules, applications), affichées en modale | `src/data/details.js` (la clé doit correspondre au titre normalisé, voir plus bas) |
 | Les articles de blog, les fiches service, les fiches manuels  | `src/content/blog/`, `src/content/services/`, `src/content/manuels/` (un fichier `.md` par entrée, voir `docs/PUBLIER-UN-ARTICLE.md` pour le blog) |
 | Les centres (horaires, adresse, coordonnées GPS, lien Maps)   | `src/data/centres.js` (validé par Zod au build : une valeur manquante sur un centre `pretPourPublication:true` fait échouer `npm run build`) |
 | Les fondateurs et enseignants (noms, rôles, biographies, photos) | `src/data/team.js` (voir `docs/EQUIPE.md`)                    |
@@ -79,7 +79,7 @@ src/
 ├── data/              données en JS (hors Markdown)
 │   ├── site.js        URL, titre, description du site
 │   ├── levels.js      les 13 fiches du sélecteur de niveau
-│   ├── details.js     les 7 fiches « En savoir plus »
+│   ├── details.js     les 8 fiches « En savoir plus »
 │   ├── centres.js     les 5 centres (remplace l'ancienne collection, validé par Zod)
 │   └── team.js        fondateurs et enseignants
 ├── layouts/
