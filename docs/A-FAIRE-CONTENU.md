@@ -235,14 +235,13 @@ confirmer que c'est bien la bonne vidéo.
 
 ## 9. Tout le reste
 
-### Nom de domaine
+### Nom de domaine — résolu
 
-`src/data/site.js:11` : `SITE_URL = 'https://example.com'` — domaine
-réservé à la documentation (RFC 2606), utilisé volontairement comme
-valeur temporaire pour que les URLs canoniques, Open Graph et le plan du
-site restent valides en attendant le vrai domaine. Ce fichier est la
-seule source : `astro.config.mjs:8` le réutilise automatiquement, rien à
-changer ailleurs une fois `SITE_URL` corrigé.
+**Ce point n'est plus d'actualité** (vérifié contre `src/data/site.js:5`) :
+`SITE_URL` vaut maintenant `'https://www.hakililab.com'`, plus le domaine
+réservé `https://example.com` cité à l'origine ici. `astro.config.mjs`
+le réutilise automatiquement pour son champ `site`, comme prévu. Voir
+`docs/RAPPORT-PROJET.md` section 4.1.
 
 ### Image de partage (Open Graph / réseaux sociaux)
 
@@ -295,12 +294,11 @@ de l'application.
 - **Articles de blog à réécrire :** 3 (texte d'exemple identique sur les 3).
 - **Témoignages :** 0 existant, aucun composant pour les recevoir.
 - **Partenaires :** 0 existant, aucun composant pour les recevoir.
-- **Incohérence à trancher :** 1 (numéro de téléphone par défaut, bandeau mobile vs reste du site).
+- **Incohérence à trancher :** 0 — l'incohérence signalée à l'origine (numéro de téléphone par défaut, bandeau mobile vs reste du site) n'a plus lieu d'être, voir section 7.
 - **Photos réelles réutilisées hors de leur contexte propre :** 3 photos, 8 emplacements au total.
-- **Autres valeurs :** nom de domaine (`SITE_URL`), image de partage Open Graph (1200×630), lien externe Amira à confirmer.
+- **Autres valeurs :** image de partage Open Graph (1200×630), lien externe Amira à confirmer. Le nom de domaine (`SITE_URL`) est résolu, voir section 9.
 
-**Les trois qui bloquent le plus de choses, si je devais prioriser :**
+**Les deux qui bloquent le plus de choses, si je devais prioriser :**
 
-1. **Le nom de domaine réel (`src/data/site.js:11`).** Une seule valeur à changer, mais elle conditionne les URLs canoniques, l'Open Graph, le plan du site (`sitemap.xml`) et tout le balisage JSON-LD sur les 33 pages du site — actuellement, toutes ces URLs pointent vers un domaine qui n'existe pas.
-2. **Les tarifs.** 13 valeurs manquantes qui touchent la quasi-totalité de l'offre commerciale (les 4 matières ont déjà un vrai tarif depuis une passe précédente, mais toutes les formules, programmes, manuels et applications restent à « À définir ») : c'est l'information la plus directement bloquante pour qu'un parent prenne sa décision.
-3. **Adresses, coordonnées GPS et horaires réels des 5 centres.** Tant qu'ils manquent, aucune fiche centre n'affiche d'itinéraire ni de lien Google Maps, et aucun balisage `LocalBusiness` n'est émis pour le référencement local — l'information la plus basique pour un centre de tutorat physique (où et quand) est absente des 5 pages dédiées.
+1. **Les tarifs.** 13 valeurs manquantes qui touchent la quasi-totalité de l'offre commerciale (les 4 matières ont déjà un vrai tarif depuis une passe précédente, mais toutes les formules, programmes, manuels et applications restent à « À définir ») : c'est l'information la plus directement bloquante pour qu'un parent prenne sa décision.
+2. **Adresses, coordonnées GPS et horaires réels des 5 centres.** Tant qu'ils manquent, aucune fiche centre n'affiche d'itinéraire ni de lien Google Maps, et aucun balisage `LocalBusiness` n'est émis pour le référencement local — l'information la plus basique pour un centre de tutorat physique (où et quand) est absente des 5 pages dédiées.

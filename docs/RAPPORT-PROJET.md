@@ -9,9 +9,16 @@ Généré le 28 août 2026.
 > (`src/scripts/contact-form.js`, `.env`/`.env.example`,
 > `PUBLIC_WEB3FORMS_KEY`) — le site n'a plus aucune variable d'environnement
 > ni service tiers de formulaire. Les sections 1 (services externes) et 2
-> (inventaire) ci-dessous sont corrigées en conséquence ; le reste du
-> document garde son horodatage du 28/08 pour tout ce qui n'a pas changé
-> depuis.
+> (inventaire) ci-dessous sont corrigées en conséquence.
+>
+> **Mise à jour du 01/09/2026** : relecture complète, fichier par fichier
+> contre le disque réel (pas seulement les sections touchées le 31/08).
+> La section 2 contenait une narrative du 28/08 périmée (111 fichiers non
+> suivis, dix orphelins/doublons photo, un script manquant) : tout cela a
+> été résolu entre-temps et est réécrit en conséquence, avec la section 3
+> qui en dépendait. Le reste du document (sections 7, 8, et le reste de la
+> section 2 non cité ici) garde son horodatage d'origine pour ce qui n'a
+> pas changé.
 
 ---
 
@@ -25,7 +32,7 @@ Généré le 28 août 2026.
 ### Intégrations Astro configurées (`astro.config.mjs`)
 
 - **`@astrojs/sitemap` 3.7.3** — seule intégration déclarée. Génère `sitemap-index.xml` au build. Configurée avec un filtre qui exclut `/404` du sitemap. Les entrées de contenu non prêtes (`pretPourPublication:false`, articles `brouillon:true`) n'y apparaissent jamais car elles ne produisent aucune route (`getStaticPaths` les exclut en amont).
-- `site: SITE_URL` — pointe vers `src/data/site.js`. **Actuellement `https://example.com`** (domaine réservé RFC 2606, volontairement provisoire — voir section 4).
+- `site: SITE_URL` — pointe vers `src/data/site.js`. **Résolu depuis cette première rédaction** : `SITE_URL` vaut maintenant `https://www.hakililab.com` (plus le domaine réservé RFC 2606 `https://example.com` cité ici à l'origine) — voir section 4.1.
 
 ### Dépendances de production (`dependencies`)
 
@@ -73,7 +80,7 @@ Voir `README-DEPLOIEMENT.md` pour la marche à suivre.
 
 Vérification effectuée en traçant chaque import (composants `.astro`, scripts `.js`, styles `.css` via les `@import` de `src/styles/main.css`, données `.js`, contenu `.md` via `getCollection`/`getStaticPaths`) plutôt qu'en supposant qu'un fichier présent est forcément utilisé — c'est cette vérification qui a fait remonter les cas listés en "Orphelins" ci-dessous.
 
-Résultat : **la quasi-totalité de l'arborescence `src/` est effectivement utilisée** — chaque composant de `src/components/`, chaque page de `src/pages/`, chaque module de `src/data/`, chaque fichier `src/content/**/*.md`, et 9 des 10 scripts de `src/scripts/` sont importés par au moins un autre fichier ou constituent une route Astro valide. Le détail (quel script importé par quelle page, quel composant par quel autre) figure dans la section 5 pour les fichiers structurants ; l'exception (le 10e script) est documentée ci-dessous.
+Résultat : **la totalité de l'arborescence `src/` est effectivement utilisée** — chaque composant de `src/components/`, chaque page de `src/pages/`, chaque module de `src/data/`, chaque fichier `src/content/**/*.md`, et les 8 scripts de `src/scripts/` sont importés par au moins un autre fichier ou constituent une route Astro valide (revérifié le 01/09/2026 : 0 orphelin dans `src/`, voir ci-dessous). Le détail (quel script importé par quelle page, quel composant par quel autre) figure dans la section 5 pour les fichiers structurants.
 
 Cas particuliers vérifiés individuellement, à connaître :
 
@@ -82,28 +89,20 @@ Cas particuliers vérifiés individuellement, à connaître :
 
 ### Orphelins
 
-Fichiers qui existent mais que rien n'importe ni ne référence — vérifié par recherche de chaque nom de fichier dans tout `src/`, pas par déduction.
+**Section résolue, vérifiée le 01/09/2026 fichier par fichier contre le disque réel** (et non recopiée du 28/08). Chacun des orphelins listés à l'origine a disparu du dépôt depuis :
 
-| Fichier | Depuis quand à l'écart | Nature |
-|---|---|---|
-| **`src/scripts/brochure-form.js`** | ⚠️ **Régression récente, non commitée.** Le dernier commit Git (`e3dcdf7`, 25/08/2026) importe encore ce script dans `src/pages/index.astro`. Dans l'état actuel du dossier de travail (non commité), cet import a disparu du bloc `<script>` de `index.astro` — probablement perdu lors d'une édition ultérieure de ce même bloc (ajout de `nav-active.js`). | **Ce n'est pas un script abandonné — c'est un bug fonctionnel actif.** Le formulaire "Recevez la plaquette de la rentrée" (`src/components/Brochure.astro`, affiché sur l'accueil) a un `id="brochureForm"` mais son gestionnaire de soumission JS n'est plus jamais chargé sur la page. Le `<form>` n'a pas d'attribut `action` : sans le script, un clic sur "Télécharger" déclenche une soumission par défaut du navigateur (rechargement de la page avec les champs en paramètres d'URL), sans jamais envoyer l'e-mail ni proposer le téléchargement. **À corriger avant mise en ligne** — voir section 3. |
-| `src/assets/photos/846A2755.jpg` | Présent dès les tout premiers commits (photo de banque d'images du gabarit d'origine, mentionnée comme telle dans `AMELIORATIONS.md` et `scripts/README-images.md`). | Photo de démonstration jamais remplacée par un import réel, laissée sur le disque après le remplacement par les vraies photos (`1.jpg`–`42.jpeg`). |
-| `src/assets/photos/846A26820.jpg` | Idem. | Idem. |
-| `src/assets/photos/banner1.jpg` | Idem. | Idem. |
-| `src/assets/photos/mahamadou.jpg` | Déposé en cours de session (photo composite/montage refusée, remplacée par un vrai portrait). | Superseded par `portrait-mahamadou-bikienga.jpg`, qui est le fichier réellement importé dans `src/data/team.js`. |
-| `src/assets/photos/salfo.jpg` | Idem. | Superseded par `portrait-salfo-bikienga.jpg`. |
-| `src/assets/photos/siaoPhoto.jpeg` | Reliquat d'un renommage de fichier en cours de session. | `src/data/centres.js` importe `siaoPhoto.jpg` (sans "e") — le fichier `.jpeg` est un doublon inutilisé du même renommage. |
-| `public/favicon.png` | Modifié le 27/08 (activement maintenu), mais jamais câblé. | Aucun fichier du projet ne contient de balise `<link rel="icon">` — vérifié dans `src/layouts/BaseLayout.astro` (le seul `<head>` du site) : absente. `favicon.ico` fonctionne par convention implicite du navigateur (récupéré automatiquement à la racine du domaine), mais `favicon.png` et `favicon.svg` ne sont référencés par aucune balise. Voir section 4. |
+- `src/scripts/brochure-form.js` : n'existe plus. Ce n'était plus une régression à corriger mais un script devenu inutile — la fonctionnalité qu'il gérait (plaquette de la rentrée) a été redessinée en téléchargement direct sans JavaScript (commit `48f945a`, voir section 4.1), rendant le script obsolète plutôt qu'à ré-importer.
+- `src/assets/photos/846A2755.jpg`, `846A26820.jpg`, `banner1.jpg`, `mahamadou.jpg`, `salfo.jpg`, `siaoPhoto.jpeg` : aucun n'existe plus sur le disque.
+- `public/favicon.png` : n'est plus orphelin — câblé via `<link rel="icon" href="/favicon.png" sizes="32x32">` dans `src/layouts/BaseLayout.astro` (commit `046aca2`, voir section 4.1).
+
+Aucun orphelin trouvé dans `src/` à ce jour.
 
 ### Dupliqués
 
-Vérifiés par comparaison **de contenu** (somme MD5), pas seulement par nom de fichier identique.
+**Section résolue, vérifiée le 01/09/2026** (les deux dossiers ci-dessous n'existent plus du tout sur le disque, plus seulement "recommandés à la suppression") :
 
-| Doublon | Original (référence utilisée par le code) | Détail |
-|---|---|---|
-| **`src/assets/photos/hero/`** (45 fichiers, ~11 Mo) | `src/assets/photos/` (racine) | Dossier entier composé de copies **strictement identiques, octet pour octet** (vérifié par échantillonnage MD5 sur 5 fichiers pris au hasard : `1.jpg`, `5.jpeg`, `20.jpeg`, `37.jpeg`, `42.jpeg` — hachages identiques dans les deux emplacements) des photos déjà présentes à la racine de `src/assets/photos/`. Sur les 45 fichiers de ce dossier, **seuls 3 sont réellement importés** (`hero/37.jpeg`, `hero/36.jpeg`, `hero/40.jpeg`, par `src/components/Hero.astro`) — et même ces 3-là dupliquent un fichier de même nom déjà utilisé ailleurs à la racine (`37.jpeg` est aussi importé directement par `src/pages/a-propos/index.astro` et `src/pages/index.astro` pour la citation). Les 42 autres fichiers du dossier ne sont importés par rien. |
-| **`src/assets/photos/Images/`** (44 fichiers + 1 document, ~9,6 Mo) | `src/assets/photos/` (racine) | Dossier entier, lui aussi identique octet pour octet à la racine (même vérification MD5). **Zéro fichier de ce dossier n'est importé nulle part** — contrairement à `hero/`, aucune exception. Ce dossier n'est en plus **suivi par Git nulle part** (`git ls-files` y retourne 0 résultat), contrairement à `hero/` qui a 3 fichiers commités. Contient aussi deux fichiers sans équivalent à la racine, tout aussi inutilisés : `Saaba.jpg` et `siao.jpeg` (noms capitalisés différemment des fichiers réellement utilisés `saabaPhoto.jpg`/`siaoPhoto.jpg`). |
-| `src/assets/photos/Images/cahier_des_charges_lot2_moteur_IA.docx` (16,9 Ko) | — pas une image, pas un doublon d'image | À part : ce n'est pas une photo dupliquée mais un document Word égaré dans le dossier de photos. Peut contenir des spécifications projet réelles ("lot 2, moteur IA" — probablement lié aux articles de blog sur Amira/Dr Maya) : **à ouvrir et vérifier son contenu avant toute suppression** — s'il s'agit d'un vrai document de spécifications, il aurait sa place dans `docs/`, pas dans `src/assets/photos/`. |
+- `src/assets/photos/hero/` : le dossier entier a été supprimé. `src/components/Hero.astro` importe désormais ses 3 photos directement depuis la racine de `src/assets/photos/` (`../assets/photos/37.jpeg` etc.), sans copie intermédiaire.
+- `src/assets/photos/Images/` (44 fichiers + le document Word égaré `cahier_des_charges_lot2_moteur_IA.docx`) : le dossier entier a été supprimé. Le document Word ne se trouve nulle part ailleurs dans le dépôt (`docs/` inclus) — recherché explicitement, absent.
 
 ### Générés/temporaires qui ne devraient pas être versionnés
 
@@ -119,41 +118,17 @@ Vérifiés par comparaison **de contenu** (somme MD5), pas seulement par nom de 
 
 **Rien n'échappe au `.gitignore` en sens inverse** (rien de généré/temporaire n'est versionné par erreur). En revanche, voir l'alerte majeure de la section suivante : le problème inverse existe — des fichiers **sources, réels, non temporaires** ne sont eux, pas versionnés du tout.
 
-### ⚠️ Constat transversal, hors des 4 catégories demandées mais essentiel
+### Constat transversal du 28/08 : résolu
 
-`git status` révèle **111 fichiers non suivis par Git** (`??`), dont une bonne partie n'a rien d'orphelin ou de temporaire — ce sont des fichiers sources actifs, jamais commités depuis leur création :
-
-- Modules de données entiers : `src/data/centres.js`, `src/data/team.js`
-- Composants : `src/components/PersonCard.astro`
-- Une page entière : `src/pages/dr-maya/`
-- Scripts : `src/scripts/gallery-lightbox.js`, `src/scripts/nav-active.js`
-- Styles : `src/styles/components/lightbox.css`, `src/styles/components/person-card.css`
-- 3 articles de blog, 3 fiches manuels (`src/content/manuels/mathematiques-1re.md`, `-2nde.md`, `-terminale.md`)
-- Toutes les photos réellement utilisées par le site (aucune des photos en usage — portraits, photos de centre, `37.jpeg`, etc. — n'est suivie par Git, y compris celles qui SONT référencées par du code lui-même commité)
-- `docs/EQUIPE.md`, tout `public/extraits/`, `public/favicon.png`, `public/horaires.pdf`, `public/plaquette-rentree.pdf`, tout `public/videos/`
-
-Le dernier commit date du 25/08/2026 ; nous sommes le 28/08/2026. **Tout ce qui a été construit depuis (page Dr Maya, migration des centres vers `centres.js`, l'équipe, la galerie avec lightbox, l'indicateur de section actif, les articles de blog, les extraits PDF de manuels, la plaquette téléchargeable, les vidéos) n'existe que dans le dossier de travail local, jamais dans l'historique Git.** Voir le résumé en fin de tâche pour la priorité que représente ce point.
+**Résolu, vérifié le 01/09/2026.** La situation décrite ici le 28/08 (111 fichiers sources actifs jamais commités depuis leur création — modules de données, composants, une page entière, scripts, styles, articles de blog, photos, PDF) n'existe plus : `git status --porcelain` ne retourne plus qu'**un seul fichier non suivi**, `src/assets/photos/journee-hakili-stagiare.jpg` (une photo d'article de blog déposée sur le disque mais pas encore commitée — sans rapport avec le problème structurel d'origine, à traiter au prochain commit qui touche cet article). Tout ce qui était listé ici est dans l'historique Git depuis les commits `64d4381`/`e204cfe` (voir section 4.1).
 
 ---
 
 ## 3. Fichiers ou routes à supprimer
 
-Rien n'a été supprimé — liste uniquement, par ordre de priorité.
+**Section entièrement traitée, vérifiée le 01/09/2026 fichier par fichier.** Les 10 candidats listés le 28/08 ont tous été supprimés du dépôt, sauf le premier qui a été traité différemment de ce qui était prévu : `src/scripts/brochure-form.js` n'a pas été "re-branché" comme envisagé alors — la fonctionnalité qu'il gérait a été redessinée en téléchargement direct sans JavaScript (commit `48f945a`), rendant le script inutile plutôt qu'à réintégrer, donc lui aussi supprimé. `public/favicon.png` a suivi l'option recommandée à l'époque : gardé et câblé plutôt que supprimé (commit `046aca2`). Le détail vérifié fichier par fichier est en section 2 (Orphelins, Dupliqués).
 
-| # | Chemin | Pourquoi | Vérification à faire avant suppression |
-|---|---|---|---|
-| 1 | *(ne pas supprimer — re-brancher)* `src/scripts/brochure-form.js` | Ce n'est **pas** un candidat à la suppression : c'est le fichier manquant à ré-importer dans `src/pages/index.astro` (voir section 2). Listé ici pour mémoire, à traiter en premier. | Aucune — c'est un ajout d'une ligne, pas une suppression. |
-| 2 | `src/assets/photos/Images/` (dossier entier, 44 fichiers image) | Doublon 100 % confirmé de la racine, zéro référence, jamais suivi par Git — le plus sûr des trois à supprimer. | Aucune dépendance externe possible (dossier jamais commité, donc jamais publié). |
-| 3 | `src/assets/photos/Images/Saaba.jpg`, `Images/siao.jpeg` | Mêmes garanties que ci-dessus (dans le même dossier), mais pas des doublons d'un fichier racine — noms uniques, toujours inutilisés. | Idem. |
-| 4 | `src/assets/photos/Images/cahier_des_charges_lot2_moteur_IA.docx` | Pas une image, sans rapport avec le dossier — mais **ouvrir le fichier avant de le supprimer**, voir remarque section 2 (pourrait être un document de spécifications à déplacer vers `docs/` plutôt qu'à supprimer). | Lire le contenu d'abord. |
-| 5 | `src/assets/photos/hero/` — 42 des 45 fichiers (tous sauf `36.jpeg`, `37.jpeg`, `40.jpeg`) | Doublons confirmés de la racine, non importés. | Vérifier qu'aucun autre composant que `Hero.astro` ne référence ce dossier avant de vider le reste (déjà vérifié dans ce rapport, à re-vérifier si le code a changé entre-temps). |
-| 6 | `src/assets/photos/hero/36.jpeg`, `37.jpeg`, `40.jpeg` (les 3 restants) | Utilisés, mais redondants : `Hero.astro` pourrait importer directement `../assets/photos/36.jpeg` etc. (déjà présents à la racine) au lieu de maintenir une copie séparée dans `hero/`. Suppression du dossier `hero/` entier possible **après** avoir changé les 3 imports dans `Hero.astro`. | Modifier les 3 lignes d'import dans `src/components/Hero.astro` avant de supprimer les fichiers, sinon le build casse. |
-| 7 | `src/assets/photos/846A2755.jpg`, `846A26820.jpg`, `banner1.jpg` | Photos de banque d'images du gabarit d'origine, zéro référence. | Aucune — confirmé sans usage. |
-| 8 | `src/assets/photos/mahamadou.jpg`, `salfo.jpg` | Anciennes photos composites refusées, remplacées. | Aucune — confirmé sans usage. |
-| 9 | `src/assets/photos/siaoPhoto.jpeg` | Doublon de renommage, `siaoPhoto.jpg` (sans e) est le fichier réellement utilisé. | Vérifier une dernière fois `grep -r "siaoPhoto" src/` avant de supprimer, au cas où une modification récente y aurait touché. |
-| 10 | `public/favicon.png` | Soit à supprimer (si `favicon.ico`/`favicon.svg` suffisent), soit — **recommandé** — à garder et câbler via une balise `<link rel="icon">` dans `BaseLayout.astro` (voir section 4). Ne pas supprimer sans trancher ce point d'abord. | Décider d'abord de la stratégie favicon. |
-
-**Aucune route de page** (`.astro` sous `src/pages/`) n'est candidate à la suppression — toutes celles qui existent sont liées depuis la navigation ou une autre page (vérifié dans les sessions de travail précédentes via `scripts/verifier-pages.mjs`, qui rapporte 0 lien mort et 0 ancre orpheline sur les 34 routes construites).
+Concernant les **routes de page** : deux existaient encore au 28/08 et ont depuis été retirées, `/contact` et `/inscription` (voir la note de mise à jour du 31/08 en tête de ce document — pages fantômes confirmées avant suppression, remplacées par des liens WhatsApp directs). Aucune des routes qui existent encore aujourd'hui n'est candidate à la suppression : toutes sont liées depuis la navigation ou une autre page (`scripts/verifier-pages.mjs` rapporte 0 lien mort et 0 ancre orpheline sur les 34 routes construites, vérifié le 01/09/2026).
 
 ---
 
@@ -204,7 +179,7 @@ Les 10 fichiers à lire en premier pour comprendre comment ce projet est constru
 
 1. **`src/data/site.js`** — 3 constantes (URL, titre, description du site). Tout ce qui touche au SEO/JSON-LD/sitemap en dépend. Le premier fichier à modifier une fois le vrai domaine connu.
 2. **`src/layouts/BaseLayout.astro`** — le `<head>` unique du site (meta, Open Graph, JSON-LD `EducationalOrganization`, polices). Toute page passe par lui, directement ou via `SiteLayout.astro`.
-3. **`src/layouts/SiteLayout.astro`** — la coquille commune à presque toutes les pages (TopBar + Header + `<main id="contenu">` + fil d'Ariane optionnel + Footer + scripts globaux). `src/pages/index.astro` est la seule page qui ne l'utilise pas (elle assemble `BaseLayout` directement, avec sa propre liste de scripts — voir l'alerte du `brochure-form.js` manquant, section 2).
+3. **`src/layouts/SiteLayout.astro`** — la coquille commune à presque toutes les pages (TopBar + Header + `<main id="contenu">` + fil d'Ariane optionnel + Footer + scripts globaux). `src/pages/index.astro` est la seule page qui ne l'utilise pas (elle assemble `BaseLayout` directement, avec sa propre liste de scripts).
 4. **`src/content.config.ts`** — les schémas Zod des 3 collections de contenu (`blog`, `services`, `manuels`), avec le garde-fou `requireWhenReady()` qui fait échouer le build si une entrée `pretPourPublication:true` a un champ vide ou "À définir".
 5. **`src/data/centres.js`** — les 5 centres, validés par un schéma Zod maison (pas une collection de contenu — remplace l'ancienne collection `centres`, voir le commentaire daté dans `content.config.ts`). Structure `horaires` prête pour une grille détaillée future.
 6. **`src/data/details.js`** — les fiches "En savoir plus" (services, manuels, applications), affichées en modale. La clé de chaque fiche doit correspondre exactement au titre normalisé de la carte qui l'ouvre (voir `src/scripts/detail-modal.js`, point suivant).
@@ -279,7 +254,7 @@ L'original signalait qu'une vérification visuelle multi-largeurs (1440/1080/980
 
 `RAPPORT-SITE.md` (racine du projet, 734 lignes, supprimé après cette fusion) documentait, chantier après chantier, toute la transformation du site d'une page unique (composants `About.astro`, `Teachers.astro`, `Services.astro`, `Centres.astro`, `Productions.astro`, `Contact.astro`, `Testimonials.astro`, `Partners.astro`, `Faq.astro`, `Gallery.astro`, `Blog.astro` — **aucun de ces fichiers n'existe plus aujourd'hui**, tous supprimés une fois remplacés par de vraies pages) vers la structure multipage actuelle.
 
-**Ce n'est pas recopié tel quel.** Un journal de bord de 734 lignes, avec décomptes de routes et tableaux de contraste figés à un instant passé, aurait fait doublon avec ce rapport-ci (qui décrit l'état réel *actuel*, vérifié aujourd'hui) et l'aurait rendu trompeur par endroits (le site avait alors 27 routes ; il en a 35 aujourd'hui — voir section 2). Ce qui suit condense uniquement ce qui a une valeur durable : les règles et décisions encore en vigueur, pas les instantanés de mesure.
+**Ce n'est pas recopié tel quel.** Un journal de bord de 734 lignes, avec décomptes de routes et tableaux de contraste figés à un instant passé, aurait fait doublon avec ce rapport-ci (qui décrit l'état réel *actuel*, vérifié aujourd'hui) et l'aurait rendu trompeur par endroits (le site avait alors 27 routes ; il en a 34 aujourd'hui — voir section 2). Ce qui suit condense uniquement ce qui a une valeur durable : les règles et décisions encore en vigueur, pas les instantanés de mesure.
 
 ### 8.1 Règles de contenu toujours en vigueur
 
