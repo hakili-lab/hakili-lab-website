@@ -67,12 +67,11 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          # Empreinte SHA256 de la cle publique du serveur. Sans elle, la
-          # connexion accepte n'importe quel hote qui repond a l'adresse :
-          # on verifie donc l'identite du serveur avant de lui livrer quoi
-          # que ce soit. Si l'empreinte ne correspond pas, la connexion est
-          # refusee et rien n'est deploye.
-          fingerprint: ${{ secrets.VPS_HOST_FINGERPRINT }}
+          # Pas d'option `fingerprint` ici : l'epinglage de cle d'hote de
+          # cette action est casse et refuse la connexion meme avec une
+          # empreinte correcte. Voir la note « Épinglage de la clé d'hôte »
+          # de README-DEPLOIEMENT.md et l'issue appleboy/ssh-action#275.
+          #
           # `docker build` refait `npm ci` + `npm run build` dans l'image :
           # la valeur par defaut (10m) est trop juste sur un petit VPS.
           command_timeout: 20m

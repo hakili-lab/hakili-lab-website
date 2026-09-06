@@ -91,10 +91,12 @@ teste explicitement le résultat de `docker build` avant tout `docker stop` :
 une image qui ne se construit pas laisse l'ancien conteneur en service plutôt
 que de couper le site. Le conteneur est ensuite confirmé en service avant un
 `docker image prune -f` qui évite que les images orphelines ne remplissent le
-disque du VPS. La connexion SSH est épinglée par empreinte de clé d'hôte
-(protection contre l'usurpation du serveur). Les identifiants sont quatre
-secrets de dépôt (`VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`,
-`VPS_HOST_FINGERPRINT`), rien n'est versionné. Voir section 4.3.
+disque du VPS. Les identifiants sont trois secrets de dépôt (`VPS_HOST`,
+`VPS_USER`, `VPS_SSH_KEY`), rien n'est versionné. L'épinglage de la clé d'hôte
+SSH a été tenté puis retiré : l'option `fingerprint` d'`appleboy/ssh-action`
+est cassée et refuse la connexion même avec une empreinte correcte
+(<https://github.com/appleboy/ssh-action/issues/275>, ouverte de longue date).
+Voir section 4.3.
 
 Voir `README-DEPLOIEMENT.md` (section « Auto-hébergement par conteneur Docker ») pour la marche à suivre.
 

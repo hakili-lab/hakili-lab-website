@@ -126,9 +126,8 @@ premier a réussi** :
    s'arrête ici et le serveur n'est jamais touché**. C'est la protection qui
    manquait depuis qu'on n'est plus chez un hébergeur statique qui refusait
    de publier un build en échec.
-2. **Déployer** — connexion SSH au VPS (dont l'identité est vérifiée par
-   empreinte, voir plus bas), puis `git pull`, `docker build`, et seulement
-   ensuite le remplacement du conteneur. **Si `docker build` échoue sur le
+2. **Déployer** — connexion SSH au VPS, puis `git pull`, `docker build`, et
+   seulement ensuite le remplacement du conteneur. **Si `docker build` échoue sur le
    serveur, le script s'arrête avant `docker stop`** : le site reste en ligne
    sur l'ancienne version plutôt que d'être coupé pour une image qui ne s'est
    pas construite. Une fois le nouveau conteneur confirmé en service, un
@@ -152,7 +151,7 @@ tourner sur la dernière version déployée avec succès.
 
 ### Ce que GitHub doit connaître
 
-Quatre secrets de dépôt (**Settings → Secrets and variables → Actions**), déjà
+Trois secrets de dépôt (**Settings → Secrets and variables → Actions**), déjà
 configurés. Le workflow ne fait qu'y faire référence, aucune valeur n'est
 écrite dans le dépôt :
 
@@ -161,23 +160,19 @@ configurés. Le workflow ne fait qu'y faire référence, aucune valeur n'est
 | `VPS_HOST` | L'adresse du serveur. |
 | `VPS_USER` | L'utilisateur SSH utilisé pour se connecter. |
 | `VPS_SSH_KEY` | La **clé privée** SSH correspondante. Sa clé publique doit être dans le `~/.ssh/authorized_keys` de cet utilisateur sur le serveur. |
-| `VPS_HOST_FINGERPRINT` | L'empreinte SHA256 de la **clé publique d'hôte** du serveur. Elle permet de vérifier qu'on parle bien au bon serveur avant de lui envoyer quoi que ce soit, plutôt que de faire confiance à qui répond à l'adresse. |
 
-Cette dernière est une empreinte publique, pas un secret au sens strict : elle
-est stockée comme secret par commodité. Pour la (re)calculer :
+### Épinglage de la clé d'hôte : tenté, abandonné
 
-```sh
-ssh-keyscan -t ed25519 <adresse-du-serveur> | ssh-keygen -lf -
-```
+L'option `fingerprint` d'`appleboy/ssh-action` devait vérifier l'identité du
+serveur avant de s'y connecter. Elle a été mise en place puis retirée : la
+fonctionnalité est cassée dans l'action et refuse la connexion même avec une
+empreinte correcte. Le problème est connu, ouvert depuis des années et non
+corrigé — <https://github.com/appleboy/ssh-action/issues/275>.
 
-La valeur à mettre dans le secret est la partie `SHA256:...` de la sortie.
-
-> **Si le déploiement se met soudain à échouer à la connexion SSH** alors que
-> rien n'a changé côté dépôt, la clé d'hôte du serveur a probablement été
-> régénérée (réinstallation, changement de machine). Recalculer l'empreinte
-> avec la commande ci-dessus et mettre à jour le secret. C'est le
-> fonctionnement attendu : la connexion est refusée tant que l'identité du
-> serveur n'est pas confirmée, et rien n'est déployé entre-temps.
+À reconsidérer si l'issue est un jour résolue, ou si l'on remplace cette action
+par autre chose. En l'état, la connexion fait confiance à l'hôte qui répond à
+l'adresse ; le secret `VPS_HOST_FINGERPRINT`, s'il subsiste dans les réglages
+du dépôt, n'est plus utilisé et peut être supprimé.
 
 ### Ce qui fait échouer le job, et ce qui ne le fait pas
 
@@ -187,7 +182,7 @@ Une croix rouge doit vouloir dire « le site n'est pas à jour ». Toutes les
 | Étape | Bloquante ? | Pourquoi |
 |---|---|---|
 | `npm ci` / `npm run build` (runner) | **Oui** | Rien ne doit atteindre le serveur si le site ne se construit pas. |
-| Connexion SSH (empreinte, clé) | **Oui** | Sans certitude sur l'identité du serveur, on ne déploie pas. |
+| Connexion SSH (clé privée) | **Oui** | Sans connexion au serveur, il n'y a pas de déploiement possible. |
 | `git pull --ff-only` | **Oui** | Un clone qui a divergé doit être réglé à la main, pas contourné. |
 | `docker build` | **Oui** | Le script s'arrête avant `docker stop` : l'ancien conteneur continue de servir le site. |
 | `docker stop` / `docker rm` | Non (`\|\| true`) | Au premier déploiement il n'y a pas de conteneur à arrêter, et ce n'est pas une erreur. |
