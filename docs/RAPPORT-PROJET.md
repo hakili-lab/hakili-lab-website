@@ -80,7 +80,21 @@ Docker (build multi-étapes `node:22-slim` → nginx `alpine`), derrière un por
 non standard. Le `Dockerfile` et `docker/nginx.conf` sont maintenant
 versionnés à la racine du dépôt — `docker/nginx.conf` porte `absolute_redirect
 off` pour que nginx ne perde pas le port dans ses redirections de barre
-oblique finale. Toujours pas de CI/CD (`.github/workflows/`), voir section 10.
+oblique finale.
+
+**CI/CD en place depuis le 06/09/2026** : `.github/workflows/deploy.yml`. Tout
+push sur `main` déclenche un workflow en deux jobs enchaînés par `needs` —
+d'abord `npm ci` + `npm run build` sur le runner GitHub, puis, uniquement si
+cette vérification passe, une connexion SSH au VPS (`appleboy/ssh-action`) qui
+fait `git pull`, `docker build`, puis remplace le conteneur. Le script distant
+teste explicitement le résultat de `docker build` avant tout `docker stop` :
+une image qui ne se construit pas laisse l'ancien conteneur en service plutôt
+que de couper le site. Le conteneur est ensuite confirmé en service avant un
+`docker image prune -f` qui évite que les images orphelines ne remplissent le
+disque du VPS. La connexion SSH est épinglée par empreinte de clé d'hôte
+(protection contre l'usurpation du serveur). Les identifiants sont quatre
+secrets de dépôt (`VPS_HOST`, `VPS_USER`, `VPS_SSH_KEY`,
+`VPS_HOST_FINGERPRINT`), rien n'est versionné. Voir section 4.3.
 
 Voir `README-DEPLOIEMENT.md` (section « Auto-hébergement par conteneur Docker ») pour la marche à suivre.
 
@@ -165,13 +179,13 @@ Concernant les **routes de page** : `/inscription` existait encore au 28/08 et a
 | Manque | Bloquant ? | Détail |
 |---|---|---|
 | **Image de partage Open Graph** | 🟡 Souhaitable, non bloquant | Toujours pas d'`og:image`/`twitter:image` (commentaires `TODO(url)` restants dans `BaseLayout.astro`). En attente d'un visuel 1200×630 fourni par le propriétaire du projet. Sans lui, les partages sur réseaux sociaux n'ont pas de vignette. |
-| **Tests automatisés** | 🟡 Peut attendre | Aucun framework de test (Vitest, Playwright Test en assertions…). `npm run verify` et `npm run verify:contrast` (section 6) tiennent ce rôle, à lancer manuellement. |
+| **Tests automatisés** | 🟡 Peut attendre | Aucun framework de test (Vitest, Playwright Test en assertions…). `npm run verify` et `npm run verify:contrast` (section 6) tiennent ce rôle, à lancer manuellement. Le workflow de déploiement (`deploy.yml`) exécute `npm run build` mais **pas** ces deux scripts : ils exigent un serveur de prévisualisation en parallèle. Un déploiement automatique garantit donc que le site se construit, pas qu'il est exempt de lien mort ou de défaut de contraste. |
 
 ### 4.3 Décisions explicites (pas des oublis)
 
 | Sujet | Décision | Raison |
 |---|---|---|
-| CI/CD (`.github/workflows/`) | Pas mise en place pour l'instant | Projet piloté par une seule personne. L'hébergeur statique (Cloudflare Pages / Netlify / Vercel) exécute déjà `npm run build` à chaque déploiement et ne publie pas un build en échec. À reconsidérer si des contributeurs rejoignent le projet. |
+| CI/CD (`.github/workflows/`) | ~~Pas mise en place~~ → **mise en place le 06/09/2026** (`deploy.yml`) | La décision d'origine reposait sur un hébergeur statique qui exécutait `npm run build` à chaque déploiement et refusait de publier un build en échec. Le passage à l'auto-hébergement Docker a supprimé ce filet : plus rien ne vérifiait le build avant qu'il n'atteigne le serveur, et le déploiement était redevenu manuel. Le workflow rétablit les deux — vérification du build sur le runner GitHub, puis reconstruction du conteneur sur le VPS, et rien ne touche au serveur si le build échoue. L'interface `/admin`, qui met des non-développeurs en position de publier, rendait cette protection nécessaire. |
 | `LICENSE` | Pas de fichier de licence | Site vitrine commercial, pas un projet open source. |
 | `CONTRIBUTING.md` | Pas de guide de contribution | Sans objet tant que le projet reste piloté par une seule personne. |
 

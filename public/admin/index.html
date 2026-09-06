@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Page d'administration : ne doit jamais etre indexee ni apparaitre
+         dans les resultats de recherche (elle est aussi hors sitemap, qui
+         n'est genere que depuis les routes Astro, pas depuis public/). -->
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Administration — Hakili Lab</title>
+  </head>
+  <body>
+    <!-- Sveltia CMS est charge depuis un CDN : aucune dependance npm ajoutee
+         au projet, rien a installer ni a reconstruire quand le CMS evolue.
+         Le script ne doit PAS porter type="module" (build IIFE). -->
+    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+  </body>
+</html>

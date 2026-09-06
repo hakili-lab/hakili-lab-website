@@ -1,0 +1,234 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+#
+# Configuration de l'interface d'administration (Sveltia CMS), servie sur
+# /admin. Elle edite directement les fichiers Markdown du depot via l'API
+# GitHub : chaque enregistrement est un commit sur la branche main.
+#
+# Les champs ci-dessous reproduisent exactement les schemas Zod de
+# src/content.config.ts. Toute divergence (nom de champ, type, valeur
+# d'enumeration) produirait des entrees que `astro build` refuse.
+#
+# Hors perimetre de cette interface : les centres (src/data/centres.js),
+# l'equipe (src/data/team.js), les tarifs et fiches detaillees
+# (src/data/details.js, levels.js, site.js) restent edites dans le code.
+
+backend:
+  name: github
+  repo: hakili-lab/hakili-lab-website
+  branch: main
+  # TODO(admin): URL du Worker Cloudflare a renseigner
+  # Le Worker porte le Client ID et le Client Secret de la GitHub OAuth App.
+  # Ces deux valeurs vivent uniquement dans le Worker, jamais dans ce depot.
+  base_url: REMPLACE_PAR_URL_DU_WORKER
+
+site_url: https://www.hakililab.com
+
+# Dossier ou sont deposees les images televersees depuis l'interface. Les
+# photos du site sont deja toutes dans src/assets/photos/ (a plat) : on garde
+# ce dossier unique plutot que d'en creer un second.
+media_folder: "src/assets/photos"
+public_folder: "/src/assets/photos"
+
+output:
+  # Un champ facultatif laisse vide est omis du frontmatter au lieu d'y ecrire
+  # une valeur vide. Indispensable pour `image` : `image: ""` ferait echouer le
+  # build (Astro tente de resoudre la chaine vide comme un fichier image),
+  # alors que l'absence du champ est valide (image().optional()).
+  omit_empty_optional_fields: true
+
+collections:
+  # --- Articles de blog -----------------------------------------------------
+  # Schema : src/content.config.ts > const blog
+  - name: "blog"
+    label: "Articles de blog"
+    label_singular: "Article"
+    description: "Les articles publies sur /blog."
+    folder: "src/content/blog"
+    create: true
+    # Le nom du fichier reprend le champ `slug` du frontmatter, qui est aussi
+    # ce qui construit l'URL (voir getStaticPaths de src/pages/blog/[slug].astro).
+    slug: "{{fields.slug}}"
+    identifier_field: "titre"
+    summary: "{{fields.titre}}"
+    sortable_fields: ["date", "titre", "categorie"]
+    # Chemin depuis le fichier de l'article jusqu'au dossier des photos :
+    # src/content/blog/x.md -> ../../assets/photos/. C'est la forme deja
+    # utilisee par les articles existants, et celle qu'Astro sait resoudre.
+    media_folder: "/src/assets/photos"
+    public_folder: "../../assets/photos"
+    fields:
+      - name: "slug"
+        label: "Adresse de la page (slug)"
+        widget: "string"
+        required: true
+        hint: "En minuscules, sans accents ni espaces (tirets a la place). Donne l'URL : /blog/mon-article. Ne plus le changer une fois l'article en ligne."
+        pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$", "Uniquement des minuscules, des chiffres et des tirets."]
+      - name: "titre"
+        label: "Titre"
+        widget: "string"
+        required: true
+      - name: "description"
+        label: "Description"
+        widget: "text"
+        required: true
+        hint: "La phrase affichee sous le titre sur la carte de l'article et dans les resultats de recherche."
+      - name: "date"
+        label: "Date de publication"
+        widget: "datetime"
+        required: true
+        type: "date"
+        format: "YYYY-MM-DD"
+        time_format: false
+        picker_utc: true
+      - name: "categorie"
+        label: "Categorie"
+        widget: "select"
+        required: true
+        options: ["Pédagogie", "Conseils", "Actualité"]
+      - name: "image"
+        label: "Image"
+        widget: "image"
+        required: false
+        choose_url: false
+        hint: "Facultatif. Sans image, l'article s'affiche simplement sans illustration."
+      - name: "brouillon"
+        label: "Brouillon (non publie)"
+        widget: "boolean"
+        # Volontairement true : un nouvel article ne doit jamais se publier par
+        # accident avant relecture. Le schema Zod, lui, vaut false par defaut
+        # pour les articles deja en ligne.
+        default: true
+        hint: "Tant que cette case est cochee, l'article n'apparait ni sur /blog ni a son adresse."
+      - name: "body"
+        label: "Texte de l'article"
+        widget: "markdown"
+        required: true
+
+  # --- Services -------------------------------------------------------------
+  # Schema : src/content.config.ts > const services
+  - name: "services"
+    label: "Services"
+    label_singular: "Service"
+    description: "Les fiches de /services. Tous les champs ont une valeur par defaut : une fiche peut rester incomplete tant que « Pret pour publication » est decoche."
+    folder: "src/content/services"
+    create: true
+    slug: "{{fields.slug}}"
+    identifier_field: "nom"
+    summary: "{{fields.nom}}"
+    sortable_fields: ["nom", "slug"]
+    fields:
+      - name: "slug"
+        label: "Adresse de la page (slug)"
+        widget: "string"
+        required: true
+        hint: "En minuscules, sans accents ni espaces. Donne l'URL : /services/cours-appui."
+        pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$", "Uniquement des minuscules, des chiffres et des tirets."]
+      - name: "nom"
+        label: "Nom du service"
+        widget: "string"
+        required: false
+      - name: "resumeCourt"
+        label: "Resume court"
+        widget: "text"
+        required: false
+      - name: "publicVise"
+        label: "Public vise"
+        widget: "list"
+        required: false
+        label_singular: "Profil"
+        field: { name: "profil", label: "Profil", widget: "string" }
+      - name: "deroule"
+        label: "Deroule"
+        widget: "list"
+        required: false
+        label_singular: "Etape"
+        field: { name: "etape", label: "Etape", widget: "string" }
+      - name: "facts"
+        label: "Informations pratiques"
+        widget: "list"
+        required: false
+        label_singular: "Information"
+        summary: "{{fields.label}} : {{fields.valeur}}"
+        fields:
+          - { name: "label", label: "Libelle", widget: "string", required: true }
+          - { name: "valeur", label: "Valeur", widget: "string", required: true }
+      - name: "cta"
+        label: "Texte du bouton (appel a l'action)"
+        widget: "string"
+        required: false
+      - name: "pretPourPublication"
+        label: "Pret pour publication"
+        widget: "boolean"
+        default: false
+        hint: "A ne cocher que lorsque slug, nom, resume court, public vise, deroule et texte du bouton contiennent de vraies valeurs. Une formule d'attente (« A definir », « A preciser »…) dans l'un de ces champs fait echouer la mise en ligne."
+      - name: "body"
+        label: "Texte de la fiche"
+        widget: "markdown"
+        required: false
+
+  # --- Manuels --------------------------------------------------------------
+  # Schema : src/content.config.ts > const manuels
+  - name: "manuels"
+    label: "Manuels"
+    label_singular: "Manuel"
+    description: "Les fiches de /manuels. Tous les champs ont une valeur par defaut : une fiche peut rester incomplete tant que « Pret pour publication » est decoche."
+    folder: "src/content/manuels"
+    create: true
+    slug: "{{fields.slug}}"
+    identifier_field: "slug"
+    summary: "{{fields.niveau}} — {{fields.matiere}}"
+    sortable_fields: ["slug", "niveau", "matiere"]
+    fields:
+      - name: "slug"
+        label: "Adresse de la page (slug)"
+        widget: "string"
+        required: true
+        hint: "En minuscules, sans accents ni espaces. Donne l'URL : /manuels/mathematiques-3e."
+        pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$", "Uniquement des minuscules, des chiffres et des tirets."]
+      - name: "niveau"
+        label: "Niveau"
+        widget: "string"
+        required: false
+        hint: "Tel qu'affiche sur la fiche, par exemple 3ᵉ, 2ⁿᵈᵉ, Terminale."
+      - name: "matiere"
+        label: "Matiere"
+        widget: "string"
+        required: false
+      - name: "resumeCourt"
+        label: "Resume court"
+        widget: "text"
+        required: false
+      - name: "publicVise"
+        label: "Public vise"
+        widget: "list"
+        required: false
+        label_singular: "Profil"
+        field: { name: "profil", label: "Profil", widget: "string" }
+      - name: "caracteristiques"
+        label: "Caracteristiques"
+        widget: "list"
+        required: false
+        label_singular: "Caracteristique"
+        field: { name: "caracteristique", label: "Caracteristique", widget: "string" }
+      - name: "facts"
+        label: "Informations pratiques"
+        widget: "list"
+        required: false
+        label_singular: "Information"
+        summary: "{{fields.label}} : {{fields.valeur}}"
+        fields:
+          - { name: "label", label: "Libelle", widget: "string", required: true }
+          - { name: "valeur", label: "Valeur", widget: "string", required: true }
+      - name: "cta"
+        label: "Texte du bouton (appel a l'action)"
+        widget: "string"
+        required: false
+      - name: "pretPourPublication"
+        label: "Pret pour publication"
+        widget: "boolean"
+        default: false
+        hint: "A ne cocher que lorsque slug, niveau, matiere, resume court et texte du bouton contiennent de vraies valeurs. Une formule d'attente (« A definir », « A preciser »…) dans l'un de ces champs fait echouer la mise en ligne."
+      - name: "body"
+        label: "Texte de la fiche"
+        widget: "markdown"
+        required: false

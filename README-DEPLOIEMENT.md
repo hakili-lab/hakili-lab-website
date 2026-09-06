@@ -2,7 +2,7 @@
 
 Pour quelqu'un qui reprend ce projet sans avoir suivi son développement. Commandes exactes, à copier-coller telles quelles.
 
-> **État au 01/09/2026** (voir `docs/RAPPORT-PROJET.md` section 4 pour le détail) : le code est prêt. `SITE_URL` pointe déjà sur `https://www.hakililab.com`, le favicon et le manifest sont câblés, le dépôt est sur GitHub (`github.com/hakili-lab/hakili-lab-website`, branche `main`) et à jour. `/inscription` et Web3Forms restent retirés (plus aucune variable d'environnement requise) ; `/contact` a été restaurée en page d'affichage simple (coordonnées seulement, aucun formulaire). Restent : choisir un hébergeur et y faire pointer le DNS du domaine (ce guide), et une image de partage Open Graph (en attente d'un visuel).
+> **État au 01/09/2026** (voir `docs/RAPPORT-PROJET.md` section 4 pour le détail) : le code est prêt. `SITE_URL` pointe déjà sur `https://www.hakililab.com`, le favicon et le manifest sont câblés, le dépôt est sur GitHub (`github.com/hakili-lab/hakili-lab-website`, branche `main`) et à jour. `/inscription` et Web3Forms restent retirés (plus aucune variable d'environnement requise) ; `/contact` a été restaurée en page d'affichage simple (coordonnées seulement, aucun formulaire). L'interface d'administration `/admin` est en place côté site ; il reste à y renseigner l'URL du Worker Cloudflare (voir la section « Interface d'administration »). Le déploiement est désormais automatisé : tout push sur `main` déclenche `.github/workflows/deploy.yml`, qui vérifie le build puis reconstruit le conteneur sur le VPS. Restent aussi : faire pointer le DNS du domaine sur le serveur (ce guide), et une image de partage Open Graph (en attente d'un visuel).
 
 ---
 
@@ -34,6 +34,44 @@ Aucune. Le site n'a plus de formulaire ni de service tiers à configurer
 et bouton WhatsApp direct — et la plaquette de la rentrée est un
 téléchargement direct de `public/plaquette-rentree.pdf`) : `npm run build`
 fonctionne sans aucun fichier `.env` ni variable système.
+
+L'interface d'administration `/admin` (voir la section suivante) ne change rien
+à cela : ses identifiants OAuth vivent dans un Worker Cloudflare externe, pas
+dans le build Astro.
+
+---
+
+## Interface d'administration (`/admin`)
+
+Le site expose une interface web d'édition de contenu à l'adresse `/admin`
+(Sveltia CMS). Elle permet de créer et modifier les **articles de blog**, les
+**services** et les **manuels** depuis un navigateur, avec un compte GitHub
+ayant accès au dépôt. Guide complet : `docs/ADMINISTRATION.md`.
+
+Côté déploiement, il n'y a **rien à faire** : les deux fichiers concernés
+(`public/admin/index.html` et `public/admin/config.yml`) sont dans `public/`,
+donc recopiés tels quels dans `dist/` par `npm run build`. Sveltia CMS est
+chargé depuis un CDN — aucune dépendance npm, aucune étape de build en plus.
+
+**Prérequis, à configurer une seule fois et en dehors de ce projet Astro :**
+
+- une **GitHub OAuth App** pour le dépôt `hakili-lab/hakili-lab-website` ;
+- un **Worker Cloudflare** (l'authentificateur de Sveltia CMS) qui porte le
+  Client ID et le Client Secret de cette application. Le site étant 100 %
+  statique, il n'a aucun serveur pour tenir ce rôle. **Ces secrets ne sont
+  jamais dans ce dépôt** et n'ont pas à l'être ;
+- l'URL de ce Worker renseignée dans la clé `backend.base_url` de
+  `public/admin/config.yml`.
+
+> Tant que `base_url` n'est pas renseignée, la page `/admin` s'affiche mais la
+> connexion GitHub échoue. Le reste du site n'est pas affecté.
+
+**Enregistrer dans `/admin` publie le contenu.** Le CMS écrit dans le dépôt
+GitHub (un commit sur `main`), et ce commit déclenche le workflow de
+déploiement décrit dans la section suivante : la modification est en ligne
+quelques minutes plus tard, sans intervention sur le serveur. Une publication
+qui casserait le build est arrêtée à l'étape de vérification, avant d'atteindre
+le serveur.
 
 ---
 
@@ -72,9 +110,115 @@ Arrêter ensuite le serveur de prévisualisation (`Ctrl+C` dans son terminal, ou
 
 ---
 
-## Déploiement
+## Déploiement automatique (méthode principale)
 
-Le dépôt est sur GitHub (`origin` → `github.com/hakili-lab/hakili-lab-website`, branche `main`), mais **aucun hébergeur n'y est encore branché** (vérifié : aucun fichier `netlify.toml`/`vercel.json`/`wrangler.toml`, aucun `.github/workflows/`).
+**Tout push sur la branche `main` déclenche le déploiement**, via le workflow
+GitHub Actions `.github/workflows/deploy.yml`. Il n'y a plus rien à faire à la
+main dans le cas courant : on pousse, et le site se met à jour tout seul en
+quelques minutes.
+
+Le workflow se déroule en deux temps, et **le second ne démarre que si le
+premier a réussi** :
+
+1. **Vérifier** — sur le runner GitHub (pas sur le serveur) : `npm ci` puis
+   `npm run build`. Si le site ne se construit pas (le plus souvent : une
+   entrée de contenu invalide, voir `src/content.config.ts`), **le workflow
+   s'arrête ici et le serveur n'est jamais touché**. C'est la protection qui
+   manquait depuis qu'on n'est plus chez un hébergeur statique qui refusait
+   de publier un build en échec.
+2. **Déployer** — connexion SSH au VPS (dont l'identité est vérifiée par
+   empreinte, voir plus bas), puis `git pull`, `docker build`, et seulement
+   ensuite le remplacement du conteneur. **Si `docker build` échoue sur le
+   serveur, le script s'arrête avant `docker stop`** : le site reste en ligne
+   sur l'ancienne version plutôt que d'être coupé pour une image qui ne s'est
+   pas construite. Une fois le nouveau conteneur confirmé en service, un
+   `docker image prune -f` supprime les images orphelines laissées par les
+   builds précédents, pour que le disque du VPS ne se remplisse pas au fil des
+   déploiements.
+
+### Suivre une exécution
+
+Onglet **Actions** du dépôt :
+<https://github.com/hakili-lab/hakili-lab-website/actions>
+
+Chaque push y apparaît comme une exécution du workflow « Deploiement », avec
+une coche verte (réussi) ou une croix rouge (échoué). Cliquer dessus affiche le
+détail étape par étape : on voit immédiatement si l'échec vient de la
+vérification (le site ne se construit pas — à corriger dans le code ou le
+contenu) ou du déploiement (problème sur le serveur : SSH, `git pull`, Docker).
+
+Un échec de la vérification ne casse rien en ligne : le site continue de
+tourner sur la dernière version déployée avec succès.
+
+### Ce que GitHub doit connaître
+
+Quatre secrets de dépôt (**Settings → Secrets and variables → Actions**), déjà
+configurés. Le workflow ne fait qu'y faire référence, aucune valeur n'est
+écrite dans le dépôt :
+
+| Secret | Contenu |
+|---|---|
+| `VPS_HOST` | L'adresse du serveur. |
+| `VPS_USER` | L'utilisateur SSH utilisé pour se connecter. |
+| `VPS_SSH_KEY` | La **clé privée** SSH correspondante. Sa clé publique doit être dans le `~/.ssh/authorized_keys` de cet utilisateur sur le serveur. |
+| `VPS_HOST_FINGERPRINT` | L'empreinte SHA256 de la **clé publique d'hôte** du serveur. Elle permet de vérifier qu'on parle bien au bon serveur avant de lui envoyer quoi que ce soit, plutôt que de faire confiance à qui répond à l'adresse. |
+
+Cette dernière est une empreinte publique, pas un secret au sens strict : elle
+est stockée comme secret par commodité. Pour la (re)calculer :
+
+```sh
+ssh-keyscan -t ed25519 <adresse-du-serveur> | ssh-keygen -lf -
+```
+
+La valeur à mettre dans le secret est la partie `SHA256:...` de la sortie.
+
+> **Si le déploiement se met soudain à échouer à la connexion SSH** alors que
+> rien n'a changé côté dépôt, la clé d'hôte du serveur a probablement été
+> régénérée (réinstallation, changement de machine). Recalculer l'empreinte
+> avec la commande ci-dessus et mettre à jour le secret. C'est le
+> fonctionnement attendu : la connexion est refusée tant que l'identité du
+> serveur n'est pas confirmée, et rien n'est déployé entre-temps.
+
+### Ce qui fait échouer le job, et ce qui ne le fait pas
+
+Une croix rouge doit vouloir dire « le site n'est pas à jour ». Toutes les
+étapes ne sont donc pas traitées de la même façon :
+
+| Étape | Bloquante ? | Pourquoi |
+|---|---|---|
+| `npm ci` / `npm run build` (runner) | **Oui** | Rien ne doit atteindre le serveur si le site ne se construit pas. |
+| Connexion SSH (empreinte, clé) | **Oui** | Sans certitude sur l'identité du serveur, on ne déploie pas. |
+| `git pull --ff-only` | **Oui** | Un clone qui a divergé doit être réglé à la main, pas contourné. |
+| `docker build` | **Oui** | Le script s'arrête avant `docker stop` : l'ancien conteneur continue de servir le site. |
+| `docker stop` / `docker rm` | Non (`\|\| true`) | Au premier déploiement il n'y a pas de conteneur à arrêter, et ce n'est pas une erreur. |
+| Contrôle `docker ps` après `docker run` | **Oui** | Un conteneur qui sort aussitôt laisserait le site hors ligne ; le job doit le signaler. |
+| `docker image prune -f` | Non (`\|\| true`) | Volontairement non bloquant : voir ci-dessous. |
+
+Le nettoyage des images est la **dernière** commande, exécutée alors que le
+déploiement a déjà réussi et que le conteneur vient d'être confirmé en service
+par le contrôle `docker ps`. Un `prune` qui échoue (démon Docker occupé, build
+manuel lancé en parallèle sur le serveur…) ne change rien au fait que le site
+est bien en ligne dans sa nouvelle version. Le laisser faire échouer le job
+afficherait une croix rouge pour un site parfaitement déployé — et pousserait
+à redéployer sans raison. D'où le `|| true`.
+
+En contrepartie, un échec de nettoyage répété passe inaperçu dans le statut du
+workflow. S'il devient nécessaire de le surveiller (disque du VPS qui se
+remplit malgré tout), la trace reste lisible dans le log de l'étape, sous
+« Nettoyage des images Docker orphelines ».
+
+Le workflow suppose aussi que le dépôt est déjà cloné sur le serveur dans
+`~/hakili-lab-website` pour cet utilisateur, et que celui-ci peut lancer
+`docker` sans mot de passe (appartenance au groupe `docker`).
+
+Le déploiement n'est configuré **que pour `main`** : pousser sur une autre
+branche ne touche pas au serveur.
+
+---
+
+## Choix de l'hébergeur (historique)
+
+Le dépôt est sur GitHub (`origin` → `github.com/hakili-lab/hakili-lab-website`, branche `main`). Le site tourne aujourd'hui en auto-hébergement Docker, déployé par le workflow décrit ci-dessus ; aucun hébergeur statique tiers n'y est branché (pas de `netlify.toml`/`vercel.json`/`wrangler.toml`).
 
 Le site est un export 100 % statique (`dist/`, sans serveur Node ni fonction serverless requise), compatible avec n'importe quel hébergeur de sites statiques. Options courantes, sans trancher à votre place :
 
@@ -86,7 +230,7 @@ Le site est un export 100 % statique (`dist/`, sans serveur Node ni fonction ser
 | **GitHub Pages** | Gratuit, mais pas de redirections serveur natives. |
 | **Auto-hébergement Docker** | Serveur maîtrisé de bout en bout ; c'est la méthode en place aujourd'hui (voir la section « Auto-hébergement par conteneur Docker » plus bas). |
 
-Marche générale une fois l'hébergeur choisi (identique pour Cloudflare Pages/Netlify/Vercel) :
+Si l'on devait un jour basculer vers un hébergeur statique, la marche générale (identique pour Cloudflare Pages/Netlify/Vercel) serait :
 
 1. Vérifier que le dépôt GitHub est à jour :
    ```sh
@@ -144,7 +288,19 @@ conservant l'hôte **et le port** courants. C'est un réglage d'infrastructure :
 le code du site, lui, n'a jamais construit d'URL absolue pour ses liens de
 navigation.
 
-### Mettre à jour le site déployé
+### Mettre à jour le site déployé — à la main (méthode de secours)
+
+> **Ce n'est plus la méthode courante.** Depuis la mise en place du workflow
+> GitHub Actions (section « Déploiement automatique » plus haut), un push sur
+> `main` suffit. La procédure ci-dessous reste utile dans trois cas :
+>
+> - le workflow échoue à l'étape de déploiement et il faut comprendre pourquoi,
+>   en rejouant les commandes une par une sur le serveur ;
+> - GitHub Actions est indisponible, ou les secrets SSH sont à renouveler ;
+> - on veut redéployer **sans passer par un commit** — par exemple pour
+>   reconstruire l'image après un changement côté serveur. C'est rare.
+
+Sur le serveur, connecté en SSH :
 
 ```sh
 cd hakili-lab
@@ -153,6 +309,14 @@ docker build --no-cache -t hakili-lab-website .
 docker stop hakili-lab-website && docker rm hakili-lab-website
 docker run -d --name hakili-lab-website -p 8014:80 --restart unless-stopped hakili-lab-website
 ```
+
+Différence assumée avec le workflow : `--no-cache` ici, pour écarter tout doute
+sur une image périmée quand on débogue à la main. Le workflow, lui, s'appuie
+sur le cache Docker (le `COPY package*.json` du `Dockerfile` l'invalide
+correctement) pour rester rapide.
+
+À taper à la main, `docker stop && docker rm` échoue si le conteneur n'existe
+pas — sans conséquence, passer directement au `docker run`.
 
 ---
 
@@ -181,9 +345,10 @@ Une fois le site en ligne sur sa vraie URL, vérifier concrètement :
 
 ## Maintenance courante
 
-- **Publier un nouvel article de blog** : voir `docs/PUBLIER-UN-ARTICLE.md`, guide dédié, pas à dupliquer ici.
-- **Mettre à jour l'équipe (photos, bios, rôles)** : voir `docs/EQUIPE.md`, guide dédié.
-- **Mettre à jour un tarif ou une caractéristique de service/manuel** : directement dans les fichiers `src/content/services/*.md` ou `src/content/manuels/*.md` (frontmatter), ou dans `src/data/details.js` pour les fiches "En savoir plus" (services, manuels, applications).
-- **Mettre à jour une donnée de centre** (horaires, adresse, coordonnées) : `src/data/centres.js`, validé par un schéma Zod au build — une valeur manquante sur un centre marqué `pretPourPublication:true` fait échouer `npm run build` avec un message précis plutôt que de publier une fiche à moitié vide.
+- **Éditer du contenu sans toucher au code** : interface `/admin`, pour les articles de blog, les services et les manuels — voir `docs/ADMINISTRATION.md`.
+- **Publier un nouvel article de blog** : voir `docs/PUBLIER-UN-ARTICLE.md`, guide dédié, pas à dupliquer ici (via `/admin` ou en éditant le fichier `.md`).
+- **Mettre à jour l'équipe (photos, bios, rôles)** : voir `docs/EQUIPE.md`, guide dédié. **Pas éditable depuis `/admin`** (données dans `src/data/team.js`).
+- **Mettre à jour un tarif ou une caractéristique de service/manuel** : depuis `/admin` (rubriques « Services » et « Manuels »), ou directement dans les fichiers `src/content/services/*.md` ou `src/content/manuels/*.md` (frontmatter). Les fiches "En savoir plus" (services, manuels, applications) restent dans `src/data/details.js`, **hors `/admin`**.
+- **Mettre à jour une donnée de centre** (horaires, adresse, coordonnées) : `src/data/centres.js`, **hors `/admin`**, validé par un schéma Zod au build — une valeur manquante sur un centre marqué `pretPourPublication:true` fait échouer `npm run build` avec un message précis plutôt que de publier une fiche à moitié vide.
 
-Après toute modification de contenu, relancer la boucle `npm run build` → `npm run preview` → `npm run verify` → `npm run verify:contrast` décrite plus haut avant de redéployer.
+Après toute modification de contenu faite en local, relancer la boucle `npm run build` → `npm run preview` → `npm run verify` → `npm run verify:contrast` décrite plus haut **avant de pousser sur `main`** : le workflow de déploiement vérifie que le site se construit, mais **il n'exécute pas** `verify` ni `verify:contrast` (ces deux scripts ont besoin d'un serveur de prévisualisation lancé en parallèle). Un lien mort ou un défaut de contraste passerait donc le déploiement sans être signalé.

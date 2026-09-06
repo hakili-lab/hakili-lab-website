@@ -35,7 +35,7 @@ Node.js ≥ 22.12.0 est requis (`package.json` → `engines`).
 | Les points de rupture responsive (1080 / 980 / 680 px)        | `src/styles/responsive.css`                                      |
 | Les 13 fiches « classe » du sélecteur de niveau (accueil)     | `src/data/levels.js`                                             |
 | Les 8 fiches « En savoir plus » (matières, formules, applications), affichées en modale | `src/data/details.js` (la clé doit correspondre au titre normalisé, voir plus bas) |
-| Les articles de blog, les fiches service, les fiches manuels  | `src/content/blog/`, `src/content/services/`, `src/content/manuels/` (un fichier `.md` par entrée, voir `docs/PUBLIER-UN-ARTICLE.md` pour le blog) |
+| Les articles de blog, les fiches service, les fiches manuels  | `src/content/blog/`, `src/content/services/`, `src/content/manuels/` (un fichier `.md` par entrée, voir `docs/PUBLIER-UN-ARTICLE.md` pour le blog) — également éditables par formulaire depuis `/admin`, voir `docs/ADMINISTRATION.md` |
 | Les centres (horaires, adresse, coordonnées GPS, lien Maps)   | `src/data/centres.js` (validé par Zod au build : une valeur manquante sur un centre `pretPourPublication:true` fait échouer `npm run build`) |
 | Les fondateurs et enseignants (noms, rôles, biographies, photos) | `src/data/team.js` (voir `docs/EQUIPE.md`)                    |
 | L'URL de production, le titre et la description SEO           | `src/data/site.js`                                               |
@@ -104,9 +104,10 @@ Le détail vit dans des documents dédiés, ce README n'en recopie pas le conten
 
 | Document                   | Pour                                                                                          |
 | -------------------------- | -------------------------------------------------------------------------------------------- |
-| `README-DEPLOIEMENT.md`    | Installer, construire, vérifier et mettre en ligne le site (commandes exactes à copier-coller). |
+| `README-DEPLOIEMENT.md`    | Installer, construire, vérifier et mettre en ligne le site (commandes exactes à copier-coller). Le déploiement est automatique : tout push sur `main` déclenche `.github/workflows/deploy.yml`. |
 | `docs/RAPPORT-PROJET.md`   | État technique détaillé : stack, inventaire des fichiers, orphelins et doublons, ce qui manque, décisions de structure et d'accessibilité. |
 | `docs/EQUIPE.md`           | Remplacer les espaces réservés par les vraies photos et biographies des fondateurs et enseignants. |
+| `docs/ADMINISTRATION.md`   | L'interface web `/admin` : connexion, gestion des accès, ce qui s'y édite (blog, services, manuels) et ce qui n'y est pas éditable (centres, équipe, tarifs). |
 | `docs/PUBLIER-UN-ARTICLE.md` | Ajouter, modifier ou dépublier un article de blog sans savoir programmer.                   |
 | `docs/A-FAIRE-CONTENU.md`  | Inventaire complet du contenu provisoire : quoi fournir, où, sous quel format.                |
 

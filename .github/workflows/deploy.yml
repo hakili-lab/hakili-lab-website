@@ -1,0 +1,134 @@
+# Deploiement automatique du site sur le VPS.
+#
+# Deux etapes, dans cet ordre, et la seconde ne demarre que si la premiere a
+# reussi (`needs`) :
+#
+#   1. verifier  — sur le runner GitHub : `npm ci` puis `npm run build`.
+#      C'est le garde-fou qui manquait depuis qu'on n'est plus chez un
+#      hebergeur statique qui refusait de publier un build en echec. Un
+#      contenu invalide (voir src/content.config.ts) fait echouer cette
+#      etape, et le serveur n'est jamais touche.
+#
+#   2. deployer  — sur le VPS, par SSH : git pull, docker build, puis
+#      seulement ensuite le remplacement du conteneur.
+#
+# Aucun secret n'est ecrit ici : uniquement des references ${{ secrets.* }}.
+
+name: Deploiement
+
+on:
+  push:
+    branches: [main]
+
+# Lecture seule : ce workflow ne pousse rien sur le depot.
+permissions:
+  contents: read
+
+# Deux pushes rapproches ne doivent pas deployer en parallele sur la meme
+# machine. `cancel-in-progress: false` : on ne coupe jamais un deploiement
+# deja en cours au milieu d'un docker build/run, on attend qu'il finisse.
+concurrency:
+  group: deploiement-production
+  cancel-in-progress: false
+
+jobs:
+  # --- Etape 1 : le site se construit-il ? ---------------------------------
+  verifier:
+    name: Verifier que le site se construit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le depot
+        uses: actions/checkout@v7
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v7
+        with:
+          # Aligne sur engines.node de package.json (">=22.12.0") et sur le
+          # node:22-slim du Dockerfile : le build du runner et celui de
+          # l'image tournent ainsi sur la meme version majeure.
+          node-version: '22'
+          cache: npm
+
+      - name: Installer les dependances
+        run: npm ci
+
+      - name: Construire le site
+        run: npm run build
+
+  # --- Etape 2 : deployer, seulement si l'etape 1 a reussi -----------------
+  deployer:
+    name: Deployer sur le VPS
+    runs-on: ubuntu-latest
+    needs: verifier
+    steps:
+      - name: Reconstruire et relancer le conteneur par SSH
+        uses: appleboy/ssh-action@v1.2.5
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          # Empreinte SHA256 de la cle publique du serveur. Sans elle, la
+          # connexion accepte n'importe quel hote qui repond a l'adresse :
+          # on verifie donc l'identite du serveur avant de lui livrer quoi
+          # que ce soit. Si l'empreinte ne correspond pas, la connexion est
+          # refusee et rien n'est deploye.
+          fingerprint: ${{ secrets.VPS_HOST_FINGERPRINT }}
+          # `docker build` refait `npm ci` + `npm run build` dans l'image :
+          # la valeur par defaut (10m) est trop juste sur un petit VPS.
+          command_timeout: 20m
+          script: |
+            set -eu
+
+            cd ~/hakili-lab-website
+
+            # --ff-only : on avance sur origin/main, jamais de commit de
+            # fusion cree sur le serveur de production. Si le clone du
+            # serveur a diverge, on echoue ici, avant de toucher au
+            # conteneur.
+            git pull --ff-only
+
+            # Le build AVANT tout arret de l'existant. Le test explicite ne
+            # depend pas de `set -e` : si l'image ne se construit pas, on
+            # sort ici et l'ancien conteneur continue de servir le site.
+            if ! docker build -t hakili-lab-website .; then
+              echo "ERREUR : docker build a echoue. L'ancien conteneur reste en place, le site en ligne n'est pas coupe."
+              exit 1
+            fi
+
+            # `|| true` uniquement ici : au tout premier deploiement (ou
+            # apres un arret manuel) il n'y a pas de conteneur a arreter,
+            # et ce n'est pas une erreur. Le garde-fou du build est au-dessus.
+            docker stop hakili-lab-website || true
+            docker rm hakili-lab-website || true
+
+            docker run -d \
+              --name hakili-lab-website \
+              -p 8014:80 \
+              --restart unless-stopped \
+              hakili-lab-website
+
+            # Un conteneur qui sort immediatement laisserait le site hors
+            # ligne sans que le workflow s'en apercoive.
+            if [ -z "$(docker ps -q --filter name=^/hakili-lab-website$)" ]; then
+              echo "ERREUR : le conteneur ne tourne pas apres docker run."
+              docker logs --tail 50 hakili-lab-website || true
+              exit 1
+            fi
+
+            echo "Deploiement termine, conteneur en cours d'execution :"
+            docker ps --filter name=^/hakili-lab-website$
+
+            # Nettoyage en dernier, une fois le nouveau conteneur confirme en
+            # service. Chaque build laisse derriere lui l'image precedente
+            # devenue sans tag ; sur un petit VPS elles finissent par remplir
+            # le disque. Sans -a : seules les images orphelines (aucun tag,
+            # aucun conteneur qui les utilise) partent — celle qui sert le
+            # site n'est jamais concernee.
+            #
+            # `|| true` : a ce stade le deploiement a reussi et le conteneur
+            # est confirme en service. Un nettoyage rate ne doit donc pas
+            # faire passer le job au rouge et laisser croire que la mise en
+            # ligne a echoue — contrairement au build et au demarrage du
+            # conteneur, qui eux sont bloquants.
+            echo "Nettoyage des images Docker orphelines :"
+            docker image prune -f || true
