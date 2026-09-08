@@ -231,3 +231,102 @@ collections:
         label: "Texte de la fiche"
         widget: "markdown"
         required: false
+  # --- Nos centres ----------------------------------------------------------
+  # Schema : src/data/centres.js > centreSchema
+  #
+  # Collection de type "files" et non "folder" : les 5 centres forment un
+  # ensemble fixe, ecrit dans un seul fichier de donnees (src/data/centres.json),
+  # pas une liste ouverte ou l on cree et supprime des entrees librement.
+  - name: "centres"
+    label: "Nos centres"
+    files:
+      - name: "centres"
+        label: "Les 5 centres"
+        file: "src/data/centres.json"
+        description: "Les centres affiches sur /centres et sur l'accueil. Le fichier contient les cinq centres a la fois : enregistrer met a jour la page de chacun."
+        fields:
+          - name: "centres"
+            label: "Centres"
+            label_singular: "Centre"
+            widget: "list"
+            summary: "{{fields.nom}}"
+            fields:
+              - name: "slug"
+                label: "Identifiant (slug)"
+                widget: "string"
+                required: true
+                hint: "En minuscules, sans accents ni espaces. Donne l'URL : /centres/pissy. Ne plus le changer une fois le centre en ligne."
+                pattern: ["^[a-z0-9]+(-[a-z0-9]+)*$", "Uniquement des minuscules, des chiffres et des tirets."]
+              - name: "nom"
+                label: "Nom"
+                widget: "string"
+                required: false
+              - name: "description"
+                label: "Description"
+                widget: "text"
+                required: false
+                hint: "La phrase affichee sous le nom du centre, sur la carte et en haut de sa page."
+              - name: "image"
+                label: "Photo"
+                widget: "image"
+                required: true
+                choose_url: false
+                hint: "La photo doit etre choisie ou televersee dans src/assets/photos/. Une adresse externe ne fonctionnerait pas : le site retaille les images au moment de la compilation."
+              - name: "horaires"
+                label: "Horaires"
+                widget: "object"
+                fields:
+                  - name: "resume"
+                    label: "Resume"
+                    widget: "string"
+                    required: false
+                    hint: "Le texte affiche tant que la grille detaillee est vide, par exemple « Du lundi au samedi, 8h a 18h »."
+                  - name: "grille"
+                    label: "Grille detaillee"
+                    label_singular: "Journee"
+                    widget: "list"
+                    required: false
+                    summary: "{{fields.jour}}"
+                    hint: "Facultatif. Des qu'une journee est ajoutee ici, la grille remplace le resume ci-dessus."
+                    fields:
+                      - name: "jour"
+                        label: "Jour"
+                        widget: "string"
+                        required: true
+                      - name: "creneaux"
+                        label: "Creneaux"
+                        label_singular: "Creneau"
+                        widget: "list"
+                        summary: "{{fields.debut}} - {{fields.fin}} : {{fields.niveau}}"
+                        fields:
+                          - { name: "debut", label: "Debut", widget: "string", required: true }
+                          - { name: "fin", label: "Fin", widget: "string", required: true }
+                          - { name: "niveau", label: "Niveau", widget: "string", required: true }
+              - name: "classesOuvertes"
+                label: "Classes ouvertes"
+                widget: "string"
+                required: false
+              - name: "adresse"
+                label: "Adresse"
+                widget: "string"
+                required: false
+              - name: "latitude"
+                label: "Latitude"
+                widget: "number"
+                required: false
+                value_type: "float"
+                hint: "Facultatif. Latitude et longitude vont ensemble : renseignez les deux ou aucune."
+              - name: "longitude"
+                label: "Longitude"
+                widget: "number"
+                required: false
+                value_type: "float"
+              - name: "googleMapsUrl"
+                label: "Lien Google Maps"
+                widget: "string"
+                required: false
+              - name: "pretPourPublication"
+                label: "Pret pour publication"
+                widget: "boolean"
+                default: false
+                hint: "A ne cocher que lorsque le nom, la description et le resume des horaires contiennent de vraies valeurs. Une formule d'attente (« A definir », « A preciser »…) dans l'un de ces champs fait echouer la mise en ligne."

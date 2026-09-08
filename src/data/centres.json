@@ -1,0 +1,84 @@
+{
+  "centres": [
+    {
+      "slug": "pissy",
+      "nom": "Pissy",
+      "description": "Au cœur d'un quartier dense, un cadre studieux pensé pour les collégiens et lycéens qui veulent progresser sérieusement en mathématiques.",
+      "image": "/src/assets/photos/pissyPhoto.jpeg",
+      "horaires": {
+        "resume": "Du lundi au samedi, 8h à 18h",
+        "grille": []
+      },
+      "classesOuvertes": "",
+      "adresse": "",
+      "latitude": null,
+      "longitude": null,
+      "googleMapsUrl": "",
+      "pretPourPublication": true
+    },
+    {
+      "slug": "tampouy",
+      "nom": "Tampouy",
+      "description": "Un centre facilement accessible depuis le nord de la ville, avec des séances en fin d’après-midi et le samedi.",
+      "image": "/src/assets/photos/tampouyPhoto.jpeg",
+      "horaires": {
+        "resume": "Du lundi au samedi, 8h à 18h",
+        "grille": []
+      },
+      "classesOuvertes": "",
+      "adresse": "",
+      "latitude": null,
+      "longitude": null,
+      "googleMapsUrl": "",
+      "pretPourPublication": true
+    },
+    {
+      "slug": "saaba",
+      "nom": "Saaba",
+      "description": "À l'est de Ouagadougou, un cadre calme et propice à la concentration pour les collégiens et lycéens.",
+      "image": "/src/assets/photos/saabaPhoto.jpg",
+      "horaires": {
+        "resume": "Du lundi au samedi, 8h à 18h",
+        "grille": []
+      },
+      "classesOuvertes": "",
+      "adresse": "",
+      "latitude": null,
+      "longitude": null,
+      "googleMapsUrl": "",
+      "pretPourPublication": true
+    },
+    {
+      "slug": "siao",
+      "nom": "SIAO",
+      "description": "Notre centre historique, en plein centre-ville,le seul à accueillir aussi les plus jeunes, du primaire au secondaire, pratique pour les familles qui viennent chercher leurs enfants en sortant du travail.",
+      "image": "/src/assets/photos/siaoPhoto.jpg",
+      "horaires": {
+        "resume": "Du lundi au samedi, 8h à 18h",
+        "grille": []
+      },
+      "classesOuvertes": "",
+      "adresse": "",
+      "latitude": null,
+      "longitude": null,
+      "googleMapsUrl": "",
+      "pretPourPublication": true
+    },
+    {
+      "slug": "nagrin",
+      "nom": "Nagrin",
+      "description": "Notre implantation la plus récente, au sud de la ville, avec des groupes à taille réduite.",
+      "image": "/src/assets/photos/nagrinPhoto.jpeg",
+      "horaires": {
+        "resume": "Du lundi au samedi, 8h à 18h",
+        "grille": []
+      },
+      "classesOuvertes": "",
+      "adresse": "",
+      "latitude": null,
+      "longitude": null,
+      "googleMapsUrl": "",
+      "pretPourPublication": true
+    }
+  ]
+}
