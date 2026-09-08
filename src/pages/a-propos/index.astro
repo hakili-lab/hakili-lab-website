@@ -1,6 +1,8 @@
 ---
-// Page /a-propos : histoire, valeurs et fondateurs (PersonCard, donnees dans
-// src/data/team.js) de Hakili Lab.
+// Page /a-propos : histoire et fondateurs (PersonCard, donnees dans
+// src/data/team.js) de Hakili Lab. Les valeurs et les engagements des eleves
+// vivent desormais sur /valeurs ; il n'en reste ici qu'un teaser. L'ancre
+// #valeurs est conservee sur ce teaser pour les liens externes deja partages.
 import { Picture } from 'astro:assets';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PersonCard from '../../components/PersonCard.astro';
@@ -39,60 +41,13 @@ import photo from '../../assets/photos/37.jpeg';
   </div>
 </section>
 
-<section class="section" id="valeurs">
+<section class="section section-cloud" id="valeurs">
   <div class="wrap" style="max-width:760px">
     <span class="eyebrow">Nos valeurs</span>
     <h2 class="h2">Ce qui nous anime</h2>
-    <ul class="marks">
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous croyons au <b>potentiel d’excellence de chaque enfant</b>.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous <b>enseignons pour la compréhension</b>.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous formons une <b>communauté d’apprentissage</b> : chaque élève est un enseignant, chaque enseignant est un élève.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous sommes une <b>équipe solidaire</b> : chacun veille sur les autres.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Notre <b>engagement</b> ne connaît pas de limites quand il s’agit de faire réussir un élève.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous <b>valorisons l’apprentissage</b>.</div></li>
-    </ul>
-  </div>
-</section>
-
-<section class="section section-cloud" id="engagements">
-  <div class="wrap">
-    <span class="eyebrow">Engagements de nos élèves</span>
-    <h2 class="h2">Dans notre communauté d’apprentissage, chaque élève contribue à l’excellence collective</h2>
-    <p class="lead">Voici comment.</p>
-    <div class="cards-4">
-      <article class="card">
-        <div class="icon"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14h6"/></svg></div>
-        <h3>Je valorise l’apprentissage</h3>
-        <ul>
-          <li><b>J’arrive à l’heure</b> pour ne manquer aucune opportunité d’apprendre et par respect pour mes camarades et enseignants</li>
-          <li><b>Je prépare mes cours</b> avant de venir au centre, car la compréhension commence par ma propre curiosité</li>
-          <li><b>Je reste concentré</b> : mon téléphone reste éteint pour que je sois pleinement présent dans mon apprentissage</li>
-        </ul>
-      </article>
-      <article class="card">
-        <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M7 10v5c0 1.7 2.2 3 5 3s5-1.3 5-3v-5"/></svg></div>
-        <h3>Je suis un apprenant proactif</h3>
-        <ul>
-          <li><b>Je pose des questions</b> quand je ne comprends pas : c’est un signe de force, pas de faiblesse</li>
-          <li><b>Je participe activement</b>, car chaque intervention enrichit notre communauté d’apprentissage</li>
-        </ul>
-      </article>
-      <article class="card">
-        <div class="icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/></svg></div>
-        <h3>Je construis une communauté solidaire</h3>
-        <ul>
-          <li><b>Je respecte chacun</b> : enseignants, personnel et camarades</li>
-          <li><b>Je valorise les contributions de tous</b>, sachant que chaque élève peut être mon enseignant</li>
-          <li><b>J’encourage mes camarades</b>, car leur réussite est aussi la mienne</li>
-        </ul>
-      </article>
-      <article class="card">
-        <div class="icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <h3>Je représente notre excellence</h3>
-        <ul>
-          <li><b>Je porte la tenue requise</b> avec fierté, car elle symbolise notre engagement commun vers l’excellence</li>
-        </ul>
-      </article>
+    <p class="lead">Six convictions guident notre travail au quotidien, et quatre engagements accompagnent chaque élève qui rejoint nos centres.</p>
+    <div class="hero-actions" style="margin-top:28px">
+      <a class="btn btn-outline" href="/valeurs">Découvrir nos valeurs &rarr;</a>
     </div>
   </div>
 </section>
