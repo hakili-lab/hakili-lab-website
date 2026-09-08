@@ -1,5 +1,27 @@
 # Fondateurs et enseignants (portraits)
 
+> **À lire d'abord — la section « L'équipe » est temporairement désactivée.**
+>
+> Le site étant en ligne, la grille des portraits d'enseignants de
+> `/enseignants` est **commentée** : elle n'affichait que des espaces
+> réservés (« Enseignant 1 » à « Enseignant 4 », « Biographie à venir. »,
+> initiales au lieu de photos). Les données de `src/data/team.js` sont
+> intactes, rien n'a été supprimé.
+>
+> **Pour la réactiver**, une fois les vraies photos et biographies saisies
+> dans `src/data/team.js` (voir la suite de ce guide) : ouvrir
+> `src/pages/enseignants/index.astro` et retirer le commentaire Astro qui
+> entoure le bloc « L'équipe ». Concrètement, supprimer la ligne d'ouverture
+> `{/* Section « L'equipe » desactivee temporairement : ...` et les lignes
+> d'explication qui la suivent, ainsi que la ligne de fermeture située juste
+> avant le bloc `<div class="recruit">`. Le contenu entre les deux
+> (`div.group-title`, `p.group-sub`, `div.person-grid`) est déjà prêt et
+> repart tel quel.
+>
+> La section « Nos fondateurs » de `/a-propos` n'est **pas** concernée :
+> elle reste affichée, avec les vraies photos et biographies de Salfo et
+> Mahamadou.
+
 Ce guide explique comment remplacer les espaces réservés actuels par les
 vraies photos et biographies, sur les sections « Nos fondateurs »
 (`/a-propos`) et « L'équipe » (page des enseignants).
