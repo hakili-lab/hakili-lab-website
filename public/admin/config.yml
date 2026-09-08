@@ -481,3 +481,66 @@ collections:
                 widget: "string"
                 required: false
                 hint: "La phrase a cote de la pastille. Masquee sur petits ecrans."
+  # --- Fiches « En savoir plus » --------------------------------------------
+  # Schema : src/content.config.ts > ficheDetailSchema
+  #
+  # Huit fiches, dans un seul fichier de donnees. Cinq s'ouvrent en fenetre
+  # modale depuis les cartes de /services ; les trois autres sont lues
+  # directement par une page dediee : "test de positionnement" par /methode,
+  # "amira" par /amira, "maya" par /maya.
+  - name: "fiches"
+    label: "Fiches « En savoir plus »"
+    files:
+      - name: "fiches"
+        label: "Les 8 fiches"
+        file: "src/data/details.json"
+        description: "Le contenu des fenetres « En savoir plus » ouvertes depuis les cartes de la page Services, et des encarts des pages Notre methode, Amira et Maya."
+        fields:
+          - name: "fiches"
+            label: "Fiches"
+            label_singular: "Fiche"
+            widget: "list"
+            summary: "{{fields.cle}}"
+            fields:
+              - name: "cle"
+                label: "Cle de liaison (a ne pas modifier a la legere)"
+                widget: "string"
+                required: true
+                pattern: ["^[a-z0-9]+( [a-z0-9]+)*$", "Uniquement des minuscules, des chiffres et des espaces simples : ni majuscule, ni accent, ni ponctuation. Un accent ou une majuscule empecherait la fiche de s'ouvrir."]
+                hint: "AVERTISSEMENT : cette cle n'est pas un identifiant libre. Pour les cinq fiches ouvertes depuis la page Services, elle doit correspondre EXACTEMENT au titre affiche sur la carte, ecrit sans accents, sans majuscules et sans ponctuation (« Mathematiques au secondaire » sur la carte donne « mathematiques au secondaire » ici). Si les deux ne correspondent plus, le bouton « En savoir plus » de cette carte cesse d'ouvrir la fiche, sans aucun message d'erreur ni echec de compilation. Modifier une cle impose donc de modifier le titre de la carte dans le meme mouvement, et inversement. Les trois fiches « test de positionnement », « amira » et « maya » echappent a cette regle : elles sont appelees par leur cle depuis les pages Notre methode, Amira et Maya, mais renommer leur cle casserait ces pages au build."
+              - name: "k"
+                label: "Categorie"
+                widget: "string"
+                required: true
+                hint: "Le petit intitule vert au-dessus du titre : Matiere, Formule ou Application."
+              - name: "p"
+                label: "Presentation"
+                widget: "text"
+                required: true
+                hint: "Le paragraphe d'introduction de la fiche."
+              - name: "who"
+                label: "Pour qui"
+                label_singular: "Profil"
+                widget: "list"
+                field: { name: "profil", label: "Profil", widget: "string" }
+                hint: "Au moins un profil."
+              - name: "how"
+                label: "Comment cela se passe"
+                label_singular: "Etape"
+                widget: "list"
+                field: { name: "etape", label: "Etape", widget: "string" }
+                hint: "Au moins une etape."
+              - name: "facts"
+                label: "Informations pratiques"
+                label_singular: "Information"
+                widget: "list"
+                required: false
+                summary: "{{fields.label}} : {{fields.valeur}}"
+                hint: "Les pastilles en bas de fiche. Une information dont la valeur est une formule d'attente (« A definir », « A preciser ») n'est pas affichee."
+                fields:
+                  - { name: "label", label: "Libelle", widget: "string", required: true }
+                  - { name: "valeur", label: "Valeur", widget: "string", required: true }
+              - name: "cta"
+                label: "Texte du bouton (appel a l'action)"
+                widget: "string"
+                required: true

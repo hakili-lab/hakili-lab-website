@@ -6,7 +6,7 @@ import { detail } from '../../data/details.js';
 import { isPlaceholder } from '../../lib/placeholders.js';
 
 const test = detail['test de positionnement'];
-const realFacts = test.f.filter((f) => !isPlaceholder(f[1]));
+const realFacts = test.facts.filter((f) => !isPlaceholder(f.valeur));
 ---
 <SiteLayout
   title="Notre méthode"
@@ -71,7 +71,7 @@ const realFacts = test.f.filter((f) => !isPlaceholder(f[1]));
 
     {realFacts.length > 0 && (
       <div class="modal-facts" style="margin-top:30px">
-        {realFacts.map(([label, valeur]) => (
+        {realFacts.map(({ label, valeur }) => (
           <div class="fact">
             <span>{label}</span>
             <b set:html={valeur} />

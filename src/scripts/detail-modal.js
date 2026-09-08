@@ -26,10 +26,10 @@ function openDetail(key,title){
   html+='</ul></div><div><h3>Comment cela se passe</h3><ul>';
   d.how.forEach(function(x){html+='<li>'+x+'</li>'});
   html+='</ul></div></div>';
-  var realFacts=d.f.filter(function(x){return !isPlaceholder(x[1])});
+  var realFacts=d.facts.filter(function(x){return !isPlaceholder(x.valeur)});
   if(realFacts.length){
     html+='<div class="modal-facts">';
-    realFacts.forEach(function(x){html+='<div class="fact"><span>'+x[0]+'</span><b>'+x[1]+'</b></div>'});
+    realFacts.forEach(function(x){html+='<div class="fact"><span>'+x.label+'</span><b>'+x.valeur+'</b></div>'});
     html+='</div>';
   }
   html+='<div class="modal-actions"><a class="btn btn-green" href="#contact" data-close="1">'+d.cta+'</a>'

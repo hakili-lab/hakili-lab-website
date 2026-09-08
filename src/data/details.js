@@ -1,30 +1,36 @@
-// Fiches "En savoir plus" affichees en modale (DetailModal.astro) et lues
-// directement par certaines pages (/methode, /amira, /maya).
+// Fiches "En savoir plus" : affichees en fenetre modale (DetailModal.astro)
+// depuis les cartes de /services, et lues directement par trois pages
+// (/methode, /amira, /maya) dans leur frontmatter.
 //
-// 7 entrees : les autres (formules, programmes, manuels) ont ete retirees
-// le 2026-08-22 car verifie qu'aucune carte ni page ne les reference plus.
-// Deux verifications necessaires, pas une seule (la premiere passe de ce
-// nettoyage a rate les deux entrees ci-dessous marquees "import direct" et
-// a casse le build - lecon retenue) :
-// 1) declenchables via une carte modale : document.querySelectorAll('[data-detail]')
-//    sur le site compile (detail-modal.js exclut toute carte devenue un
-//    vrai lien <a> ou qui contient deja un .card-more) ;
-// 2) importees directement par une page : grep de "from '.../details.js'"
-//    dans src/pages - /methode et /amira lisent chacune une entree
-//    directement dans leur frontmatter, hors du systeme de fenetre modale.
-// Le contenu retire vit maintenant dans src/content/services/,
-// src/content/manuels/ - rien n'a ete perdu, cette copie etait devenue une
-// redondance jamais affichee.
-export var detail = {
-  "mathematiques et francais au primaire":{k:"Matière",p:"Du CP1 au CM2, nous construisons les fondations : en mathématiques, le sens du nombre, les quatre opérations, les mesures, et surtout la capacité à lire un énoncé et à choisir l’opération qui convient ; en français, l’alphabet, la lecture et la dictée.",who:["L’élève qui compte encore sur ses doigts en CE2","Celui qui sait calculer mais bloque sur les problèmes","Celui qui réussit déjà bien et veut consolider ses acquis","Le futur candidat au CEP en CM2"],how:["Test de positionnement","Groupe de six à dix élèves du même niveau réel","Deux séances par semaine après les cours","Point de situation avec les parents chaque période"],f:[["Classes","CP1 à CM2"],["Tarif","18 000 FCFA / mois"]],cta:"Inscrire mon enfant"},
-  "mathematiques au secondaire":{k:"Matière",p:"De la 6ᵉ à la Terminale. Le calcul littéral, les équations et la géométrie déterminent toute la suite du parcours : c’est là que nous concentrons l’effort.",who:["L’élève en difficulté depuis le collège","Celui qui suit mais veut viser plus haut","Le candidat au BEPC ou au baccalauréat"],how:["Test de positionnement","Groupe constitué par classe et par niveau réel","Séances en semaine (Matin et soir) et le week-end","Evaluations régulières et bilan aux parents"],f:[["Classes","6ᵉ à Terminale"],["Tarif","1 250 FCFA / heure"]],cta:"Inscrire mon enfant"},
-  "physiquechimie":{k:"Matière",p:"Au secondaire, avec le même principe qu’en mathématiques : reprendre les notions manquantes avant d’avancer dans le programme. Beaucoup de blocages en physique sont en réalité des blocages en calcul.",who:["L’élève qui comprend le cours mais rate les exercices","Celui qui confond les unités et les formules","Celui qui a un bon niveau et veut se perfectionner","Le candidat au BEPC ou au baccalauréat"],how:["Diagnostic des prérequis mathématiques","Reprise des notions de base, puis programme de la classe","Entraînement sur les épreuves des années passées"],f:[["Classes","À préciser"],["Tarif","1 250 FCFA / heure"]],cta:"Inscrire mon enfant"},
-  "anglais en 6e et 5e":{k:"Matière",p:"Les deux premières années du secondaire décident du rapport de l’élève à l’anglais pour tout son parcours. Nous y travaillons la prononciation, le vocabulaire de base et les premières structures, à l’oral autant qu’à l’écrit.",who:["L’élève qui entre en 6ᵉ sans base en anglais","Celui qui écrit correctement mais n’ose pas parler","Celui qui est déjà à l’aise et veut aller plus loin"],how:["Séances courtes et fréquentes","Beaucoup d’oral, en petits groupes","Vocabulaire construit autour du quotidien de l’élève"],f:[["Classes","6ᵉ et 5ᵉ"],["Centres","À préciser"],["Tarif","1 250 FCFA / heure"]],cta:"Inscrire mon enfant"},
-  "suivi des parents":{k:"Formule",p:"Un accompagnement n’a de valeur que si la famille sait où en est l’enfant. Nous faisons un point régulier sur la progression, les difficultés qui résistent et ce qui peut être travaillé à la maison.",who:["Tous les parents d’élèves inscrits"],how:["Bilan écrit après chaque série d’évaluations","Rencontre avec l’enseignant du groupe","Conseils concrets pour le travail à la maison"],f:[["Fréquence","À définir"],["Format","Écrit et rencontre"],["Coût","Compris"]],cta:"En savoir plus"},
-  // Import direct : src/pages/methode/index.astro:6 (detail['test de positionnement'])
-  "test de positionnement":{k:"Formule",p:"Le point de départ de tout accompagnement à Hakili Lab, et il est gratuit. Il ne sert pas à noter l’élève mais à savoir où le fil s’est cassé.",who:["Toute famille qui envisage une inscription","Les parents qui veulent simplement situer leur enfant"],how:["Prise de rendez-vous dans le centre de votre choix","Epreuve d’environ une heure, sans enjeu de note","Restitution aux parents : ce qui est acquis, ce qui manque","Proposition d’un groupe et d’une formule adaptés"],f:[["Durée","Environ 1 heure"],["Coût","Gratuit"],["Résultat","Sous 48 heures"]],cta:"Prendre rendez-vous"},
-  // Import direct : src/pages/amira/index.astro:7 (detail.amira)
-  "amira":{k:"Application",p:"Le professeur de mathématiques disponible 24 heures sur 24. L’élève pose sa question à toute heure, depuis son téléphone, et reçoit une explication guidée qui le fait chercher au lieu de lui donner la réponse.",who:["Les élèves inscrits dans nos centres","Les élèves qui travaillent seuls le soir","Les parents qui ne peuvent pas aider sur les exercices"],how:["L’élève photographie ou saisit son exercice","Amira l’accompagne étape par étape","Elle reformule tant que la notion n’est pas comprise","L’enseignant du centre voit sur quoi l’élève a buté"],f:[["Accès","Téléphone et ordinateur"],["Disponibilité","24 h sur 24"],["Tarif","À définir"]],cta:"Essayer Amira"},
-  // Import direct : src/pages/maya/index.astro (detail['maya'])
-  "maya":{k:"Application",p:"L’outil qui situe le niveau réel de l’élève, cartographie les notions manquantes, puis propose un parcours de remédiation. C’est la version numérique de la première étape de notre méthode.",who:["Les familles avant une inscription","Les établissements qui veulent situer une classe entière","Les enseignants qui suivent la progression d’un groupe"],how:["Test adapté à la classe de l’élève","Cartographie des lacunes, notion par notion","Parcours de remédiation proposé automatiquement","Suivi des progrès dans le temps"],f:[["Public","Familles et établissements"],["Passation","Au centre"],["Tarif","À définir"]],cta:"Demander une démonstration"}
-};
+// Les valeurs vivent desormais dans details.json, que l interface
+// d administration sait editer (Sveltia CMS, voir public/admin/config.yml >
+// collection "fiches"). Ce fichier ne fait plus que remettre la liste sous la
+// forme d objet indexe par cle attendue par le reste du code : l export
+// "detail" n a pas change de forme.
+//
+// ATTENTION, ce module part dans le bundle NAVIGATEUR : detail-modal.js
+// l importe pour remplir la fenetre modale cote client. Il ne doit donc
+// embarquer aucune dependance lourde. C est pour cette raison que la
+// validation Zod des fiches vit dans src/content.config.ts, qui ne tourne
+// qu au build - mesure faite, importer Zod ici faisait passer le JS livre sur
+// chaque page de 17 Ko a 76 Ko.
+//
+// La cle d une fiche n est pas un identifiant technique libre : pour les cinq
+// fiches ouvertes depuis une carte, detail-modal.js retrouve l entree en
+// normalisant le titre affiche sur la carte (fonction norm()). Renommer une
+// cle sans renommer le titre correspondant, ou l inverse, casse l ouverture de
+// la fiche sans aucun message. Voir l avertissement porte par le champ "cle"
+// dans public/admin/config.yml.
+import donnees from './details.json';
+
+export var detail = {};
+donnees.fiches.forEach(function (fiche) {
+  detail[fiche.cle] = {
+    k: fiche.k,
+    p: fiche.p,
+    who: fiche.who,
+    how: fiche.how,
+    facts: fiche.facts,
+    cta: fiche.cta,
+  };
+});

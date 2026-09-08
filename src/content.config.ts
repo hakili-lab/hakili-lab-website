@@ -4,6 +4,7 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { isPlaceholder } from './lib/placeholders.js';
+import fichesDetail from './data/details.json';
 
 // Garde-fou contre les pages a moitie remplies : une entree marquee
 // pretPourPublication:true doit avoir tous ses champs de contenu reel
@@ -95,5 +96,41 @@ const manuels = defineCollection({
       requireWhenReady(['slug', 'niveau', 'matiere', 'resumeCourt', 'cta'])(data, ctx)
     ),
 });
+
+// --- Fiches "En savoir plus" (src/data/details.json) ------------------------
+// Ces fiches ne forment pas une collection de contenu : elles vivent dans un
+// seul fichier JSON, remis en forme par src/data/details.js. Leur schema est
+// verifie ici, et non dans details.js, pour une raison mesuree : details.js
+// part dans le bundle navigateur (detail-modal.js l importe cote client), et y
+// embarquer Zod faisait passer le JS livre sur chaque page de 17 Ko a 76 Ko.
+// Ce fichier-ci, lui, est charge par Astro au demarrage du build, cote
+// serveur : une erreur levee ici arrete le build, ce qui est exactement le
+// garde-fou recherche.
+const ficheDetailSchema = z.object({
+  cle: z.string().min(1),
+  k: z.string().min(1),
+  p: z.string().min(1),
+  who: z.array(z.string().min(1)).min(1),
+  how: z.array(z.string().min(1)).min(1),
+  facts: z.array(z.object({ label: z.string().min(1), valeur: z.string().min(1) })).default([]),
+  cta: z.string().min(1),
+});
+
+z.array(ficheDetailSchema)
+  .superRefine((fiches, ctx) => {
+    // Deux fiches de meme cle : la seconde ecraserait la premiere a la
+    // construction de l objet indexe, sans que rien ne le signale.
+    const vues = new Set<string>();
+    for (const fiche of fiches) {
+      if (vues.has(fiche.cle)) {
+        ctx.addIssue({
+          code: 'custom',
+          message: `Fiche "${fiche.cle}" : cette cle apparait deux fois dans src/data/details.json ; la seconde ecraserait silencieusement la premiere.`,
+        });
+      }
+      vues.add(fiche.cle);
+    }
+  })
+  .parse(fichesDetail.fiches);
 
 export const collections = { blog, services, manuels };
