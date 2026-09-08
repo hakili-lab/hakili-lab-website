@@ -3,11 +3,16 @@
 // src/data/team.js) de Hakili Lab. Les valeurs et les engagements des eleves
 // vivent desormais sur /valeurs ; il n'en reste ici qu'un teaser. L'ancre
 // #valeurs est conservee sur ce teaser pour les liens externes deja partages.
-import { Picture } from 'astro:assets';
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import PersonCard from '../../components/PersonCard.astro';
 import { fondateurs } from '../../data/team.js';
-import photo from '../../assets/photos/37.jpeg';
+
+// Video de presentation. Seul endroit ou l'identifiant YouTube est ecrit : la
+// vignette et l'iframe de la fenetre modale en decoulent tous les deux, donc
+// changer de video tient en une ligne. La legende voyage avec, elle sert de
+// titre a la fenetre modale (aria-labelledby="modalTitle").
+const VIDEO_ID = 'J304iUf3VvY';
+const VIDEO_TITRE = 'Une journée dans un centre Hakili Lab';
 ---
 <SiteLayout
   title="Qui sommes-nous"
@@ -33,11 +38,17 @@ import photo from '../../assets/photos/37.jpeg';
         <a class="btn btn-outline" href="/enseignants">Nos enseignants</a>
       </div>
     </div>
-    <a class="video-wrap" href="https://youtu.be/J304iUf3VvY" target="_blank" rel="noopener" aria-label="Voir la vidéo de présentation">
-      <Picture src={photo} formats={['avif', 'webp']} widths={[500, 900]} sizes="(max-width: 980px) 100vw, 560px" alt="Une séance de cours dans un centre Hakili Lab" loading="lazy" />
+    <button
+      class="video-wrap"
+      type="button"
+      data-video-id={VIDEO_ID}
+      data-video-titre={VIDEO_TITRE}
+      aria-label="Voir la vidéo de présentation"
+    >
+      <img src={`https://img.youtube.com/vi/${VIDEO_ID}/hqdefault.jpg`} width="480" height="360" alt="Une séance de cours dans un centre Hakili Lab" loading="lazy" />
       <span class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span>
-      <span class="video-cap">Une journée dans un centre Hakili Lab &nbsp;•&nbsp; 2 min</span>
-    </a>
+      <span class="video-cap">{VIDEO_TITRE} &nbsp;•&nbsp; 2 min</span>
+    </button>
   </div>
 </section>
 
