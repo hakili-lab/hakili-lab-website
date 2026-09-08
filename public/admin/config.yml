@@ -330,3 +330,75 @@ collections:
                 widget: "boolean"
                 default: false
                 hint: "A ne cocher que lorsque le nom, la description et le resume des horaires contiennent de vraies valeurs. Une formule d'attente (« A definir », « A preciser »…) dans l'un de ces champs fait echouer la mise en ligne."
+  # --- Equipe ---------------------------------------------------------------
+  # Schema : src/data/team.js > personSchema
+  #
+  # Collection de type "files" comme les centres : deux listes connues
+  # (fondateurs, enseignants) dans un seul fichier de donnees, pas une
+  # arborescence d'entrees a creer et supprimer librement.
+  #
+  # Note : la section « L'equipe » de /enseignants est commentee pour le
+  # moment, en attendant de vraies photos (voir docs/EQUIPE.md). Les fiches
+  # restent editables ici ; elles s'afficheront le jour ou la section sera
+  # reactivee. « Nos fondateurs », sur /a-propos, est bien affichee.
+  - name: "equipe"
+    label: "Equipe"
+    files:
+      - name: "equipe"
+        label: "Fondateurs et enseignants"
+        file: "src/data/team.json"
+        description: "Les portraits nommes : les fondateurs affiches sur /a-propos, et les enseignants de la page /enseignants."
+        fields:
+          - name: "fondateurs"
+            label: "Fondateurs"
+            label_singular: "Fondateur"
+            widget: "list"
+            summary: "{{fields.name}}"
+            fields:
+              - name: "name"
+                label: "Nom"
+                widget: "string"
+                required: true
+              - name: "role"
+                label: "Role"
+                widget: "string"
+                required: true
+                hint: "Affiche sous le nom, par exemple « Co-fondateur » ou « Enseignant de mathematiques »."
+              - name: "bio"
+                label: "Biographie"
+                widget: "text"
+                required: true
+                hint: "Un paragraphe. Obligatoire : une carte sans biographie afficherait un blanc sous le nom. Tant que le vrai texte n'est pas pret, laissez « Biographie a venir. »."
+              - name: "photo"
+                label: "Photo"
+                widget: "image"
+                required: false
+                choose_url: false
+                hint: "Facultatif. Sans photo, la carte affiche automatiquement les initiales de la personne sur un fond bleu tres clair. La photo doit etre choisie ou televersee dans src/assets/photos/ : une adresse externe ne fonctionnerait pas, le site retaille les images au moment de la compilation."
+          - name: "enseignants"
+            label: "Enseignants"
+            label_singular: "Enseignant"
+            widget: "list"
+            required: false
+            summary: "{{fields.name}}"
+            fields:
+              - name: "name"
+                label: "Nom"
+                widget: "string"
+                required: true
+              - name: "role"
+                label: "Role"
+                widget: "string"
+                required: true
+                hint: "Affiche sous le nom, par exemple « Co-fondateur » ou « Enseignant de mathematiques »."
+              - name: "bio"
+                label: "Biographie"
+                widget: "text"
+                required: true
+                hint: "Un paragraphe. Obligatoire : une carte sans biographie afficherait un blanc sous le nom. Tant que le vrai texte n'est pas pret, laissez « Biographie a venir. »."
+              - name: "photo"
+                label: "Photo"
+                widget: "image"
+                required: false
+                choose_url: false
+                hint: "Facultatif. Sans photo, la carte affiche automatiquement les initiales de la personne sur un fond bleu tres clair. La photo doit etre choisie ou televersee dans src/assets/photos/ : une adresse externe ne fonctionnerait pas, le site retaille les images au moment de la compilation."
