@@ -3,7 +3,7 @@
 // EducationalOrganization (+ blocs additionnels passes en prop), polices.
 // Toute page y passe, directement ou via SiteLayout.astro.
 import '../styles/main.css';
-import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION } from '../data/site.js';
+import { SITE_URL, SITE_TITLE, SITE_DESCRIPTION, SITE_EMAIL, SITE_PHONES, SITE_SOCIALS } from '../data/site.js';
 
 interface Props {
   title?: string;
@@ -20,16 +20,13 @@ const organizationJsonLd = {
   name: 'Hakili Lab',
   description: SITE_DESCRIPTION,
   url: SITE_URL,
-  email: 'info@hakililab.com',
-  telephone: ['+22657919191', '+22658795050'],
+  email: SITE_EMAIL,
+  telephone: SITE_PHONES.map((p) => p.tel),
   areaServed: {
     '@type': 'City',
     name: 'Ouagadougou',
   },
-  sameAs: [
-    'https://web.facebook.com/hakililab',
-    'https://www.tiktok.com/@hakililab',
-  ],
+  sameAs: SITE_SOCIALS.map((reseau) => reseau.url),
 };
 
 const extraJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];

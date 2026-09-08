@@ -1,0 +1,16 @@
+{
+  "telephones": [
+    { "tel": "+22657919191", "display": "57 91 91 91" },
+    { "tel": "+22658795050", "display": "58 79 50 50" }
+  ],
+  "email": "info@hakililab.com",
+  "whatsapp": "22657919191",
+  "reseauxSociaux": [
+    { "plateforme": "Facebook", "url": "https://web.facebook.com/hakililab" },
+    { "plateforme": "TikTok", "url": "https://www.tiktok.com/@hakililab" }
+  ],
+  "bandeau": {
+    "badge": "Rentrée 2026-2027",
+    "texte": "Inscriptions ouvertes dans les cinq centres. Test de positionnement gratuit."
+  }
+}

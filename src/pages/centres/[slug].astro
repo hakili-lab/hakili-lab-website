@@ -4,7 +4,7 @@
 // donnees reelles (adresse + GPS) sont disponibles.
 import { Picture } from 'astro:assets';
 import SiteLayout from '../../layouts/SiteLayout.astro';
-import { SITE_URL } from '../../data/site.js';
+import { SITE_URL, SITE_EMAIL, SITE_PHONES } from '../../data/site.js';
 import { isPlaceholder } from '../../lib/placeholders.js';
 import { centres } from '../../data/centres.js';
 
@@ -35,8 +35,8 @@ const localBusinessJsonLd =
         parentOrganization: 'Hakili Lab',
         description: d.description,
         url: `${SITE_URL}/centres/${d.slug}`,
-        email: 'info@hakililab.com',
-        telephone: ['+22657919191', '+22658795050'],
+        email: SITE_EMAIL,
+        telephone: SITE_PHONES.map((p) => p.tel),
         openingHours: 'Mo-Sa 08:00-18:00',
         address: {
           '@type': 'PostalAddress',
@@ -82,7 +82,7 @@ const localBusinessJsonLd =
 
       {!hasAdresse && (
         <p class="steps-note" style="margin-top:20px">
-          Pour l’adresse exacte et l’itinéraire, appelez-nous : <a href="tel:+22657919191" style="text-decoration:underline">57 91 91 91</a> / <a href="tel:+22658795050" style="text-decoration:underline">58 79 50 50</a>.
+          Pour l’adresse exacte et l’itinéraire, appelez-nous : {SITE_PHONES.map((p, i) => (<Fragment>{i > 0 && <Fragment> / </Fragment>}<a href={`tel:${p.tel}`} style="text-decoration:underline">{p.display}</a></Fragment>))}.
         </p>
       )}
 

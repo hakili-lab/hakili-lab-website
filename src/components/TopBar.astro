@@ -2,15 +2,21 @@
 // Bandeau fin en tete de chaque page (annonce rentree + coordonnees). Se
 // simplifie en mobile via responsive.css (email/tag masques, libelle
 // "Contact :" ajoute).
+//
+// Pastille, phrase et coordonnees viennent toutes de src/data/site.js, donc de
+// parametres-site.json : editables depuis /admin, et jamais recopiees ici.
+import { SITE_BANDEAU, SITE_PHONES, SITE_EMAIL, telephoneInternational } from '../data/site.js';
+
+const telephones = SITE_PHONES.map(telephoneInternational).join(' / ');
 ---
 <div class="topbar">
   <div class="wrap">
-    <span class="topbar-tag">Rentrée 2026-2027</span>
-    <span class="topbar-sentence">Inscriptions ouvertes dans les cinq centres. Test de positionnement gratuit.</span>
+    <span class="topbar-tag">{SITE_BANDEAU.badge}</span>
+    <span class="topbar-sentence">{SITE_BANDEAU.texte}</span>
     <span class="topbar-contact">
       <span class="topbar-contact-label">Contact :</span>
-      <a href="tel:+22657919191" class="topbar-phone">+226 57 91 91 91 / +226 58 79 50 50</a>
-      <a href="mailto:info@hakililab.com" class="topbar-email">info@hakililab.com</a>
+      <a href={`tel:${SITE_PHONES[0].tel}`} class="topbar-phone">{telephones}</a>
+      <a href={`mailto:${SITE_EMAIL}`} class="topbar-email">{SITE_EMAIL}</a>
     </span>
   </div>
 </div>

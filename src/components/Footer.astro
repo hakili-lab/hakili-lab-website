@@ -3,6 +3,7 @@
 // mentions legales et reseaux sociaux.
 import { Image } from 'astro:assets';
 import logo from '../assets/logo-hakili-lab.png';
+import { SITE_SOCIALS } from '../data/site.js';
 ---
 <footer class="footer">
   <div class="wrap">
@@ -22,7 +23,7 @@ import logo from '../assets/logo-hakili-lab.png';
         Hakili Lab SARL, tous droits réservés
       </span>
       <span>
-        <a href="https://web.facebook.com/hakililab">Facebook</a> &nbsp;•&nbsp; <a href="https://www.tiktok.com/@hakililab">TikTok</a> 
+        {SITE_SOCIALS.map((reseau, i) => (<Fragment>{i > 0 && <Fragment> &nbsp;•&nbsp; </Fragment>}<a href={reseau.url}>{reseau.plateforme}</a></Fragment>))} 
         </span>
     </div>
   </div>

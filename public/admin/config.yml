@@ -402,3 +402,82 @@ collections:
                 required: false
                 choose_url: false
                 hint: "Facultatif. Sans photo, la carte affiche automatiquement les initiales de la personne sur un fond bleu tres clair. La photo doit etre choisie ou televersee dans src/assets/photos/ : une adresse externe ne fonctionnerait pas, le site retaille les images au moment de la compilation."
+  # --- Coordonnees et bandeau -----------------------------------------------
+  # Schema : src/data/site.js > parametresSchema
+  #
+  # Ne sont volontairement PAS editables ici : SITE_URL, SITE_TITLE et
+  # SITE_DESCRIPTION. Ces trois valeurs pilotent le build et le referencement
+  # (URL canoniques, sitemap, robots.txt, titre et description par defaut) et
+  # non une information de contact : une faute de frappe enregistree depuis
+  # cette interface les casserait toutes d'un coup, sans rien pour le
+  # signaler. Elles restent ecrites en dur dans src/data/site.js.
+  - name: "parametres"
+    label: "Coordonnees et bandeau"
+    files:
+      - name: "parametres"
+        label: "Coordonnees, reseaux sociaux et bandeau"
+        file: "src/data/parametres-site.json"
+        description: "Les coordonnees affichees partout sur le site (bandeau du haut, pied de page, page Contact, balisage pour les moteurs de recherche) et le texte du bandeau d'annonce. Une seule saisie ici met a jour toutes les pages."
+        fields:
+          - name: "telephones"
+            label: "Telephones"
+            label_singular: "Telephone"
+            widget: "list"
+            summary: "{{fields.display}}"
+            hint: "Le premier numero de la liste est celui sur lequel pointe le lien du bandeau du haut."
+            fields:
+              - name: "tel"
+                label: "Numero pour les liens d'appel"
+                widget: "string"
+                required: true
+                pattern: ["^[+][0-9]{8,15}$", "Un plus suivi uniquement de chiffres, indicatif compris : +22657919191"]
+                hint: "Format international, sans espace : +22657919191. C'est ce numero qui est compose quand on touche le lien."
+              - name: "display"
+                label: "Numero tel qu'affiche"
+                widget: "string"
+                required: true
+                hint: "La forme lisible, sans l'indicatif : 57 91 91 91."
+          - name: "email"
+            label: "Adresse e-mail"
+            widget: "string"
+            required: true
+            pattern: ["^[^@ ]+@[^@ ]+[.][^@ ]+$", "Une adresse e-mail valide est attendue."]
+          - name: "whatsapp"
+            label: "Numero WhatsApp"
+            widget: "string"
+            required: true
+            pattern: ["^[0-9]{10,15}$", "Uniquement des chiffres, indicatif pays compris et sans le plus : 22657919191. Ni espaces, ni tirets, ni +."]
+            hint: "Ce numero alimente tous les boutons WhatsApp du site. Il s'ecrit sans le plus et sans espaces, indicatif pays compris : 22657919191. Un espace oublie rendrait chaque bouton inoperant."
+          - name: "reseauxSociaux"
+            label: "Reseaux sociaux"
+            label_singular: "Reseau"
+            widget: "list"
+            required: false
+            summary: "{{fields.plateforme}}"
+            hint: "Affiches en bas de page, et declares aux moteurs de recherche comme profils officiels."
+            fields:
+              - name: "plateforme"
+                label: "Nom du reseau"
+                widget: "string"
+                required: true
+                hint: "Le texte du lien, par exemple Facebook ou TikTok."
+              - name: "url"
+                label: "Adresse du profil"
+                widget: "string"
+                required: true
+                pattern: ["^https?://.+", "Une adresse complete est attendue, https:// compris."]
+          - name: "bandeau"
+            label: "Bandeau d'annonce"
+            widget: "object"
+            hint: "Le bandeau fin tout en haut de chaque page."
+            fields:
+              - name: "badge"
+                label: "Pastille"
+                widget: "string"
+                required: false
+                hint: "Le texte court sur fond vert, affiche en majuscules quel que soit ce qui est saisi ici. Exemple : Rentree 2026-2027."
+              - name: "texte"
+                label: "Phrase d'annonce"
+                widget: "string"
+                required: false
+                hint: "La phrase a cote de la pastille. Masquee sur petits ecrans."
