@@ -1,7 +1,7 @@
 ---
 slug: "journee-des-stagiaires-2026"
 titre: "Retour sur la Journée des Stagiaires 2026"
-description: "Nos stagiaires ont présenté cinq projets construits pendant leur stage, dont Dr Maya et Prof Amira."
+description: "Nos stagiaires ont présenté cinq projets construits pendant leur stage, dont Maya et Prof Amira."
 date: 2026-08-29
 categorie: "Actualité"
 image: "../../assets/photos/journee-hakili-stagiare.jpg"
@@ -21,7 +21,7 @@ Cinq projets ont été présentés ce jour-là :
 **Rémédiation Maths.** Un diagnostic intelligent qui confirme précisément
 où se situent les lacunes d'un élève avant de lui proposer un parcours de
 remédiation. C'est le projet qui a donné naissance à l'outil que nous
-appelons aujourd'hui Dr Maya.
+appelons aujourd'hui Maya.
 
 **Reconnaissance Faciale.** Un système de contrôle de présence qui
 enregistre l'arrivée de l'élève au centre et en informe aussitôt les

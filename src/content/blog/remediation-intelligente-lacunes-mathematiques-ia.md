@@ -1,6 +1,6 @@
 ---
 slug: "remediation-intelligente-lacunes-mathematiques-ia"
-titre: "Dr Maya : combler les lacunes en mathématiques grâce à l'IA"
+titre: "Maya : combler les lacunes en mathématiques grâce à l'IA"
 description: "Comment l'intelligence artificielle permet d'identifier les difficultés en mathématiques et de proposer des parcours de révision personnalisés."
 date: 2026-09-23
 categorie: "Pédagogie"
@@ -10,7 +10,7 @@ brouillon: false
 
 Chaque élève apprend à son rythme : l'intelligence artificielle permet désormais de poser un diagnostic précis des difficultés et de proposer des parcours de révision ciblés.
 
-En mathématiques, les notions sont fortement cumulatives. Une notion mal comprise au collège, comme le calcul fractionnaire ou les équations, peut pénaliser l'élève tout au long du lycée. Pour répondre à cet enjeu, Hakili Lab développe [**Dr Maya**](/dr-maya), un outil de remédiation intelligente.
+En mathématiques, les notions sont fortement cumulatives. Une notion mal comprise au collège, comme le calcul fractionnaire ou les équations, peut pénaliser l'élève tout au long du lycée. Pour répondre à cet enjeu, Hakili Lab développe [**Maya**](/maya), un outil de remédiation intelligente.
 
 Le dispositif repose sur trois piliers :
 

@@ -4,7 +4,7 @@ Site vitrine du centre de tutorat Hakili Lab (Ouagadougou), en mathématiques
 et physique-chimie du primaire au secondaire. Astro, rendu 100 % statique.
 
 Le site est multipage : accueil, à propos, méthode, enseignants, services,
-centres, manuels, Amira, Dr Maya, galerie, blog, FAQ, contact. La page
+centres, manuels, Amira, Maya, galerie, blog, FAQ, contact. La page
 `/contact` est une page d'affichage (téléphone, e-mail, WhatsApp, tous tirés
 de `src/data/site.js`) : pas de formulaire ni de service tiers.
 Le contenu éditorial (articles, fiches service, fiches manuels) vit dans des
@@ -57,7 +57,7 @@ de section dans un composant, la clé correspondante dans `details.js` doit
 être mise à jour à l'identique, sinon la fiche ne s'ouvre plus (silencieusement,
 sans erreur visible). Une carte devenue un vrai lien `<a>`, ou qui contient
 déjà un lien « En savoir plus », n'ouvre jamais de modale même si sa clé
-existe. Trois fiches (`test de positionnement`, `amira`, `dr maya`) sont aussi
+existe. Trois fiches (`test de positionnement`, `amira`, `maya`) sont aussi
 lues directement par leur page, hors du système de modale : le commentaire en
 tête de `details.js` détaille les deux vérifications à faire avant d'en retirer
 une.

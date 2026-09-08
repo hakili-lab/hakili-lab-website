@@ -22,6 +22,6 @@ pretPourPublication: true
 
 Pour l’élève dont les lacunes remontent à une ou plusieurs années. On repart du point exact identifié par le test, on comble dans l’ordre où les notions s’enchaînent, puis on rattrape le niveau de la classe.
 
-## Dr Maya, l’outil de diagnostic et de remédiation
+## Maya, l’outil de diagnostic et de remédiation
 
-L’outil qui situe le niveau réel de l’élève, cartographie les notions manquantes, puis propose un parcours de remédiation. C’est la version numérique de la première étape de notre méthode. [En savoir plus sur Dr Maya](/dr-maya).
+L’outil qui situe le niveau réel de l’élève, cartographie les notions manquantes, puis propose un parcours de remédiation. C’est la version numérique de la première étape de notre méthode. [En savoir plus sur Maya](/maya).

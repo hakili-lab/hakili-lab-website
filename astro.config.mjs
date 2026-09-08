@@ -9,6 +9,13 @@ import { SITE_URL } from './src/data/site.js';
 export default defineConfig({
   site: SITE_URL, // defini dans src/data/site.js
   server: { port: 3000 },
+  // /dr-maya a ete renomme en /maya. L'ancienne adresse a pu etre partagee ou
+  // indexee depuis la mise en ligne : en mode static, Astro construit pour
+  // chaque entree une vraie page de redirection (meta refresh + canonical),
+  // donc l'ancien lien continue d'aboutir au lieu de tomber en 404.
+  redirects: {
+    '/dr-maya': '/maya',
+  },
   integrations: [
     sitemap({
       // Les articles de blog en brouillon et toute entree de collection avec

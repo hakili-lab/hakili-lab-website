@@ -1,6 +1,9 @@
 ---
 // Fiche detail d'un manuel de la Collection Hakili Lab (une route par entree
 // "manuels" prete a publier), avec balisage JSON-LD Book correspondant.
+//
+// Le bouton « Commander » est commente pour l'instant (voir plus bas dans le
+// template) : aucun circuit de commande n'existe encore.
 import { existsSync } from 'node:fs';
 import path from 'node:path';
 import { getCollection, render } from 'astro:content';
@@ -76,7 +79,15 @@ const bookJsonLd = {
     )}
 
     <div class="hero-actions" style="margin-top:30px">
+      {/* Bouton « Commander » desactive : il n'existe pas encore de vrai
+          circuit de commande, le lien se contentait de renvoyer vers
+          /contact. Le champ `cta` du frontmatter des manuels
+          (src/content/manuels/*.md) est conserve tel quel, il n'est
+          simplement plus lu ici. Pour le reactiver, retirer les lignes
+          d'ouverture et de fermeture de ce commentaire.
+
       <a class="btn btn-primary" href="/contact">{d.cta}</a>
+      */}
       {hasExtrait && (
         <a class="btn btn-outline" href={`/extraits/${extraitFile}`} target="_blank" rel="noopener">Feuilleter un extrait</a>
       )}

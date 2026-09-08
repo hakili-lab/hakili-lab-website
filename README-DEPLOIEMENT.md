@@ -334,7 +334,7 @@ Une fois le site en ligne sur sa vraie URL, vérifier concrètement :
 - [ ] **`https://www.hakililab.com/sitemap-index.xml`** : doit répondre et lister les URLs réelles du site.
 - [ ] **`https://www.hakililab.com/robots.txt`** : doit répondre et référencer le bon sitemap.
 - [ ] Relancer `npm run verify -- --base=https://www.hakililab.com` pour vérifier liens et ancres sur le site réellement en ligne (et pas seulement en local).
-- [ ] Parcourir la navigation complète (`/dr-maya`, `/amira`, `/galerie`, fiches centres, articles de blog…) pour confirmer que toutes les pages répondent en production.
+- [ ] Parcourir la navigation complète (`/maya`, `/amira`, `/galerie`, fiches centres, articles de blog…) pour confirmer que toutes les pages répondent en production.
 
 ---
 

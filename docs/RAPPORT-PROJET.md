@@ -303,7 +303,7 @@ L'original signalait qu'une vérification visuelle multi-largeurs (1440/1080/980
 
 - La carte "Diagnostic et remédiation" (autrefois classée à tort sous "Productions") est fusionnée dans `/services/remediation` — les deux décrivaient la même offre.
 - Les effectifs ("Effectif : ...") ont été retirés des fiches détail individuelles (services/manuels), à l'exception explicite des sections globales qui annoncent un nombre d'enseignants (bandeau `.stats`, encart `.recruit` d'`/enseignants`) — celles-là non touchées, sur demande.
-- Tarifs reçus et appliqués à l'époque : primaire 18 000 FCFA/mois, secondaire 1 250 FCFA/heure (toujours les valeurs actuelles dans `src/data/details.js`, vérifié section 2 de ce rapport). Le reste (formules, manuels, Amira, Dr Maya) reste `À définir`, faute de valeur communiquée.
+- Tarifs reçus et appliqués à l'époque : primaire 18 000 FCFA/mois, secondaire 1 250 FCFA/heure (toujours les valeurs actuelles dans `src/data/details.js`, vérifié section 2 de ce rapport). Le reste (formules, manuels, Amira, Maya) reste `À définir`, faute de valeur communiquée.
 - Détecteur de répétitions de contenu (`scripts/verifier-pages.mjs`) : méthode encore active aujourd'hui (voir section 6) — blocs `p/li/h2/h3/blockquote/figcaption` de 20 à 200 caractères, exclusion des zones de gabarit et des relations ancêtre/descendant, normalisation (minuscules, sans accents, sans ponctuation), quatre contrôles (doublon exact même page, doublon exact >2 pages, quasi-doublon ≥85% par trigrammes, chiffre-clé répété), avec une `Map` d'exceptions documentées et justifiées une par une plutôt que des cas simplement retirés de la détection.
 
 ### 8.4 Direction visuelle "isga.ma" — pourquoi le site a cet aspect

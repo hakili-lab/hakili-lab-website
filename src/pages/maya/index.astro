@@ -1,30 +1,30 @@
 ---
-// Page produit /dr-maya (diagnostic et remediation) : contenu tire de la
-// fiche "dr maya" de src/data/details.js, avec balisage JSON-LD
+// Page produit /maya (diagnostic et remediation) : contenu tire de la
+// fiche "maya" de src/data/details.js, avec balisage JSON-LD
 // MobileApplication.
 import SiteLayout from '../../layouts/SiteLayout.astro';
 import { detail } from '../../data/details.js';
 import { isPlaceholder } from '../../lib/placeholders.js';
 import { SITE_URL } from '../../data/site.js';
 
-const d = detail['dr maya'];
+const d = detail['maya'];
 const realFacts = d.f.filter((f) => !isPlaceholder(f[1]));
 
 const appJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'MobileApplication',
-  name: 'Dr Maya',
+  name: 'Maya',
   description: d.p,
-  url: `${SITE_URL}/dr-maya`,
+  url: `${SITE_URL}/maya`,
   applicationCategory: 'EducationApplication',
   operatingSystem: 'Web',
   publisher: { '@type': 'EducationalOrganization', name: 'Hakili Lab' },
 };
 ---
 <SiteLayout
-  title="Dr Maya : Diagnostic et remédiation numériques "
+  title="Maya : Diagnostic et remédiation numériques "
   description={d.p}
-  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Dr Maya' }]}
+  breadcrumbs={[{ label: 'Accueil', href: '/' }, { label: 'Maya' }]}
   jsonLd={appJsonLd}
   hideBreadcrumb
 >
@@ -32,7 +32,7 @@ const appJsonLd = {
   <div class="wrap" style="max-width:760px">
     <a class="post-link" href="/">&larr; Accueil</a>
     <span class="app-tag">Application</span>
-    <h1 class="h2" style="margin-top:16px">Dr Maya</h1>
+    <h1 class="h2" style="margin-top:16px">Maya</h1>
     <p class="lead">{d.p}</p>
 
     <div class="modal-cols" style="margin-top:30px">
