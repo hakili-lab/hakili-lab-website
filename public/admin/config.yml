@@ -16,10 +16,9 @@ backend:
   name: github
   repo: hakili-lab/hakili-lab-website
   branch: main
-  # TODO(admin): URL du Worker Cloudflare a renseigner
   # Le Worker porte le Client ID et le Client Secret de la GitHub OAuth App.
   # Ces deux valeurs vivent uniquement dans le Worker, jamais dans ce depot.
-  base_url: REMPLACE_PAR_URL_DU_WORKER
+  base_url: https://sveltia-cms-auth.zidawendkounieddieeliel.workers.dev
 
 site_url: https://www.hakililab.com
 
