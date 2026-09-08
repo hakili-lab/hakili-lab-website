@@ -1,5 +1,8 @@
 ---
 // Page d'un article de blog (une route par entree publiee, brouillon:false).
+//
+// Une zone de commentaires Giscus est preparee en bas de page, entierement
+// commentee donc sans effet pour le visiteur. Voir docs/COMMENTAIRES.md.
 import { getCollection, render } from 'astro:content';
 import { Picture } from 'astro:assets';
 import SiteLayout from '../../layouts/SiteLayout.astro';
@@ -42,4 +45,35 @@ const plainDescription = post.data.description.replace(/<[^>]+>/g, '');
     </div>
   </div>
 </article>
+
+{/* Zone reservee aux commentaires (Giscus), pas encore activee.
+
+    Tout le bloc ci-dessous est commente : a ce stade rien n'est rendu, rien
+    n'est charge, et un visiteur ne voit aucune difference. Il n'y a pas de
+    section vide ni de titre orphelin dans la page.
+
+    Pour activer, en une seule fois (procedure detaillee : docs/COMMENTAIRES.md) :
+      1. remplacer les trois valeurs A_VOIR_SUR_GISCUS_APP par celles que
+         giscus.app fournit pour ce depot ;
+      2. retirer la ligne d'ouverture de ce commentaire et sa ligne de
+         fermeture, plus bas.
+    Ne decommentez pas avant d'avoir les vraies valeurs : le script se
+    chargerait sans pouvoir se rattacher a une discussion.
+
+<section class="section" id="commentaires">
+  <div class="wrap article">
+    <h2 class="h2">Commentaires</h2>
+    <script src="https://giscus.app/client.js"
+      data-repo="hakili-lab/hakili-lab-website"
+      data-repo-id="A_VOIR_SUR_GISCUS_APP"
+      data-category="A_VOIR_SUR_GISCUS_APP"
+      data-category-id="A_VOIR_SUR_GISCUS_APP"
+      data-mapping="pathname"
+      data-theme="light"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
+</section>
+*/}
 </SiteLayout>
