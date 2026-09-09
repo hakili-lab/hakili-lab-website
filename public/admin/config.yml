@@ -544,3 +544,142 @@ collections:
                 label: "Texte du bouton (appel a l'action)"
                 widget: "string"
                 required: true
+  # --- Contenu du site ------------------------------------------------------
+  # Schemas : src/data/hero.js, src/data/valeurs.js, src/data/faq.js
+  #
+  # Une seule collection pour les trois blocs de texte de marque, regroupes ici
+  # plutot qu'eparpilles en trois collections de premier niveau : ce sont tous
+  # des textes de page, pas des donnees structurees comme les centres ou les
+  # manuels.
+  - name: "contenu"
+    label: "Contenu du site"
+    files:
+      # --- Accueil (Hero.astro) ---
+      - name: "accueil"
+        label: "Accueil : bandeau principal"
+        file: "src/data/hero.json"
+        description: "Le grand bandeau en haut de la page d'accueil : titre, phrase d'introduction, ligne de reperes et les deux boutons. Les photos qui defilent derriere ne se changent pas ici."
+        fields:
+          - name: "titre"
+            label: "Titre"
+            widget: "object"
+            hint: "Le titre est en trois morceaux pour que le mot mis en vert reste au bon endroit sans avoir a ecrire de code."
+            fields:
+              - name: "avant"
+                label: "Debut du titre"
+                widget: "string"
+                required: false
+                hint: "Ce qui precede le mot en vert. Pensez a l'espace final : « Votre enfant peut »."
+              - name: "accent"
+                label: "Mot mis en vert"
+                widget: "string"
+                required: true
+                hint: "Le seul mot (ou groupe de mots) affiche en vert dans le titre."
+              - name: "apres"
+                label: "Fin du titre"
+                widget: "string"
+                required: false
+                hint: "Ce qui suit le mot en vert. Pensez a l'espace initial : « comprendre les maths. »."
+          - name: "sousTitre"
+            label: "Phrase d'introduction"
+            widget: "text"
+            required: true
+          - name: "meta"
+            label: "Ligne de reperes"
+            label_singular: "Repere"
+            widget: "list"
+            field: { name: "repere", label: "Repere", widget: "string" }
+            hint: "Affiches sous les boutons, separes par des points : Ouagadougou, Cinq centres, Depuis 2020."
+          - name: "boutons"
+            label: "Boutons"
+            label_singular: "Bouton"
+            widget: "list"
+            summary: "{{fields.texte}}"
+            min: 2
+            max: 2
+            hint: "Exactement deux boutons. Le premier est le bouton vert plein, le second le bouton contour : cet ordre determine leur apparence."
+            fields:
+              - { name: "texte", label: "Texte du bouton", widget: "string", required: true }
+              - name: "lien"
+                label: "Lien"
+                widget: "string"
+                required: true
+                hint: "Une adresse du site (/methode) ou une adresse complete (https://...). Une adresse complete s'ouvre automatiquement dans un nouvel onglet."
+
+      # --- Page /valeurs ---
+      - name: "valeurs"
+        label: "Nos valeurs et engagements"
+        file: "src/data/valeurs.json"
+        description: "Les deux sections de la page Nos valeurs : la liste a coches, et les quatre cartes d'engagements des eleves."
+        fields:
+          - name: "valeurs"
+            label: "Section « Nos valeurs »"
+            widget: "object"
+            fields:
+              - { name: "eyebrow", label: "Petit intitule vert", widget: "string", required: true }
+              - { name: "titre", label: "Titre", widget: "string", required: true }
+              - name: "items"
+                label: "Valeurs"
+                label_singular: "Valeur"
+                widget: "list"
+                field:
+                  name: "valeur"
+                  label: "Valeur"
+                  widget: "markdown"
+                  modes: ["raw"]
+                  buttons: ["bold"]
+                  editor_components: []
+                  minimal: true
+                hint: "Une ligne par valeur. Pour mettre un passage en gras, entourez-le de deux etoiles : **comme ceci**."
+          - name: "engagements"
+            label: "Section « Engagements de nos eleves »"
+            widget: "object"
+            fields:
+              - { name: "eyebrow", label: "Petit intitule vert", widget: "string", required: true }
+              - { name: "titre", label: "Titre", widget: "string", required: true }
+              - { name: "intro", label: "Phrase d'introduction", widget: "string", required: true }
+              - name: "cartes"
+                label: "Cartes"
+                label_singular: "Carte"
+                widget: "list"
+                summary: "{{fields.titre}}"
+                hint: "L'icone de chaque carte est fixee par le gabarit et suit le rang de la carte : reordonner les cartes reordonne aussi les icones."
+                fields:
+                  - { name: "titre", label: "Titre de la carte", widget: "string", required: true }
+                  - name: "items"
+                    label: "Engagements"
+                    label_singular: "Engagement"
+                    widget: "list"
+                    field:
+                      name: "engagement"
+                      label: "Engagement"
+                      widget: "markdown"
+                      modes: ["raw"]
+                      buttons: ["bold"]
+                      editor_components: []
+                      minimal: true
+                    hint: "Une ligne par engagement. Le debut de phrase est habituellement en gras : **J'arrive a l'heure** pour ne manquer aucune..."
+
+      # --- Page /faq ---
+      - name: "faq"
+        label: "Questions frequentes"
+        file: "src/data/faq.json"
+        description: "La page Foire aux questions. La premiere question est aussi celle reprise en apercu sur la page d'accueil, et l'ensemble alimente le balisage lu par les moteurs de recherche."
+        fields:
+          - { name: "eyebrow", label: "Petit intitule vert", widget: "string", required: true }
+          - { name: "titre", label: "Titre", widget: "string", required: true }
+          - { name: "intro", label: "Phrase d'introduction", widget: "string", required: true }
+          - name: "questions"
+            label: "Questions"
+            label_singular: "Question"
+            widget: "list"
+            summary: "{{fields.question}}"
+            hint: "La premiere de la liste est affichee depliee sur la page, et c'est elle qui apparait en apercu sur la page d'accueil."
+            fields:
+              - { name: "question", label: "Question", widget: "string", required: true }
+              - { name: "reponse", label: "Reponse", widget: "text", required: true }
+          - name: "cta"
+            label: "Texte du bouton de bas de page"
+            widget: "string"
+            required: true
+            hint: "Le bouton renvoie vers la page Contact."

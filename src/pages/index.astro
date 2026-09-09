@@ -14,6 +14,7 @@ import Brochure from '../components/Brochure.astro';
 import Footer from '../components/Footer.astro';
 import DetailModal from '../components/DetailModal.astro';
 import { centres as allCentres } from '../data/centres.js';
+import { faq } from '../data/faq.js';
 import quotePhoto from '../assets/photos/37.jpeg';
 
 const serviceOrder = ['cours-appui', 'remediation', 'camp-vacances', 'preparation-examens'];
@@ -26,8 +27,10 @@ const centres = allCentres
   .filter((c) => c.pretPourPublication && centreOrder.includes(c.slug))
   .sort((a, b) => centreOrder.indexOf(a.slug) - centreOrder.indexOf(b.slug));
 
-const faqQuestion = 'Comment se passe l’inscription ?';
-const faqReponse = 'Prise de contact, test de positionnement gratuit, proposition d’un groupe et d’un horaire, puis inscription.';
+// Le teaser FAQ de l'accueil reprend la premiere question de /faq. Elle est
+// lue depuis src/data/faq.json plutot que recopiee ici : sans cela, modifier
+// une reponse depuis /admin la laisserait perimee sur l'accueil.
+const faqPremiere = faq.questions[0];
 ---
 <BaseLayout>
 <TopBar />
@@ -112,10 +115,10 @@ const faqReponse = 'Prise de contact, test de positionnement gratuit, propositio
 
 <section class="section" id="faq">
   <div class="wrap">
-    <span class="eyebrow">Questions fréquentes</span>
-    <h2 class="h2 is-minor">Ce que les parents nous demandent</h2>
+    <span class="eyebrow">{faq.eyebrow}</span>
+    <h2 class="h2 is-minor">{faq.titre}</h2>
     <div class="faq">
-      <details open><summary>{faqQuestion}</summary><div class="answer">{faqReponse}</div></details>
+      <details open><summary>{faqPremiere.question}</summary><div class="answer">{faqPremiere.reponse}</div></details>
     </div>
     <div class="hero-actions" style="margin-top:20px">
       <a class="btn btn-outline" href="/faq">Toutes les questions &rarr;</a>

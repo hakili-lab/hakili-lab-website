@@ -3,7 +3,29 @@
 // eleves. Ces deux sections vivaient sur /a-propos (ancres #valeurs et
 // #engagements) ; elles ont ete deplacees ici telles quelles, /a-propos n'en
 // garde qu'un teaser. "Nos fondateurs" est reste sur /a-propos.
+//
+// Textes editables depuis /admin : src/data/valeurs.json (schema et
+// validation dans src/data/valeurs.js).
+//
+// Les items des deux listes sont ecrits en markdown, ou "**texte**" produit le
+// gras qui etait auparavant ecrit <b>texte</b> en dur dans ce gabarit.
+// marked.parseInline rend l'interieur d'une phrase sans l'envelopper dans un
+// <p>, ce qui est exactement ce qu'il faut ici : le texte est insere dans un
+// <div> (liste a coches) ou un <li> (cartes) deja en place.
+//
+// Les icones des 4 cartes restent dans ce gabarit et ne sont pas editables :
+// ce sont des elements de dessin, pas du texte. Elles sont associees aux
+// cartes par leur rang.
+import { marked } from 'marked';
 import SiteLayout from '../../layouts/SiteLayout.astro';
+import { valeurs } from '../../data/valeurs.js';
+
+const iconesCartes = [
+  '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14h6"/>',
+  '<path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M7 10v5c0 1.7 2.2 3 5 3s5-1.3 5-3v-5"/>',
+  '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/>',
+  '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+];
 ---
 <SiteLayout
   title="Nos valeurs"
@@ -14,58 +36,31 @@ import SiteLayout from '../../layouts/SiteLayout.astro';
 <section class="section" id="valeurs">
   <div class="wrap" style="max-width:760px">
     <a class="post-link" href="/">&larr; Accueil</a>
-    <span class="eyebrow">Nos valeurs</span>
-    <h1 class="h2">Ce qui nous anime</h1>
+    <span class="eyebrow">{valeurs.valeurs.eyebrow}</span>
+    <h1 class="h2">{valeurs.valeurs.titre}</h1>
     <ul class="marks">
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous croyons au <b>potentiel d’excellence de chaque enfant</b>.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous <b>enseignons pour la compréhension</b>.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous formons une <b>communauté d’apprentissage</b> : chaque élève est un enseignant, chaque enseignant est un élève.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous sommes une <b>équipe solidaire</b> : chacun veille sur les autres.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Notre <b>engagement</b> ne connaît pas de limites quand il s’agit de faire réussir un élève.</div></li>
-      <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div>Nous <b>valorisons l’apprentissage</b>.</div></li>
+      {valeurs.valeurs.items.map((item) => (
+        <li><span class="tick"><svg viewBox="0 0 24 24"><path d="m5 13 4 4L19 7"/></svg></span><div set:html={marked.parseInline(item)} /></li>
+      ))}
     </ul>
   </div>
 </section>
 
 <section class="section section-cloud" id="engagements">
   <div class="wrap">
-    <span class="eyebrow">Engagements de nos élèves</span>
-    <h2 class="h2">Dans notre communauté d’apprentissage, chaque élève contribue à l’excellence collective</h2>
-    <p class="lead">Voici comment.</p>
+    <span class="eyebrow">{valeurs.engagements.eyebrow}</span>
+    <h2 class="h2">{valeurs.engagements.titre}</h2>
+    <p class="lead">{valeurs.engagements.intro}</p>
     <div class="cards-4">
-      <article class="card">
-        <div class="icon"><svg viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 14h6"/></svg></div>
-        <h3>Je valorise l’apprentissage</h3>
-        <ul>
-          <li><b>J’arrive à l’heure</b> pour ne manquer aucune opportunité d’apprendre et par respect pour mes camarades et enseignants</li>
-          <li><b>Je prépare mes cours</b> avant de venir au centre, car la compréhension commence par ma propre curiosité</li>
-          <li><b>Je reste concentré</b> : mon téléphone reste éteint pour que je sois pleinement présent dans mon apprentissage</li>
-        </ul>
-      </article>
-      <article class="card">
-        <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 7l9-4 9 4-9 4-9-4z"/><path d="M7 10v5c0 1.7 2.2 3 5 3s5-1.3 5-3v-5"/></svg></div>
-        <h3>Je suis un apprenant proactif</h3>
-        <ul>
-          <li><b>Je pose des questions</b> quand je ne comprends pas : c’est un signe de force, pas de faiblesse</li>
-          <li><b>Je participe activement</b>, car chaque intervention enrichit notre communauté d’apprentissage</li>
-        </ul>
-      </article>
-      <article class="card">
-        <div class="icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9"/></svg></div>
-        <h3>Je construis une communauté solidaire</h3>
-        <ul>
-          <li><b>Je respecte chacun</b> : enseignants, personnel et camarades</li>
-          <li><b>Je valorise les contributions de tous</b>, sachant que chaque élève peut être mon enseignant</li>
-          <li><b>J’encourage mes camarades</b>, car leur réussite est aussi la mienne</li>
-        </ul>
-      </article>
-      <article class="card">
-        <div class="icon"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-        <h3>Je représente notre excellence</h3>
-        <ul>
-          <li><b>Je porte la tenue requise</b> avec fierté, car elle symbolise notre engagement commun vers l’excellence</li>
-        </ul>
-      </article>
+      {valeurs.engagements.cartes.map((carte, i) => (
+        <article class="card">
+          <div class="icon"><svg viewBox="0 0 24 24" set:html={iconesCartes[i % iconesCartes.length]} /></div>
+          <h3>{carte.titre}</h3>
+          <ul>
+            {carte.items.map((item) => <li set:html={marked.parseInline(item)} />)}
+          </ul>
+        </article>
+      ))}
     </div>
   </div>
 </section>

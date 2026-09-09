@@ -7,6 +7,7 @@ import type { ImageMetadata } from 'astro';
 import heroImg1 from '../assets/photos/37.jpeg';
 import heroImg2 from '../assets/photos/36.jpeg';
 import heroImg3 from '../assets/photos/40.jpeg';
+import { hero } from '../data/hero.js';
 
 const heroImages: { src: ImageMetadata; focus?: string }[] = [
   { src: heroImg1 },
@@ -44,12 +45,12 @@ const DEFAULT_FOCUS = 'center 35%';
   </div>
   <div class="wrap">
     <span class="claim">CENTRE D’EXCELLENCE EN MATHEMATIQUES</span>
-    <h1>Votre enfant peut <em>vraiment</em> comprendre les maths.</h1>
-    <p class="hero-lead">Tutorat en mathématiques et en physique-chimie, du primaire au secondaire. Des groupes de niveau, des enseignants formés, et un suivi qui part des lacunes réelles de chaque élève.</p>
+    <h1>{hero.titre.avant}<em>{hero.titre.accent}</em>{hero.titre.apres}</h1>
+    <p class="hero-lead">{hero.sousTitre}</p>
     <div class="hero-actions">
-      <a class="btn btn-green" href="https://forms.gle/FMWP9KZtjrxyVT3x6" target="_blank" rel="noopener">Inscrire mon enfant</a>
-      <a class="btn btn-ghost" href="/methode">Découvrir notre méthode</a>
+      <a class="btn btn-green" href={hero.boutons[0].lien} target={hero.boutons[0].lien.startsWith('http') ? '_blank' : undefined} rel={hero.boutons[0].lien.startsWith('http') ? 'noopener' : undefined}>{hero.boutons[0].texte}</a>
+      <a class="btn btn-ghost" href={hero.boutons[1].lien} target={hero.boutons[1].lien.startsWith('http') ? '_blank' : undefined} rel={hero.boutons[1].lien.startsWith('http') ? 'noopener' : undefined}>{hero.boutons[1].texte}</a>
     </div>
-    <p class="hero-meta">Ouagadougou &nbsp;•&nbsp; Cinq centres &nbsp;•&nbsp; Depuis 2020</p>
+    <p class="hero-meta">{hero.meta.map((m, i) => (<Fragment>{i > 0 && <Fragment> &nbsp;•&nbsp; </Fragment>}{m}</Fragment>))}</p>
   </div>
 </section>

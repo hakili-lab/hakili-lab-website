@@ -1,0 +1,20 @@
+{
+  "eyebrow": "Questions fréquentes",
+  "titre": "Ce que les parents nous demandent",
+  "intro": "Quelques réponses aux questions les plus courantes avant une inscription.",
+  "questions": [
+    {
+      "question": "Comment se passe l’inscription ?",
+      "reponse": "Prise de contact, test de positionnement gratuit, proposition d’un groupe et d’un horaire, puis inscription."
+    },
+    {
+      "question": "À quels niveaux s’adressent les cours ?",
+      "reponse": "Hakili Lab accompagne les élèves du primaire au secondaire, selon les besoins et les groupes disponibles."
+    },
+    {
+      "question": "Le test de positionnement est-il gratuit ?",
+      "reponse": "Oui, le test de positionnement est gratuit et permet de proposer un accompagnement adapté au niveau de chaque élève."
+    }
+  ],
+  "cta": "D’autres questions ? Contactez-nous"
+}

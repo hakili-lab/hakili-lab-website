@@ -1,35 +1,24 @@
 ---
-// Page FAQ : trois questions/reponses en dur, avec balisage JSON-LD FAQPage
+// Page FAQ : liste plate de questions/reponses, avec balisage JSON-LD FAQPage
 // correspondant pour les moteurs de recherche.
+//
+// Textes editables depuis /admin : src/data/faq.json (schema et validation
+// dans src/data/faq.js). Le balisage JSON-LD est construit a partir des memes
+// donnees, il ne peut donc pas diverger de ce qui est affiche.
+//
+// La premiere question est ouverte par defaut, les suivantes fermees : c'est
+// une regle d'affichage, pas une donnee editable.
 import SiteLayout from '../../layouts/SiteLayout.astro';
-
-const question = 'Comment se passe l’inscription ?';
-const reponse = 'Prise de contact, test de positionnement gratuit, proposition d’un groupe et d’un horaire, puis inscription.';
-const questionDeux = 'À quels niveaux s’adressent les cours ?';
-const reponseDeux = 'Hakili Lab accompagne les élèves du primaire au secondaire, selon les besoins et les groupes disponibles.';
-const questionTrois = 'Le test de positionnement est-il gratuit ?';
-const reponseTrois = 'Oui, le test de positionnement est gratuit et permet de proposer un accompagnement adapté au niveau de chaque élève.';
+import { faq } from '../../data/faq.js';
 
 const faqJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: question,
-      acceptedAnswer: { '@type': 'Answer', text: reponse },
-    },
-    {
-      '@type': 'Question',
-      name: questionDeux,
-      acceptedAnswer: { '@type': 'Answer', text: reponseDeux },
-    },
-    {
-      '@type': 'Question',
-      name: questionTrois,
-      acceptedAnswer: { '@type': 'Answer', text: reponseTrois },
-    },
-  ],
+  mainEntity: faq.questions.map((q) => ({
+    '@type': 'Question',
+    name: q.question,
+    acceptedAnswer: { '@type': 'Answer', text: q.reponse },
+  })),
 };
 ---
 <SiteLayout
@@ -42,16 +31,16 @@ const faqJsonLd = {
 <section class="section">
   <div class="wrap">
     <a class="post-link" href="/">&larr; Accueil</a>
-    <span class="eyebrow">Questions fréquentes</span>
-    <h1 class="h2">Ce que les parents nous demandent</h1>
-    <p class="lead">Quelques réponses aux questions les plus courantes avant une inscription.</p>
+    <span class="eyebrow">{faq.eyebrow}</span>
+    <h1 class="h2">{faq.titre}</h1>
+    <p class="lead">{faq.intro}</p>
     <div class="faq">
-      <details open><summary>{question}</summary><div class="answer">{reponse}</div></details>
-      <details><summary>{questionDeux}</summary><div class="answer">{reponseDeux}</div></details>
-      <details><summary>{questionTrois}</summary><div class="answer">{reponseTrois}</div></details>
+      {faq.questions.map((q, i) => (
+        <details open={i === 0}><summary>{q.question}</summary><div class="answer">{q.reponse}</div></details>
+      ))}
     </div>
     <div class="hero-actions" style="margin-top:30px">
-      <a class="btn btn-outline" href="/contact">D’autres questions ? Contactez-nous</a>
+      <a class="btn btn-outline" href="/contact">{faq.cta}</a>
     </div>
   </div>
 </section>

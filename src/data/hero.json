@@ -1,0 +1,13 @@
+{
+  "titre": {
+    "avant": "Votre enfant peut ",
+    "accent": "vraiment",
+    "apres": " comprendre les maths."
+  },
+  "sousTitre": "Tutorat en mathématiques et en physique-chimie, du primaire au secondaire. Des groupes de niveau, des enseignants formés, et un suivi qui part des lacunes réelles de chaque élève.",
+  "meta": ["Ouagadougou", "Cinq centres", "Depuis 2020"],
+  "boutons": [
+    { "texte": "Inscrire mon enfant", "lien": "https://forms.gle/FMWP9KZtjrxyVT3x6" },
+    { "texte": "Découvrir notre méthode", "lien": "/methode" }
+  ]
+}

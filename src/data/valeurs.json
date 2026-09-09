@@ -1,0 +1,50 @@
+{
+  "valeurs": {
+    "eyebrow": "Nos valeurs",
+    "titre": "Ce qui nous anime",
+    "items": [
+      "Nous croyons au **potentiel d’excellence de chaque enfant**.",
+      "Nous **enseignons pour la compréhension**.",
+      "Nous formons une **communauté d’apprentissage** : chaque élève est un enseignant, chaque enseignant est un élève.",
+      "Nous sommes une **équipe solidaire** : chacun veille sur les autres.",
+      "Notre **engagement** ne connaît pas de limites quand il s’agit de faire réussir un élève.",
+      "Nous **valorisons l’apprentissage**."
+    ]
+  },
+  "engagements": {
+    "eyebrow": "Engagements de nos élèves",
+    "titre": "Dans notre communauté d’apprentissage, chaque élève contribue à l’excellence collective",
+    "intro": "Voici comment.",
+    "cartes": [
+      {
+        "titre": "Je valorise l’apprentissage",
+        "items": [
+          "**J’arrive à l’heure** pour ne manquer aucune opportunité d’apprendre et par respect pour mes camarades et enseignants",
+          "**Je prépare mes cours** avant de venir au centre, car la compréhension commence par ma propre curiosité",
+          "**Je reste concentré** : mon téléphone reste éteint pour que je sois pleinement présent dans mon apprentissage"
+        ]
+      },
+      {
+        "titre": "Je suis un apprenant proactif",
+        "items": [
+          "**Je pose des questions** quand je ne comprends pas : c’est un signe de force, pas de faiblesse",
+          "**Je participe activement**, car chaque intervention enrichit notre communauté d’apprentissage"
+        ]
+      },
+      {
+        "titre": "Je construis une communauté solidaire",
+        "items": [
+          "**Je respecte chacun** : enseignants, personnel et camarades",
+          "**Je valorise les contributions de tous**, sachant que chaque élève peut être mon enseignant",
+          "**J’encourage mes camarades**, car leur réussite est aussi la mienne"
+        ]
+      },
+      {
+        "titre": "Je représente notre excellence",
+        "items": [
+          "**Je porte la tenue requise** avec fierté, car elle symbolise notre engagement commun vers l’excellence"
+        ]
+      }
+    ]
+  }
+}
