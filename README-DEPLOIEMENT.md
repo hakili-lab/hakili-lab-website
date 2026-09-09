@@ -117,8 +117,8 @@ GitHub Actions `.github/workflows/deploy.yml`. Il n'y a plus rien à faire à la
 main dans le cas courant : on pousse, et le site se met à jour tout seul en
 quelques minutes.
 
-Le workflow se déroule en deux temps, et **le second ne démarre que si le
-premier a réussi** :
+Le workflow se déroule en trois temps, et **chaque étape ne démarre que si la
+précédente a réussi** :
 
 1. **Vérifier** — sur le runner GitHub (pas sur le serveur) : `npm ci` puis
    `npm run build`. Si le site ne se construit pas (le plus souvent : une
@@ -126,14 +126,75 @@ premier a réussi** :
    s'arrête ici et le serveur n'est jamais touché**. C'est la protection qui
    manquait depuis qu'on n'est plus chez un hébergeur statique qui refusait
    de publier un build en échec.
-2. **Déployer** — connexion SSH au VPS, puis `git pull`, `docker build`, et
-   seulement ensuite le remplacement du conteneur. **Si `docker build` échoue sur le
-   serveur, le script s'arrête avant `docker stop`** : le site reste en ligne
-   sur l'ancienne version plutôt que d'être coupé pour une image qui ne s'est
-   pas construite. Une fois le nouveau conteneur confirmé en service, un
-   `docker image prune -f` supprime les images orphelines laissées par les
-   builds précédents, pour que le disque du VPS ne se remplisse pas au fil des
-   déploiements.
+2. **Construire et publier l'image** — toujours sur le runner GitHub :
+   `docker build` à partir du `Dockerfile` du dépôt, puis publication de
+   l'image sur **GitHub Container Registry** (`ghcr.io`), sous deux
+   étiquettes (voir ci-dessous).
+3. **Déployer** — connexion SSH au VPS, puis `docker pull` de l'image déjà
+   construite, et seulement ensuite le remplacement du conteneur. **Si le
+   téléchargement échoue, le script s'arrête avant `docker stop`** : le site
+   reste en ligne sur l'ancienne version plutôt que d'être coupé. Une fois le
+   nouveau conteneur confirmé en service, un `docker image prune -f` supprime
+   les images orphelines, pour que le disque du VPS ne se remplisse pas au fil
+   des déploiements.
+
+### Pourquoi l'image est construite sur GitHub et non sur le VPS
+
+**Le VPS ne construit plus rien.** Il télécharge une image déjà prête et la
+lance. C'est le seul changement de fond depuis la première version du
+workflow ; le `Dockerfile`, lui, n'a pas bougé d'une ligne et sert toujours de
+base à la construction.
+
+La raison est concrète : le VPS est une petite machine **partagée avec d'autres
+projets**. `docker build` y refaisait `npm ci` puis `npm run build` à chaque
+déploiement, dans le conteneur de construction. Un déploiement a fini par être
+**tué par le noyau faute de mémoire** — le symptôme est un job qui s'arrête net
+avec le **code de sortie 137** (128 + 9, c'est-à-dire le signal `SIGKILL` envoyé
+par l'*OOM killer* du système). Rien n'était cassé dans le site : la machine
+n'avait simplement plus assez de mémoire au mauvais moment, ce qui dépend aussi
+de ce que faisaient les autres projets hébergés là.
+
+Déplacer la construction sur un runner GitHub règle le problème à la racine :
+
+- le runner est dimensionné pour ça, et il est neuf à chaque exécution ;
+- l'image est construite **une seule fois**, pas une fois par serveur ;
+- le VPS ne fait plus qu'un téléchargement et un redémarrage de conteneur —
+  quelques secondes, et une charge mémoire négligeable ;
+- si la construction échoue, elle échoue **sur GitHub**, avant que le serveur
+  ne soit touché.
+
+### Les deux étiquettes de l'image
+
+L'image est publiée sous deux noms qui désignent le même contenu :
+
+| Étiquette | À quoi elle sert |
+|---|---|
+| `ghcr.io/hakili-lab/hakili-lab-website:latest` | Celle que le VPS télécharge à chaque déploiement. Elle pointe toujours sur la dernière version publiée. |
+| `ghcr.io/hakili-lab/hakili-lab-website:<sha>` | L'empreinte du commit. Elle ne bouge jamais : elle permet de relancer une version précise à la main si besoin (voir la méthode de secours plus bas). |
+
+### Le registre d'images : à faire une seule fois
+
+La publication sur `ghcr.io` utilise `GITHUB_TOKEN`, un jeton que GitHub
+fournit automatiquement à chaque exécution. **Aucun compte, aucun secret et
+aucun abonnement à créer** — le registre est gratuit pour un dépôt public.
+
+En revanche, **un paquet publié sur `ghcr.io` est privé par défaut**, même
+lorsque le dépôt est public. Tant qu'il l'est, le VPS ne peut pas le
+télécharger et le déploiement échoue sur un `denied` ou `unauthorized`. Il faut
+donc, **une seule fois, après la première publication réussie** :
+
+1. ouvrir <https://github.com/orgs/hakili-lab/packages> ;
+2. cliquer sur le paquet **`hakili-lab-website`** ;
+3. **Package settings** → **Danger Zone** → **Change visibility** → **Public**.
+
+Une fois public, le VPS le télécharge sans authentification et il n'y a plus
+jamais rien à faire. Le message d'erreur du workflow rappelle cette procédure
+si le cas se présente.
+
+> L'alternative serait d'authentifier le VPS auprès de `ghcr.io` avec un jeton
+> personnel à portée `read:packages`. Elle a été écartée : elle demande de créer
+> un secret de plus et de le renouveler à son expiration, pour un site dont le
+> code est de toute façon public.
 
 ### Suivre une exécution
 
@@ -144,7 +205,9 @@ Chaque push y apparaît comme une exécution du workflow « Deploiement », avec
 une coche verte (réussi) ou une croix rouge (échoué). Cliquer dessus affiche le
 détail étape par étape : on voit immédiatement si l'échec vient de la
 vérification (le site ne se construit pas — à corriger dans le code ou le
-contenu) ou du déploiement (problème sur le serveur : SSH, `git pull`, Docker).
+contenu), de la publication de l'image (problème de construction Docker ou de
+droits sur le registre) ou du déploiement (problème sur le serveur : SSH,
+téléchargement de l'image, Docker).
 
 Un échec de la vérification ne casse rien en ligne : le site continue de
 tourner sur la dernière version déployée avec succès.
@@ -182,9 +245,10 @@ Une croix rouge doit vouloir dire « le site n'est pas à jour ». Toutes les
 | Étape | Bloquante ? | Pourquoi |
 |---|---|---|
 | `npm ci` / `npm run build` (runner) | **Oui** | Rien ne doit atteindre le serveur si le site ne se construit pas. |
+| `docker build` (runner) | **Oui** | Une image qui ne se construit pas n'est jamais publiée, donc jamais déployée. |
+| Publication sur `ghcr.io` | **Oui** | Sans image publiée, il n'y a rien à déployer. |
 | Connexion SSH (clé privée) | **Oui** | Sans connexion au serveur, il n'y a pas de déploiement possible. |
-| `git pull --ff-only` | **Oui** | Un clone qui a divergé doit être réglé à la main, pas contourné. |
-| `docker build` | **Oui** | Le script s'arrête avant `docker stop` : l'ancien conteneur continue de servir le site. |
+| `docker pull` (VPS) | **Oui** | Le script s'arrête avant `docker stop` : l'ancien conteneur continue de servir le site. |
 | `docker stop` / `docker rm` | Non (`\|\| true`) | Au premier déploiement il n'y a pas de conteneur à arrêter, et ce n'est pas une erreur. |
 | Contrôle `docker ps` après `docker run` | **Oui** | Un conteneur qui sort aussitôt laisserait le site hors ligne ; le job doit le signaler. |
 | `docker image prune -f` | Non (`\|\| true`) | Volontairement non bloquant : voir ci-dessous. |
@@ -202,9 +266,15 @@ workflow. S'il devient nécessaire de le surveiller (disque du VPS qui se
 remplit malgré tout), la trace reste lisible dans le log de l'étape, sous
 « Nettoyage des images Docker orphelines ».
 
-Le workflow suppose aussi que le dépôt est déjà cloné sur le serveur dans
-`~/hakili-lab-website` pour cet utilisateur, et que celui-ci peut lancer
-`docker` sans mot de passe (appartenance au groupe `docker`).
+Le workflow suppose que l'utilisateur SSH peut lancer `docker` sans mot de
+passe (appartenance au groupe `docker`).
+
+**Le clone du dépôt sur le serveur ne fait plus partie du chemin de
+déploiement.** Depuis que l'image est construite sur GitHub, le VPS n'a plus
+besoin de connaître le code source : il ne fait plus ni `git pull` ni
+`docker build`. Le clone présent dans `~/hakili-lab-website` est conservé,
+mais uniquement comme référence et pour du débogage manuel — il peut être en
+retard sur `main` sans que cela gêne le moindre déploiement.
 
 Le déploiement n'est configuré **que pour `main`** : pousser sur une autre
 branche ne touche pas au serveur.
@@ -243,29 +313,31 @@ Si l'on devait un jour basculer vers un hébergeur statique, la marche général
 C'est la méthode utilisée sur le serveur de déploiement actuel (image Docker
 servie par nginx derrière un port non standard, ex. `:8014`).
 
-**Le `Dockerfile` et `docker/nginx.conf` sont désormais versionnés dans le
-dépôt.** Il n'y a donc plus rien à créer à la main sur le serveur (l'ancienne
-procédure « créer le `Dockerfile` avec `nano` » n'a plus lieu d'être) : on
-clone le dépôt, les deux fichiers y sont déjà.
+**Le serveur n'a plus besoin du code source.** L'image est construite et
+publiée par GitHub (voir « Déploiement automatique » plus haut) ; mettre le site
+en service sur une machine revient à télécharger cette image et à la lancer.
+Ni clone, ni Node, ni `docker build` :
 
 ```sh
-git clone https://github.com/hakili-lab/hakili-lab-website.git hakili-lab
-cd hakili-lab
-
-# Reconstruire sans cache écarte tout risque d'image périmée
-docker build --no-cache -t hakili-lab-website .
+docker pull ghcr.io/hakili-lab/hakili-lab-website:latest
 
 docker stop hakili-lab-website 2>/dev/null || true
 docker rm   hakili-lab-website 2>/dev/null || true
 
 docker run -d --name hakili-lab-website \
   -p 8014:80 --restart unless-stopped \
-  hakili-lab-website
+  ghcr.io/hakili-lab/hakili-lab-website:latest
 ```
 
-Le build se fait **dans l'image** (`node:22-slim` → `npm ci` → `npm run
-build`), puis seul le dossier `dist/` est copié dans une image `nginx:alpine`
-finale. Rien à installer sur l'hôte hormis Docker.
+C'est exactement ce que fait le workflow à chaque déploiement. Rien à installer
+sur l'hôte hormis Docker.
+
+**Ce que contient l'image**, construite à partir du `Dockerfile` versionné dans
+le dépôt : le build se fait **dans l'image** (`node:22-slim` → `npm ci` →
+`npm run build`), puis seul le dossier `dist/` est copié dans une image
+`nginx:alpine` finale, avec `docker/nginx.conf`. C'est cette seconde image,
+légère, qui est publiée et téléchargée — les outils de construction ne partent
+pas sur le serveur.
 
 ### Pourquoi `absolute_redirect off` dans `docker/nginx.conf`
 
@@ -295,23 +367,55 @@ navigation.
 > - on veut redéployer **sans passer par un commit** — par exemple pour
 >   reconstruire l'image après un changement côté serveur. C'est rare.
 
-Sur le serveur, connecté en SSH :
+Sur le serveur, connecté en SSH. **Il n'y a plus ni `git pull` ni
+`docker build` à faire** : on récupère la même image que celle publiée par le
+workflow.
 
 ```sh
-cd hakili-lab
+docker pull ghcr.io/hakili-lab/hakili-lab-website:latest
+docker stop hakili-lab-website && docker rm hakili-lab-website
+docker run -d --name hakili-lab-website -p 8014:80 --restart unless-stopped \
+  ghcr.io/hakili-lab/hakili-lab-website:latest
+```
+
+À taper à la main, `docker stop && docker rm` échoue si le conteneur n'existe
+pas — sans conséquence, passer directement au `docker run`.
+
+#### Revenir à une version précédente
+
+Chaque déploiement publie aussi l'image sous l'empreinte de son commit. Pour
+remettre en ligne une version antérieure, récupérer son empreinte dans
+l'historique (`git log --oneline`) et l'utiliser à la place de `latest` :
+
+```sh
+docker pull ghcr.io/hakili-lab/hakili-lab-website:<empreinte-du-commit>
+docker stop hakili-lab-website && docker rm hakili-lab-website
+docker run -d --name hakili-lab-website -p 8014:80 --restart unless-stopped \
+  ghcr.io/hakili-lab/hakili-lab-website:<empreinte-du-commit>
+```
+
+L'empreinte doit être la version **complète** (40 caractères), telle que le
+workflow l'a publiée. Ce retour en arrière est manuel et temporaire : le
+déploiement suivant remettra `latest` en service. Pour le rendre durable, il
+faut annuler le commit fautif sur `main`.
+
+#### Reconstruire l'image à la main
+
+Utile seulement si GitHub est indisponible et qu'il faut absolument déployer.
+La construction se fait alors sur le serveur, avec la charge mémoire que cela
+implique (voir « Pourquoi l'image est construite sur GitHub ») :
+
+```sh
+cd hakili-lab-website
 git pull
 docker build --no-cache -t hakili-lab-website .
 docker stop hakili-lab-website && docker rm hakili-lab-website
 docker run -d --name hakili-lab-website -p 8014:80 --restart unless-stopped hakili-lab-website
 ```
 
-Différence assumée avec le workflow : `--no-cache` ici, pour écarter tout doute
-sur une image périmée quand on débogue à la main. Le workflow, lui, s'appuie
-sur le cache Docker (le `COPY package*.json` du `Dockerfile` l'invalide
-correctement) pour rester rapide.
-
-À taper à la main, `docker stop && docker rm` échoue si le conteneur n'existe
-pas — sans conséquence, passer directement au `docker run`.
+Attention : le conteneur tourne alors sur une image locale nommée
+`hakili-lab-website`, et non sur celle du registre. Le déploiement automatique
+suivant la remplacera par l'image `ghcr.io`, ce qui est le comportement voulu.
 
 ---
 
