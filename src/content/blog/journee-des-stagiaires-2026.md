@@ -1,10 +1,10 @@
 ---
-slug: "journee-des-stagiaires-2026"
-titre: "Retour sur la Journée des Stagiaires 2026"
-description: "Nos stagiaires ont présenté cinq projets construits pendant leur stage, dont Maya et Prof Amira."
-date: 2026-08-29
-categorie: "Actualité"
-image: "../../assets/photos/journee-hakili-stagiare.jpg"
+slug: journee-des-stagiaires-2026
+titre: Retour sur la Journée des Stagiaires 2026
+description: Nos stagiaires ont présenté cinq projets construits pendant leur stage, dont Maya et Prof Amira.
+date: 2026-09-01
+categorie: Actualité
+image: ../../assets/photos/journee-hakili-stagiare.jpg
 brouillon: false
 ---
 
