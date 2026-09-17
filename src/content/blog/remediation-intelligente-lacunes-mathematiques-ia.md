@@ -1,10 +1,10 @@
 ---
-slug: "remediation-intelligente-lacunes-mathematiques-ia"
+slug: remediation-intelligente-lacunes-mathematiques-ia
 titre: "Maya : combler les lacunes en mathématiques grâce à l'IA"
-description: "Comment l'intelligence artificielle permet d'identifier les difficultés en mathématiques et de proposer des parcours de révision personnalisés."
-date: 2026-09-23
-categorie: "Pédagogie"
-image: "../../assets/photos/25.jpeg"
+description: Comment l'intelligence artificielle permet d'identifier les difficultés en mathématiques et de proposer des parcours de révision personnalisés.
+date: 2026-09-04
+categorie: Pédagogie
+image: ../../assets/photos/25.jpeg
 brouillon: false
 ---
 
@@ -19,4 +19,3 @@ Le dispositif repose sur trois piliers :
 - **Un tableau de bord de suivi :** L'apprenant, les parents et les encadreurs peuvent visualiser la progression et le niveau de maîtrise acquis au fil des séances.
 
 La technologie devient ainsi un complément direct à l'humain pour offrir un soutien scolaire véritablement individualisé.
-
