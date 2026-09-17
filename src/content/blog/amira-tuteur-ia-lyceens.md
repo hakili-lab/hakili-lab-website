@@ -1,10 +1,10 @@
 ---
-slug: "amira-tuteur-ia-lyceens"
-titre: "Amira : un tuteur IA interactif pour guider les lycéens pas à pas"
-description: "Découvrez Amira, un tuteur pédagogique interactif conçu pour accompagner les lycéens dans leurs révisions grâce à l'intelligence artificielle."
-date: 2026-09-16
-categorie: "Actualité"
-image: "../../assets/photos/22.jpeg"
+slug: amira-tuteur-ia-lyceens
+titre: 'Amira : un tuteur IA interactif pour guider les lycéens pas à pas'
+description: Découvrez Amira, un tuteur pédagogique interactif conçu pour accompagner les lycéens dans leurs révisions grâce à l'intelligence artificielle.
+date: 2026-09-11
+categorie: Actualité
+image: ../../assets/photos/22.jpeg
 brouillon: false
 ---
 
